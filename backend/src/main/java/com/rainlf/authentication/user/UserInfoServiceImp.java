@@ -1,5 +1,8 @@
 package com.rainlf.authentication.user;
 
+import com.rainlf.mongo.entity.User;
+import com.rainlf.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,14 +12,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserInfoServiceImp implements UserInfoService {
 
+    @Autowired
+    private UserService userService;
 
     @Override
     public UserInfo getUserInfo(String username) {
-        return null;
+        User user = userService.getUser(username);
+        return new UserInfo(user.getUsername(),
+                user.getPassword(),
+                user.getLastPasswordResetDate(),
+                user.getRoles(),
+                user.getName());
     }
 
     @Override
     public UserInfo addUserInfo(UserInfo userInfoToAdd) {
-        return null;
+        userService.addUser(new User(userInfoToAdd.getUsername(),
+                userInfoToAdd.getPassword(),
+                userInfoToAdd.getName(),
+                userInfoToAdd.getLastPasswordResetDate(),
+                userInfoToAdd.getRoles()));
+        return userInfoToAdd;
     }
 }
