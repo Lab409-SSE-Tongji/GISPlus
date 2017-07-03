@@ -3,6 +3,8 @@ package com.rainlf.authentication.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.hibernate.validator.valuehandling.UnwrapValidatedValue;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +25,10 @@ public class JwtTokenUtil implements Serializable {
     private static final String CLAIM_KEY_USERNAME = "sub";
     private static final String CLAIM_KEY_CREATED = "created";
 
-    private String secret = "mySecret";
+    @Value("token.secret")
+    private String secret;
 
-    private Long expiration = 604800L;
+    private Long expiration = 604800L;  // s
 
     public String getUsernameFromToken(String token) {
         String username;

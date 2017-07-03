@@ -9,7 +9,6 @@ import java.util.List;
 
 public class UserInfo {
 
-    private String name;
     private String username;
     private String password;
     private Date lastPasswordResetDate;
@@ -18,20 +17,11 @@ public class UserInfo {
     public UserInfo() {
     }
 
-    public UserInfo(String name, String username, String password, Date lastPasswordResetDate, List<String> roles) {
-        this.name = name;
+    public UserInfo(String username, String password, Date lastPasswordResetDate, List<String> roles) {
         this.username = username;
         this.password = password;
         this.lastPasswordResetDate = lastPasswordResetDate;
         this.roles = roles;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getUsername() {

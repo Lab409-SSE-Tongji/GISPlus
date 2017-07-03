@@ -1,6 +1,7 @@
 package com.rainlf.authentication.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,7 +30,8 @@ public class AuthServiceImpl implements AuthService {
     private JwtTokenUtil jwtTokenUtil;
     private UserInfoService userInfoService;
 
-    private String tokenHead = "Authorization";
+    @Value("${token.tokenHeader}")
+    private String tokenHead;
 
     @Autowired
     public AuthServiceImpl(
@@ -53,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
         final String rawPassword = userInfoToAdd.getPassword();
         userInfoToAdd.setPassword(encoder.encode(rawPassword));
         userInfoToAdd.setLastPasswordResetDate(new Date());
-        userInfoToAdd.setRoles(Arrays.asList("ROLE_USER"));
+        userInfoToAdd.setRoles(Arrays.asList("ROLE_USER")); // rain
         return userInfoService.addUserInfo(userInfoToAdd);
     }
 
