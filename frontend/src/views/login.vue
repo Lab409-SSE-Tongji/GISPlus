@@ -37,13 +37,11 @@
           username: this.username,
           password: this.password
         }
-        this.$http.post(this.requestUrl, formData).then(
-            response => {
-                console.log('11111111')
-            }, response => {
-                console.log('22222222')
-          }
-        )
+        this.$http.post(this.requestUrl, formData).then(response => {
+          console.log('11111111')
+        }, response => {
+          console.log('22222222')
+        })
       }
 //      userLogin: async function() {
 //        if(this.username == "" || this.password == ""){

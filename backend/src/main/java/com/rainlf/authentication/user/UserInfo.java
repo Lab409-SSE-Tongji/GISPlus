@@ -18,6 +18,9 @@ public class UserInfo {
 
     private String name;
 
+    public UserInfo() {
+    }
+
     public UserInfo(String username, String password, Date lastPasswordResetDate, List<String> roles, String name) {
         this.username = username;
         this.password = password;

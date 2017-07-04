@@ -18,11 +18,15 @@ public class UserInfoServiceImp implements UserInfoService {
     @Override
     public UserInfo getUserInfo(String username) {
         User user = userService.getUser(username);
-        return new UserInfo(user.getUsername(),
-                user.getPassword(),
-                user.getLastPasswordResetDate(),
-                user.getRoles(),
-                user.getName());
+        if (user == null) {
+            return null;
+        } else {
+            return new UserInfo(user.getUsername(),
+                    user.getPassword(),
+                    user.getLastPasswordResetDate(),
+                    user.getRoles(),
+                    user.getName());
+        }
     }
 
     @Override

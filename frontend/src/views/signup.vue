@@ -1,6 +1,6 @@
 <template>
 
-  <div class="text-center   animated fadeInDown">
+  <div class="text-center animated fadeInDown">
     <div>
       <div>
         <h1 class="logo-name">WebGIS</h1>
@@ -9,13 +9,16 @@
 
       <form class="m-t middle-box loginscreen" role="form">
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="账号" v-model="registerModel.username" >
+          <input type="text" class="form-control" placeholder="账号" v-model="username" >
         </div>
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="昵称"  v-model="registerModel.name">
+          <input type="text" class="form-control" placeholder="昵称" v-model="name">
         </div>
         <div class="form-group">
-          <input type="password" class="form-control" placeholder="密码"  v-model="registerModel.password">
+        <input type="password" class="form-control" placeholder="密码" v-model="password">
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control" placeholder="密码" v-model="passwordRepeat">
         </div>
         <div class="form-group">
           <div class="checkbox i-checks"><label> <input type="checkbox"><i></i> 同意相关条款与政策 </label></div>
@@ -36,43 +39,32 @@
 
 <script>
 
-//  export default{
-//    name: "signup",
-//    data () {
-//      return {
-//        registerUrl: baseUrl + '/account/accounts',
-//        registerModel: {
-//          name: '',
-//          username: '',
-//          password: ''
-//        },
-//
-//      }
-//
-//    },
-//    methods: {
-//      register: function() {
-//        if(this.registerModel.name == "" || this.registerModel.username == "" || this.registerModel.password == ""){
-//          toastr.warning("输入不合法");
-//          return;
-//        }
-//        console.log("[ INFO ] - register start");
-//        this.$http.post(this.registerUrl, this.registerModel)
-//          .then(function(response){
-//            console.log("get a response after create a map");
-//            var responseBody = response.body;
-//            if (responseBody.code === 200 && responseBody.message === "successful") {
-//              toastr.success("注册成功!");
-//              this.$router.push('/login');
-//            }
-//            else{
-//              toastr.error("注册失败!");
-//            }
-//          });
-//        console.log("[ INFO ] - register end");
-//      }
-//    }
-//  }
+  export default{
+    name: "signup",
+    data () {
+      return {
+        requestUrl: global.server + 'auth/register',
+        name: '',
+        username: '',
+        password: '',
+        passwordRepeat: '',
+        }
+      },
+    methods: {
+      register: function () {
+        let formData = {
+          name: this.name,
+          username: this.username,
+          password: this.password
+        }
+        this.$http.post(this.requestUrl, formData).then(response => {
+          console.log('111111')
+        }, response => {
+          console.log('222222')
+        })
+      }
+    }
+  }
 
 </script>
 
