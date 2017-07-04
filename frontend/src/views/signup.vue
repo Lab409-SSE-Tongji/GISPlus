@@ -9,7 +9,7 @@
 
       <form class="m-t middle-box loginscreen" role="form">
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="账号" v-model="username" >
+          <input v-validate data-vv-rules="required|email" type="text" class="form-control" placeholder="账号" v-model="username" >
         </div>
         <div class="form-group">
           <input type="text" class="form-control" placeholder="昵称" v-model="name">
@@ -18,7 +18,7 @@
         <input type="password" class="form-control" placeholder="密码" v-model="password">
         </div>
         <div class="form-group">
-          <input type="password" class="form-control" placeholder="密码" v-model="passwordRepeat">
+          <input type="password" class="form-control" placeholder="确认密码" v-model="passwordRepeat">
         </div>
         <div class="form-group">
           <div class="checkbox i-checks"><label> <input type="checkbox"><i></i> 同意相关条款与政策 </label></div>
@@ -31,14 +31,12 @@
 
     </div>
   </div>
-
-
 </template>
 
 
 
 <script>
-
+  // todo 表达验证
   export default{
     name: "signup",
     data () {

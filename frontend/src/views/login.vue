@@ -43,30 +43,6 @@
           console.log('22222222')
         })
       }
-//      userLogin: async function() {
-//        if(this.username == "" || this.password == ""){
-//          toastr.warning("输入不合法");
-//          return;
-//        }
-//        let response = await UserService.login(this, {
-//          username: this.username,
-//          password: this.password
-//        });
-//        if (response.code === 200) {
-//          this.login({
-//            username: this.username,
-//            userId: response.data.id,
-//            role: response.data.role,
-//            company: response.data.company
-//          })
-//          this.$router.push({
-//            name: 'commonMap'
-//          })
-//        }
-//        else {
-//          toastr.error("密码错误！")
-//        }
-//      }
     }
   }
 
