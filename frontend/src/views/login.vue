@@ -21,26 +21,30 @@
 </template>
 
 <script>
-//  import { mapGetters, mapActions } from 'vuex'
-//  import UserService from  '../service/httpService/userService'
 
-//  export default {
-//    name: 'login',
-//    data () {
-//      return {
-//        getUrl: baseUrl + "",
-//        username: '',
-//        password: ''
-//      }
-//    },
-//    methods: {
-//      ...mapActions([
-//        'login'
-//      ]),
-//      ...mapGetters([
-//        'userStatus'
-//      ]),
-//
+  export default {
+    name: 'login',
+    data () {
+      return {
+        username: '',
+        password: '',
+        requestUrl: global.server + 'auth/login'
+      }
+    },
+    methods: {
+      userLogin: function () {
+        let formData = {
+          username: this.username,
+          password: this.password
+        }
+        this.$http.post(this.requestUrl, formData).then(
+            response => {
+                console.log('11111111')
+            }, response => {
+                console.log('22222222')
+          }
+        )
+      }
 //      userLogin: async function() {
 //        if(this.username == "" || this.password == ""){
 //          toastr.warning("输入不合法");
@@ -65,8 +69,8 @@
 //          toastr.error("密码错误！")
 //        }
 //      }
-//    }
-//  }
+    }
+  }
 
 </script>
 

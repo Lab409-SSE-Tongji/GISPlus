@@ -3,10 +3,7 @@ package com.rainlf.authentication.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.rainlf.authentication.security.JwtAuthenticationRequest;
 import com.rainlf.authentication.security.JwtAuthenticationResponse;
 import com.rainlf.authentication.user.UserInfo;
@@ -18,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * Created by Justin on 2017/6/3.
  */
 
+@CrossOrigin
 @RestController
 @RequestMapping("auth")
 public class AuthController {

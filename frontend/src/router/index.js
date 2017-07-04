@@ -5,7 +5,7 @@ import Login from '@/views/login'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -20,3 +20,14 @@ export default new Router({
     },
   ]
 })
+
+router.beforeEach( (to, from, next) => {
+    if (global.login == true) {
+      next()
+    } else {
+      next('/')
+    }
+  }
+)
+
+export default router
