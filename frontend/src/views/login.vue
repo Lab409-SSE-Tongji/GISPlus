@@ -13,7 +13,6 @@
         <input type="password" class="form-control " placeholder="密码" required="" v-model="password">
       </div>
       <button type="button" class="btn btn-primary block full-width m-b" @click="userLogin">登录</button>
-
       <p class="text-muted text-center"><small>没有账号?</small></p>
       <router-link to="/signup" class="btn btn-sm btn-white btn-block" >注册</router-link>
     </form>
@@ -28,7 +27,8 @@
       return {
         username: '',
         password: '',
-        requestUrl: global.server + 'auth/login'
+        requestUrl: global.server + 'auth/login',
+        text: ''
       }
     },
     methods: {
@@ -38,11 +38,18 @@
           password: this.password
         }
         this.$http.post(this.requestUrl, formData).then(response => {
-          console.log('11111111')
+          let bodyText = JSON.parse(response.bodyText)
+          global.login = true
+          global.username = bodyText.username
+          global.token = bodyText.token
+          this.$router.push('mainpage')
         }, response => {
-          console.log('22222222')
+          toastr.error("用户名或密码错误")
         })
       }
+    },
+    created() {
+      this.text = global.login
     }
   }
 

@@ -6,7 +6,7 @@
     <router-view name="context"></router-view>
     <footBar></footBar>
     </div>
-  </div>,
+  </div>
 </template>
 
 <script>

@@ -4,4 +4,8 @@
 
 global.server = 'http://localhost:8080/'
 
-global.login = true
+// global.login = true
+global.login = false
+
+global.username = ''
+global.token = ''

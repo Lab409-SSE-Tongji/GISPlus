@@ -4,6 +4,8 @@ import Router from 'vue-router'
 import Login from '@/views/login'
 import Signup from '@/views/signup'
 
+import MainPage from '@/views/mainpage'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -26,14 +28,26 @@ const router = new Router({
         login: Signup
       }
     },
+    {
+      path: '/mainpage',
+      name: 'mainpage',
+      components:{
+        login: MainPage
+      }
+    },
   ]
 })
 
 router.beforeEach( (to, from, next) => {
-    if (global.login == true) {
+    if (to.name === 'login') {
       next()
-    } else {
-      next('/')
+    }
+    else if (global.login === true) {
+      next()
+    }
+    else {
+      console.log('还木有登录')
+      next('login')
     }
   }
 )
