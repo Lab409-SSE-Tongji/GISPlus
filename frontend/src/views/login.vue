@@ -20,6 +20,7 @@
 </template>
 
 <script>
+  import {mapMutations} from 'vuex'
 
   export default {
     name: 'login',
@@ -32,16 +33,17 @@
       }
     },
     methods: {
+      ...mapMutations({
+        login: 'LOG_IN'
+      }),
       userLogin: function () {
         let formData = {
           username: this.username,
           password: this.password
         }
         this.$http.post(this.requestUrl, formData).then(response => {
-          let bodyText = JSON.parse(response.bodyText)
-          global.login = true
-          global.username = bodyText.username
-          global.token = bodyText.token
+          let userData = JSON.parse(response.bodyText)
+          this.login(userData)
           this.$router.push('mainpage')
         }, response => {
           toastr.error("用户名或密码错误")

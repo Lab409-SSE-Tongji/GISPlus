@@ -33,6 +33,9 @@ public class AuthServiceImpl implements AuthService {
     @Value("${token.tokenHeader}")
     private String tokenHead;
 
+    @Value("${token.initRole")
+    private String initRole;
+
     @Autowired
     public AuthServiceImpl(
             AuthenticationManager authenticationManager,
@@ -55,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
         final String rawPassword = userInfoToAdd.getPassword();
         userInfoToAdd.setPassword(encoder.encode(rawPassword));
         userInfoToAdd.setLastPasswordResetDate(new Date());
-        userInfoToAdd.setRoles(Arrays.asList("ROLE_USER")); // rain
+        userInfoToAdd.setRoles(Arrays.asList(initRole)); // rain
         return userInfoService.addUserInfo(userInfoToAdd);
     }
 

@@ -13,9 +13,8 @@
           </div>
         </li>
 
-        <li v-for="(item,index) in items" :class="{active:index==activeItem}" @click="itemClick(index,$event)">
-          <router-link v-if="item.right=='ADMIN' || item.right == role"
-                       :to="item.target"
+        <li v-for="(item,index) in items" :class="{active:index==activeItem}" @click="itemClick(index, $event)">
+          <router-link :to="item.target"
                        class="fa"
                        :class="item.iconName"
                        :title="item.title">
@@ -31,12 +30,11 @@
 </template>
 
 <script>
-//  export default {
-//    name: "",
+  export default {
+    name: "",
 //    data () {
 //      return {
-//        role:this.$store.state.session.role,
-//        username: this.$store.state.session.userName,
+//        username: global.username,
 //        activeItem:0,
 //        items: [
 //          {
@@ -77,7 +75,7 @@
 //        this.activeItem = index;
 //      }
 //    }
-//  }
+  }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

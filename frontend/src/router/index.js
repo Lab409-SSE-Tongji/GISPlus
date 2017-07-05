@@ -38,18 +38,20 @@ const router = new Router({
   ]
 })
 
-router.beforeEach( (to, from, next) => {
-    if (to.name === 'login') {
-      next()
-    }
-    else if (global.login === true) {
-      next()
-    }
-    else {
-      console.log('还木有登录')
-      next('login')
-    }
-  }
-)
+// 是否需要??
+// router.beforeEach( (to, from, next) => {
+//   // console.log(router.app.$store.state.session.login)
+//     if (to.name === 'login') {
+//       next()
+//     }
+//     else if (router.app.$store.state.session.login === true) {
+//       next()
+//     }
+//     else {
+//       console.log('还木有登录')
+//       next('login')
+//     }
+//   }
+// )
 
 export default router
