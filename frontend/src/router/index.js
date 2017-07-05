@@ -16,10 +16,6 @@ Vue.use(Router)
 const router = new Router({
   routes: [
     {
-      path: '/',
-      redirect: '/login'
-    },
-    {
       path: '/login',
       name:'login',
       components: {
@@ -34,36 +30,61 @@ const router = new Router({
       }
     },
     {
-      path: '/mainpage',
+      path: '/',
       name: 'mainpage',
-      components:{
+      components: {
         login: MainPage
-      }
+      },
+      children: [
+        {
+          path: 'mapManager',
+          components: {
+            context: MapManager
+          }
+        },
+        {
+          path: 'userManager',
+          components: {
+            context: UserManager
+          }
+        },
+        {
+          path: 'userProfile',
+          components: {
+            context: UserProfile
+          }
+        },
+        {
+          path: 'recycle',
+          components: {
+            context: Recycle
+          }
+        },
+      ]
     },
     {
-      path: '/mapManager',
-      name: 'mapManager',
-      components:{
-        context: MapManager
-      }
-    },
+      path: '*',
+      name: 'others',
+      redirect: '/'
+    }
   ]
 })
 
-// 是否需要??
-// router.beforeEach( (to, from, next) => {
-//   // console.log(router.app.$store.state.session.login)
-//     if (to.name === 'login') {
-//       next()
-//     }
-//     else if (router.app.$store.state.session.login === true) {
-//       next()
-//     }
-//     else {
-//       console.log('还木有登录')
-//       next('login')
-//     }
-//   }
-// )
+// 登录验证
+router.beforeEach( (to, from, next) => {
+  // 放行路由
+  if (to.name === 'login' || to.name === 'signup') {
+    next()
+  }
+  // 登录后正常跳转
+  else if (router.app.$store.state.session.login === true) {
+    next()
+  }
+  // 没有登录强制跳转登录页面
+  else {
+    console.log('还木有登录')
+    next('login')
+  }
+})
 
 export default router

@@ -44,7 +44,7 @@
         this.$http.post(this.requestUrl, formData).then(response => {
           let userData = JSON.parse(response.bodyText)
           this.login(userData)
-          this.$router.push('mainpage')
+          this.$router.push('/')
         }, response => {
           toastr.error("用户名或密码错误")
         })

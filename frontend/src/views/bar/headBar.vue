@@ -6,7 +6,7 @@
           </div>
           <ul class="nav navbar-top-links navbar-right">
               <li>
-                  <router-link to="/" class="fa fa-sign-out" @click.native="logout">登出</router-link>
+                  <router-link to="/login" class="fa fa-sign-out" @click.native="logout">登出</router-link>
               </li>
           </ul>
 
