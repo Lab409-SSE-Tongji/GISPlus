@@ -13,14 +13,10 @@
           </div>
         </li>
 
-        <li v-for="(item,index) in items" :class="{active:index==activeItem}" @click="itemClick(index,$event)">
-          <router-link
-                       :to="item.target"
-                       class="fa"
-                       :class="item.iconName"
-                       :title="item.title">
+        <li v-for="(item, index) in items" :class="{active:index==activeItem}" @click="itemClick(index)">
+          <router-link :to="item.target">
+            <i class="fa" :class="item.iconName"></i>
             <span class="nav-label"> {{item.title}} </span>
-
           </router-link>
         </li>
       </ul>
@@ -31,11 +27,11 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
   export default {
     name: "",
     data () {
       return {
-        username: global.username,
         activeItem:0,
         items: [
           {
@@ -51,18 +47,23 @@
           {
             target: '/profile',
             title: '个人信息',
-            iconName: 'fa-user-o'
+            iconName: 'fa-recycle'
           },
           {
-            target: '/recycled',
+            target: '/recycle',
             title: '回收站',
             iconName: 'fa-recycle'
           },
         ]
       }
     },
-    methods:{
-      itemClick: function(index, event){
+    computed: {
+      ...mapGetters({
+        username: 'username'
+      })
+    },
+    methods: {
+      itemClick: function(index){
         this.activeItem = index;
       }
     }

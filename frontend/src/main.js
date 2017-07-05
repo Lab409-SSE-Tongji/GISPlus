@@ -8,7 +8,7 @@ import VueResource from 'vue-resource'
 import VeeValidate from 'vee-validate'
 
 
-import'./global'
+import './global'
 
 Vue.use(VueResource);
 Vue.use(VeeValidate);

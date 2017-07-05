@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Login from '@/views/login'
-import Signup from '@/views/signup'
+import Login from '@/views/Login'
+import Signup from '@/views/Signup'
 
-import MainPage from '@/views/mainpage'
+import MainPage from '@/views/MainPage'
 
 Vue.use(Router)
 

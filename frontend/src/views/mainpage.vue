@@ -1,6 +1,6 @@
 <template>
   <div id="app-wrapper">
-  <sideBar></sideBar>
+  <navBar></navBar>
   <div id="page-wrapper" class="gray-bg">
     <headBar></headBar>
     <router-view name="context"></router-view>
@@ -10,14 +10,14 @@
 </template>
 
 <script>
-  import HeadBar from '@/views/bar/headBar'
-  import SideBar from '@/views/bar/sideBar'
-  import FootBar from '@/views/bar/footBar'
+  import HeadBar from '@/views/bar/HeadBar'
+  import NavBar from '@/views/bar/NavBar'
+  import FootBar from '@/views/bar/FootBar'
 
   export default {
     name: 'mainpage',
     components: {'headBar': HeadBar,
-      'sideBar': SideBar,
+      'navBar': NavBar,
       'footBar': FootBar}
   }
 </script>
