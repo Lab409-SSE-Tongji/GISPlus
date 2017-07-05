@@ -5,16 +5,17 @@
         <li class="nav-header">
           <div class="dropdown profile-element">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                          <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{username}}</strong>
-                           </span></span> </a>
+              <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">用户: {{username}}</strong> </span> </span>
+            </a>
           </div>
           <div class="logo-element">
-            IN+
+            GIS+
           </div>
         </li>
 
-        <li v-for="(item,index) in items" :class="{active:index==activeItem}" @click="itemClick(index, $event)">
-          <router-link :to="item.target"
+        <li v-for="(item,index) in items" :class="{active:index==activeItem}" @click="itemClick(index,$event)">
+          <router-link
+                       :to="item.target"
                        class="fa"
                        :class="item.iconName"
                        :title="item.title">
@@ -32,49 +33,39 @@
 <script>
   export default {
     name: "",
-//    data () {
-//      return {
-//        username: global.username,
-//        activeItem:0,
-//        items: [
-//          {
-//            target: '/myMap',
-//            title: ' 我的地图',
-//            right:'ADMIN',     //用户权限
-//            iconName: 'fa-map-o'
-//          },
-//          {
-//            target: '/recycled',
-//            title: '回收站',
-//            right:'SUPER_ADMIN',
-//            iconName: 'fa-recycle'
-//          },
-//          {
-//            target: '/userManagement',
-//            title: '用户管理',
-//            right:'SUPER_ADMIN',
-//            iconName: 'fa-address-book'
-//          },
-//          {
-//            target: '/commonMap',
-//            title: '地图展示',
-//            right:'ADMIN',
-//            iconName: 'fa-map-marker'
-//          },
-//          {
-//            target: '/personalInfo',
-//            title: '个人信息',
-//            right:'ADMIN',
-//            iconName: 'fa-user-o'
-//          }
-//        ]
-//      }
-//    },
-//    methods:{
-//      itemClick:function(index,event){
-//        this.activeItem = index;
-//      }
-//    }
+    data () {
+      return {
+        username: global.username,
+        activeItem:0,
+        items: [
+          {
+            target: '/mapManage',
+            title: ' 地图管理',
+            iconName: 'fa-map-o'
+          },
+          {
+            target: '/userManage',
+            title: '用户管理',
+            iconName: 'fa-address-book'
+          },
+          {
+            target: '/profile',
+            title: '个人信息',
+            iconName: 'fa-user-o'
+          },
+          {
+            target: '/recycled',
+            title: '回收站',
+            iconName: 'fa-recycle'
+          },
+        ]
+      }
+    },
+    methods:{
+      itemClick: function(index, event){
+        this.activeItem = index;
+      }
+    }
   }
 </script>
 

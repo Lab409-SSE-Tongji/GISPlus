@@ -6,7 +6,7 @@
           </div>
           <ul class="nav navbar-top-links navbar-right">
               <li>
-                  <router-link to="/" class="fa fa-sign-out" @click.native="logout">{{username}} 登出</router-link>
+                  <router-link to="/" class="fa fa-sign-out" @click.native="logout">登出</router-link>
               </li>
           </ul>
 
@@ -19,11 +19,6 @@ import {mapGetters, mapMutations} from 'vuex'
 
 export default {
   name: 'headBar',
-  computed: {
-    ...mapGetters({
-      username: 'username'
-    })
-  },
   methods: {
     ...mapMutations({
       s_logout: 'LOG_OUT'
@@ -38,9 +33,9 @@ export default {
       $("body").toggleClass("mini-navbar");
     }
   },
-  created () {
-    this.toggleMenu()
-  }
+//  created () {
+//    this.toggleMenu()
+//  }
 }
 </script>
 
