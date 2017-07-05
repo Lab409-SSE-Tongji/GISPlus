@@ -6,6 +6,11 @@ import Signup from '@/views/Signup'
 
 import MainPage from '@/views/MainPage'
 
+import MapManager from '@/views/context/MapManager'
+import Recycle from '@/views/context/Recycle'
+import UserManager from '@/views/context/UserManager'
+import UserProfile from '@/views/context/UserProfile'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -33,6 +38,13 @@ const router = new Router({
       name: 'mainpage',
       components:{
         login: MainPage
+      }
+    },
+    {
+      path: '/mapManager',
+      name: 'mapManager',
+      components:{
+        context: MapManager
       }
     },
   ]

@@ -35,19 +35,19 @@
         activeItem:0,
         items: [
           {
-            target: '/mapManage',
+            target: '/mapManager',
             title: ' 地图管理',
             iconName: 'fa-map-o'
           },
           {
-            target: '/userManage',
+            target: '/userManager',
             title: '用户管理',
             iconName: 'fa-address-book'
           },
           {
-            target: '/profile',
+            target: '/userProfile',
             title: '个人信息',
-            iconName: 'fa-recycle'
+            iconName: 'fa-user-o'
           },
           {
             target: '/recycle',

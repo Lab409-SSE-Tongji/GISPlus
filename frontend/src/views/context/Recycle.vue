@@ -1,5 +1,5 @@
 <template>
- <div>user manager</div>
+  <div>recycle</div>
 </template>
 
 <script>
