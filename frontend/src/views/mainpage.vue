@@ -1,6 +1,6 @@
 <template>
   <div id="app-wrapper">
-  <sideBar></sideBar>
+  <!--<sideBar></sideBar>-->
   <div id="page-wrapper" class="gray-bg">
     <headBar></headBar>
     <router-view name="context"></router-view>

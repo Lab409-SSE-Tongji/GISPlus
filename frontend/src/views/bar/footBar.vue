@@ -1,9 +1,6 @@
 <template>
   <div class="footer">
       <div class="pull-right">
-        {{systemState}}
-      </div>
-      <div>
         <strong>时间: {{currentTime}}</strong>
       </div>
   </div>
@@ -11,26 +8,19 @@
 
 <script>
 
-//export default {
-//  name: 'footBar',
-//  data () {
-//    return {
-//      systemState: '',
-//      currentTime: new Date().toLocaleString()
-//    }
-//  },
-//  created () {
-//    setInterval(() => {
-//      this.currentTime = new Date().toLocaleString()
-//    }, 1000)
-//    this.$http.get(baseUrl + '/test/state').then(response => {
-//      console.log(response)
-//      this.systemState = response.bodyText
-//    }, response => {
-//      // error callback
-//    })
-//  }
-//}
+export default {
+  name: 'footBar',
+  data () {
+    return {
+      currentTime: new Date().toLocaleString()
+    }
+  },
+  created () {
+    setInterval(() => {
+      this.currentTime = new Date().toLocaleString()
+    }, 1000)
+  }
+}
 
 </script>
 
