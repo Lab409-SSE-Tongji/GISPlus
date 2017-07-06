@@ -31,4 +31,9 @@ public class MapController {
     public ResponseEntity updateMapInfo(@RequestBody Map map) {
         return ResponseEntity.ok(mapService.updateMapInfo(map));
     }
+
+    @RequestMapping(value = "{mapId}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteMap(@PathVariable("mapId") String mapId) {
+        return ResponseEntity.ok(mapService.deleteMap(mapId));
+    }
 }

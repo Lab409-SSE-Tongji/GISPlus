@@ -14,4 +14,6 @@ public interface MapService {
     List<Map> getMaps(String userId);
 
     String updateMapInfo(Map map);
+
+    String deleteMap(String mapId);
 }

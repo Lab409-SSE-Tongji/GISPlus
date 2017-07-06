@@ -83,7 +83,7 @@
           <!--文件操作-->
           <ul class="op-list" v-show="map.opDisplay" style="left:113px; top:12px; display:block">
             <li data-toggle="modal" data-target="#editMapModal" ><img src="../../assets/rename-icon.png"><label>编辑</label></li>
-            <li ><img src="../../assets/delete-icon.png"><label>删除</label></li>
+            <li @click="deleteMap(index)"><img src="../../assets/delete-icon.png"><label>删除</label></li>
           </ul>
         </div>
       </div>
@@ -133,7 +133,6 @@ export default {
       let userId = this.userId
       this.$http.get(global.server+'/map/'+userId+'/maps').then(response => {
         this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
-        console.log(this.maps)
         toastr.success("获取用户地图成功")
       }, response => {
         toastr.success("获取用户地图失败")
@@ -159,6 +158,18 @@ export default {
         toastr.success("更新地图信息成功")
       }, response => {
         toastr.success("更新地图信息失败")
+      })
+      this.closeOp()
+    },
+    deleteMap: function (index) {
+      let id = this.maps[index].id
+      this.$http.delete(global.server+'/map/'+id).then(response => {
+          // todo 优化数组检测
+//        delete this.maps[index]
+        this.getMaps()
+        toastr.success("放入回收站成功")
+      }, response => {
+        toastr.success("放入回收站失败")
       })
       this.closeOp()
     }
