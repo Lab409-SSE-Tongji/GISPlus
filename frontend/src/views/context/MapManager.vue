@@ -4,7 +4,7 @@
     <!--顶部按钮条-->
     <div class="row btns white-bg ">
       <div class="col-lg-12 btn-content">
-        <button type="button" class="btn btn-primary" id="showtoast" v-on:click="" data-toggle="modal" data-target="#addMapModal">新建地图</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMapModal">新建地图</button>
       </div>
     </div>
 
@@ -28,30 +28,70 @@
         </div>
       </div>
 
-      <!--通用弹出框-->
+      <!--新建地图模态框-->
       <div class="modal fade" id="addMapModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                 aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">{{addMapModal.title}}</h4>
+              <h4 class="modal-title">新建地图</h4>
             </div>
             <div class="modal-body">
-              <input class="form-control" v-model="addMapModal.mapName" v-bind:placeholder="addMapModal.message"/>
+              <input class="form-control" v-model="mapName" placeholder="请输入地图名称"/>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="addMap()">&nbsp;确认&nbsp;</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" @click="addMap()">&nbsp;确认&nbsp;</button>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!--编辑地图模态框-->
+      <div class="modal fade" id="editMapModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">编辑地图信息</h4>
+            </div>
+            <div class="modal-body">
+              <input class="form-control" v-model="mapName" :placeholder="editName"/>
+            </div>
+            <div class="modal-footer">
+              <button @click="closeOp()" type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
+              <button @click="updateMapInfo()" type="button" class="btn btn-primary" data-dismiss="modal">&nbsp;确认&nbsp;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--文件-->
+      <div class="ibox-div-map">
+        <div class="ibox ibox-map" v-for="(map, index) in maps">
+          <div class="img-box img-box-map" @click="">
+            <img class="map-img" src="../../assets/myMap.jpg">
+          </div>
+          <label class="name">{{map.mapName}}</label>
+          <div class="checkBox-map">
+          </div>
+          <div class="op-map" @click="openOp(index)">
+            <img class="op-icon" src="../../assets/op-icon.png">
+          </div>
+          <!--文件操作-->
+          <ul class="op-list" v-show="map.opDisplay" style="left:113px; top:12px; display:block">
+            <li data-toggle="modal" data-target="#editMapModal" ><img src="../../assets/rename-icon.png"><label>编辑</label></li>
+            <li ><img src="../../assets/delete-icon.png"><label>删除</label></li>
+          </ul>
         </div>
       </div>
 
 
 
 
-  </div>
+    </div>
   </div>
 
 </template>
@@ -63,11 +103,11 @@ export default {
   data () {
     return {
       loading: false,
-      addMapModal: {
-        title: '新建地图',
-        mapName: '',
-        message: '请输入地图名称',
-      }
+      operation: false,
+      mapName: '',
+      maps: [],
+      editIndex: null,
+      editName: null,
     }
   },
   computed: {
@@ -79,16 +119,52 @@ export default {
     addMap: function () {
       let mapInfo = {
         userId : this.userId,
-        mapName: this.addMapModal.mapName,
+        mapName: this.mapName,
       }
-      this.addMapModal.mapName = ''
+      this.mapName = ''
       this.$http.post(global.server+'/map', mapInfo).then(response => {
         toastr.success("添加成功")
+        this.getMaps()
       }, response => {
         toastr.error("添加失败")
       })
-
+    },
+    getMaps: function () {
+      let userId = this.userId
+      this.$http.get(global.server+'/map/'+userId+'/maps').then(response => {
+        this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
+        console.log(this.maps)
+        toastr.success("获取用户地图成功")
+      }, response => {
+        toastr.success("获取用户地图失败")
+      })
+    },
+    openOp: function (index) {
+      this.maps[index].opDisplay = !this.maps[index].opDisplay
+      this.editIndex = index
+      this.editName = this.maps[index].mapName
+    },
+    closeOp: function () {
+      this.maps[this.editIndex].opDisplay = false
+      this.editIndex = null
+    },
+    updateMapInfo: function () {
+      let editIndex = this.editIndex
+      let mapInfo = {
+        id: this.maps[editIndex].id,
+        mapName: this.mapName,
+      }
+      this.$http.put(global.server+'/map', mapInfo).then(response => {
+        this.maps[editIndex].mapName = this.mapName
+        toastr.success("更新地图信息成功")
+      }, response => {
+        toastr.success("更新地图信息失败")
+      })
+      this.closeOp()
     }
+  },
+  created () {
+    this.getMaps()
   }
 }
 </script>

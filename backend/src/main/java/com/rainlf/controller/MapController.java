@@ -21,4 +21,14 @@ public class MapController {
     public ResponseEntity addMap(@RequestBody Map map) {
         return ResponseEntity.ok(mapService.addMap(map));
     }
+
+    @RequestMapping(value = "{userId}/maps", method = RequestMethod.GET)
+    public ResponseEntity getMaps(@PathVariable("userId") String userId) {
+        return ResponseEntity.ok(mapService.getMaps(userId));
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity updateMapInfo(@RequestBody Map map) {
+        return ResponseEntity.ok(mapService.updateMapInfo(map));
+    }
 }

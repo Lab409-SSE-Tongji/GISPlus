@@ -6,6 +6,8 @@ import com.rainlf.service.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2017/7/6.
  */
@@ -18,6 +20,19 @@ public class MapServiceImp implements MapService {
     @Override
     public String addMap(Map map) {
         mongoMapRepository.insert(map);
+        return null;
+    }
+
+    @Override
+    public List<Map> getMaps(String userId) {
+        return mongoMapRepository.findAllByUserId(userId);
+    }
+
+    @Override
+    public String updateMapInfo(Map map) {
+        Map mapRemote = mongoMapRepository.findOne(map.getId());
+        mapRemote.setMapName(map.getMapName());
+        mongoMapRepository.save(mapRemote);
         return null;
     }
 }
