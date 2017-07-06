@@ -27,7 +27,7 @@ public class AuthController {
     private AuthService authService;
 
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
         final String token = authService.login(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
@@ -35,7 +35,7 @@ public class AuthController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(authenticationRequest.getUsername(), token));
     }
 
-    @RequestMapping(value = "/refresh", method = RequestMethod.GET)
+    @RequestMapping(value = "refresh", method = RequestMethod.GET)
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) throws AuthenticationException {
 //        String token = request.getHeader(tokenHeader);
 //        String refreshedToken = authService.refresh(token);
@@ -47,7 +47,7 @@ public class AuthController {
         return null;
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody UserInfo addedUserInfo) throws AuthenticationException{
         return ResponseEntity.ok(authService.register(addedUserInfo));
     }

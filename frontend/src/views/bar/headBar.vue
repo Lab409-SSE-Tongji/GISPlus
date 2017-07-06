@@ -19,6 +19,12 @@ import {mapGetters, mapMutations} from 'vuex'
 
 export default {
   name: 'headBar',
+  computed: {
+      // todo: 获取当前路径显示
+    path: function () {
+      return this.$route.name
+    }
+  },
   methods: {
     ...mapMutations({
       s_logout: 'LOG_OUT'
@@ -33,9 +39,9 @@ export default {
       $("body").toggleClass("mini-navbar");
     }
   },
-//  created () {
+  created () {
 //    this.toggleMenu()
-//  }
+  }
 }
 </script>
 

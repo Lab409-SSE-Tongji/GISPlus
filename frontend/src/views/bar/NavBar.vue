@@ -36,7 +36,7 @@
         items: [
           {
             target: '/mapManager',
-            title: ' 地图管理',
+            title: '地图管理',
             iconName: 'fa-map-o'
           },
           {

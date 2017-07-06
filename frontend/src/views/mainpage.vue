@@ -13,11 +13,36 @@
   import HeadBar from '@/views/bar/HeadBar'
   import NavBar from '@/views/bar/NavBar'
   import FootBar from '@/views/bar/FootBar'
+  import {mapGetters, mapMutations} from 'vuex'
 
   export default {
     name: 'mainpage',
-    components: {'headBar': HeadBar,
+    computed: {
+      ...mapGetters({
+        username: "username"
+      }),
+      requestUrl: function () {
+//        return global.server + '/user'
+        return global.server + '/user/' + this.username
+      }
+    },
+    methods: {
+      ...mapMutations({
+        userInit: 'USER_INIT'
+      })
+    },
+    components: {
+      'headBar': HeadBar,
       'navBar': NavBar,
-      'footBar': FootBar}
+      'footBar': FootBar
+    },
+    created () {
+      this.$http.get(this.requestUrl).then(response => {
+        this.userInit(JSON.parse(response.bodyText))
+        toastr.success("登录成功")
+      }, response => {
+        toastr.error("获取用户信息失败")
+      })
+    }
   }
 </script>

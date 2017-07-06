@@ -41,13 +41,13 @@
     name: "signup",
     data () {
       return {
-        requestUrl: global.server + 'auth/register',
+        requestUrl: global.server + '/auth/register',
         name: '',
         username: '',
         password: '',
         passwordRepeat: '',
-        }
-      },
+      }
+    },
     methods: {
       register: function () {
         let formData = {
@@ -56,9 +56,9 @@
           password: this.password
         }
         this.$http.post(this.requestUrl, formData).then(response => {
-          console.log('111111')
+          toastr.success("注册成功")
         }, response => {
-          console.log('222222')
+          toastr.success("注册失败")
         })
       }
     }

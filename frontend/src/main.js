@@ -14,6 +14,20 @@ Vue.use(VueResource);
 Vue.use(VeeValidate);
 Vue.config.productionTip = false
 
+// Vue.http.interceptors.push(function(request, next) {
+//
+//   // modify method
+//   // request.method = 'POST';
+//
+//   // modify headers
+//   request.headers.set('X-CSRF-TOKEN', 'TOKEN');
+//   request.headers.set('Authorization', 'Bearer TOKEN');
+//   console.log(1111111111)
+//
+//   // continue to next interceptor
+//   next();
+// });
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -31,6 +31,7 @@ const router = new Router({
     },
     {
       path: '/',
+      redirect: '/mapManager',
       name: 'mainpage',
       components: {
         login: MainPage

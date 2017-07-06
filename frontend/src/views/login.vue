@@ -28,7 +28,7 @@
       return {
         username: '',
         password: '',
-        requestUrl: global.server + 'auth/login',
+        requestUrl: global.server + '/auth/login',
         text: ''
       }
     },
