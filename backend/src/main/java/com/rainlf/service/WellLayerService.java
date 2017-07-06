@@ -10,4 +10,6 @@ public interface WellLayerService {
     WellLayer getWellLayer(String mapId);
 
     String addWellLayer(String mapId);
+
+    String deleteWellLayer(String layerId);
 }

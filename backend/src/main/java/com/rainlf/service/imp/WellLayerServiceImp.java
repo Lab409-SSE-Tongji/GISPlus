@@ -28,4 +28,10 @@ public class WellLayerServiceImp implements WellLayerService {
         mongoWellLayerRepository.insert(new WellLayer(mapId));
         return null;
     }
+
+    @Override
+    public String deleteWellLayer(String layerId) {
+        mongoWellLayerRepository.delete(layerId);
+        return null;
+    }
 }

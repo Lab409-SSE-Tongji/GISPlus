@@ -26,4 +26,9 @@ public class WellLayerController {
         return ResponseEntity.ok(wellLayerService.addWellLayer(mapId));
     }
 
+    @RequestMapping(value = "{layerId}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteWellLayer(@PathVariable("layerId") String layerId) {
+        return ResponseEntity.ok(wellLayerService.deleteWellLayer(layerId));
+    }
+
 }
