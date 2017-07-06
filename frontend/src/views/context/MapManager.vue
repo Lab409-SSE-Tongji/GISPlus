@@ -71,7 +71,7 @@
       <!--文件-->
       <div class="ibox-div-map">
         <div class="ibox ibox-map" v-for="(map, index) in maps">
-          <div class="img-box img-box-map" @click="">
+          <div class="img-box img-box-map" @click="enterMap(index)">
             <img class="map-img" src="../../assets/myMap.jpg">
           </div>
           <label class="name">{{map.mapName}}</label>
@@ -87,9 +87,6 @@
           </ul>
         </div>
       </div>
-
-
-
 
     </div>
   </div>
@@ -172,6 +169,10 @@ export default {
         toastr.success("放入回收站失败")
       })
       this.closeOp()
+    },
+    enterMap: function (index) {
+      console.log('1')
+      this.$router.push(this.maps[index].id)
     }
   },
   created () {

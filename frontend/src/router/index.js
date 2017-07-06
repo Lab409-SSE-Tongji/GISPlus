@@ -11,6 +11,8 @@ import Recycle from '@/views/context/Recycle'
 import UserManager from '@/views/context/UserManager'
 import UserProfile from '@/views/context/UserProfile'
 
+import MapEditor from '@/views/context/MapEditor'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -41,7 +43,13 @@ const router = new Router({
           path: 'mapManager',
           components: {
             context: MapManager
-          }
+          },
+          children: [
+            {
+              path: ':mapId',
+              redirect: '/:mapId'
+            }
+          ]
         },
         {
           path: 'userManager',
@@ -59,6 +67,12 @@ const router = new Router({
           path: 'recycle',
           components: {
             context: Recycle
+          }
+        },
+        {
+          path: ':mapId',
+          components: {
+            context: MapEditor
           }
         },
       ]
