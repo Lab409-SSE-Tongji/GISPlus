@@ -132,7 +132,7 @@
       },
 
       // 窨井盖
-      getWellLayers: function () {
+      getWellLayer: function () {
         this.$http.get(global.server+'/layer/well/'+this.mapId).then(response => {
           // vue 更新对象属性的方式
           if (response.bodyText === '') {
@@ -151,7 +151,7 @@
               toastr.warning("图层已经存在")
               return
             }
-            this.getWellLayers()
+            this.getWellLayer()
             toastr.success("添加图层成功")
           }, response => {
             toastr.error("添加图层失败")
@@ -159,8 +159,44 @@
         )
       },
       deleteWellLayer: function () {
+        this.$http.delete(global.server+'/layer/water/'+this.layers.well.id).then(response => {
+          this.getWellLayer()
+          toastr.success("删除图层成功")
+        }, response => {
+          toastr.error("删除图层失败")
+        })
+      },
+
+      // 下水管道
+      getWaterPipeLayer: function () {
+        this.$http.get(global.server+'/layer/water/'+this.mapId).then(response => {
+          // vue 更新对象属性的方式
+          if (response.bodyText === '') {
+            this.$set(this.layers, 'waterPipe', {})
+          } else {
+            this.$set(this.layers, 'waterPipe', JSON.parse(response.bodyText))
+          }
+          toastr.success("获取下水管道层成功")
+        }, response => {
+          toastr.error("获取下水管道层失败")
+        })
+      },
+      addWaterPipeLayer: function () {
+        this.$http.post(global.server+'/layer/water/'+this.mapId).then(response => {
+            if (response.bodyText === 'EXITS') {
+              toastr.warning("图层已经存在")
+              return
+            }
+            this.getWaterPipeLayer()
+            toastr.success("添加图层成功")
+          }, response => {
+            toastr.error("添加图层失败")
+          }
+        )
+      },
+      deleteWaterPipeLayer: function () {
         this.$http.delete(global.server+'/layer/well/'+this.layers.well.id).then(response => {
-          this.getWellLayers()
+          this.getWaterPipeLayer()
           toastr.success("删除图层成功")
         }, response => {
           toastr.error("删除图层失败")
@@ -172,7 +208,7 @@
         if (this.editLayers.editLayerName === this.defaultLayerList.well) {
           this.addWellLayer()
         } else if (this.editLayers.editLayerName === this.defaultLayerList.waterPipe) {
-          // todo
+          this.addWaterPipeLayer()
         }
       },
       toggleDeleteLayer: function () {
@@ -186,7 +222,7 @@
         if (this.editLayers.editLayerName === this.defaultLayerList.well) {
           this.deleteWellLayer()
         } else if (this.editLayers.editLayerName === this.defaultLayerList.waterPipe) {
-          // todo
+          this.deleteWaterPipeLayer()
         }
       },
       importFile: function () {
@@ -203,7 +239,7 @@
       new google.maps.Map(document.getElementById('map'), mapProp);
 
       // 获取窨井盖图层
-      this.getWellLayers()
+      this.getWellLayer()
     }
 
 
