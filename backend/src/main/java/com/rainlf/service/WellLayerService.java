@@ -8,4 +8,6 @@ import com.rainlf.mongo.entity.WellLayer;
 public interface WellLayerService {
 
     WellLayer getWellLayer(String mapId);
+
+    String addWellLayer(String mapId);
 }

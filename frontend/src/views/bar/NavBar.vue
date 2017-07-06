@@ -9,7 +9,7 @@
             </a>
           </div>
           <div class="logo-element">
-            GIS+
+            G+
           </div>
         </li>
 

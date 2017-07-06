@@ -21,4 +21,9 @@ public class WellLayerController {
         return ResponseEntity.ok(wellLayerService.getWellLayer(mapId));
     }
 
+    @RequestMapping(value = "{mapId}", method = RequestMethod.POST)
+    public ResponseEntity addWellLayer(@PathVariable("mapId") String mapId) {
+        return ResponseEntity.ok(wellLayerService.addWellLayer(mapId));
+    }
+
 }

@@ -19,4 +19,13 @@ public class WellLayerServiceImp implements WellLayerService {
     public WellLayer getWellLayer(String mapId) {
         return mongoWellLayerRepository.findByMapId(mapId);
     }
+
+    @Override
+    public String addWellLayer(String mapId) {
+        if (mongoWellLayerRepository.findByMapId(mapId) != null) {
+            return "EXITS";
+        }
+        mongoWellLayerRepository.insert(new WellLayer(mapId));
+        return null;
+    }
 }
