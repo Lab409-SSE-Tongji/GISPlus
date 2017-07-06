@@ -41,7 +41,6 @@
     name: "signup",
     data () {
       return {
-        requestUrl: global.server + '/auth/register',
         name: '',
         username: '',
         password: '',
@@ -50,15 +49,16 @@
     },
     methods: {
       register: function () {
-        let formData = {
+        let registerInfo = {
           name: this.name,
           username: this.username,
           password: this.password
         }
-        this.$http.post(this.requestUrl, formData).then(response => {
+        this.$http.post(global.server+'/auth/register', registerInfo).then(response => {
           toastr.success("注册成功")
+          this.$router.push('login')
         }, response => {
-          toastr.success("注册失败")
+          toastr.success("请检查输入")
         })
       }
     }

@@ -21,10 +21,6 @@
       ...mapGetters({
         username: "username"
       }),
-      requestUrl: function () {
-//        return global.server + '/user'
-        return global.server + '/user/' + this.username
-      }
     },
     methods: {
       ...mapMutations({
@@ -37,7 +33,7 @@
       'footBar': FootBar
     },
     created () {
-      this.$http.get(this.requestUrl).then(response => {
+      this.$http.get(global.server+'/user/'+this.username).then(response => {
         this.userInit(JSON.parse(response.bodyText))
         toastr.success("登录成功")
       }, response => {

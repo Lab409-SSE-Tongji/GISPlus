@@ -38,11 +38,11 @@
               <h4 class="modal-title" id="myModalLabel">{{addMapModal.title}}</h4>
             </div>
             <div class="modal-body">
-              <input class="form-control" v-model="addMapModal.input" v-bind:placeholder="addMapModal.message"/>
+              <input class="form-control" v-model="addMapModal.mapName" v-bind:placeholder="addMapModal.message"/>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="">&nbsp;确认&nbsp;</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="addMap()">&nbsp;确认&nbsp;</button>
             </div>
           </div>
         </div>
@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 export default {
   name: 'manManager',
   data () {
@@ -64,13 +65,28 @@ export default {
       loading: false,
       addMapModal: {
         title: '新建地图',
-        input: '',
+        mapName: '',
         message: '请输入地图名称',
       }
     }
   },
+  computed: {
+    ...mapGetters({
+      userId: 'userId'
+    })
+  },
   methods: {
     addMap: function () {
+      let mapInfo = {
+        userId : this.userId,
+        mapName: this.addMapModal.mapName,
+      }
+      this.addMapModal.mapName = ''
+      this.$http.post(global.server+'/map', mapInfo).then(response => {
+        toastr.success("添加成功")
+      }, response => {
+        toastr.error("添加失败")
+      })
 
     }
   }

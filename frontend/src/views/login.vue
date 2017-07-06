@@ -28,7 +28,6 @@
       return {
         username: '',
         password: '',
-        requestUrl: global.server + '/auth/login',
         text: ''
       }
     },
@@ -41,7 +40,7 @@
           username: this.username,
           password: this.password
         }
-        this.$http.post(this.requestUrl, formData).then(response => {
+        this.$http.post(global.server+'/auth/login', formData).then(response => {
           let userData = JSON.parse(response.bodyText)
           this.login(userData)
           this.$router.push('/')
