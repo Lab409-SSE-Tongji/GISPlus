@@ -5,16 +5,17 @@
       <button type="button" class="btn btn-primary"  @click="editLayersFun()">编辑图层</button>
       <button type="button" class="btn btn-primary" >{{mapId}}</button>
       <button type="button" class="btn btn-primary" >{{layers}}</button>
+      <button type="button" class="btn btn-primary" >{{editLayers.editLayerName}}</button>
     </div>
     <div class="col-lg-12 btn-content" v-show="showLayers.show">
-      <button type="button" class="btn btn-sm btn-primary" :class="showLayers.wellStyle" v-show="wellLayerStatus">窨井盖</button>
-      <button type="button" class="btn btn-sm btn-primary" :class="showLayers.waterPipeStyle" v-show="waterPipeLayerStatus">下水管道</button>
+      <!--<button type="button" class="btn btn-sm btn-primary" :class="showLayers.wellStyle" v-show="wellLayerStatus">窨井盖</button>-->
+      <!--<button type="button" class="btn btn-sm btn-primary" :class="showLayers.waterPipeStyle" v-show="waterPipeLayerStatus">下水管道</button>-->
 
     </div>
     <div class="col-lg-12 btn-content" v-show="editLayers.show">
       <button type="button" class="btn btn-sm btn-success" style="margin-right: 10px" data-toggle="modal" data-target="#addLayerModal">新建</button>
-      <button type="button" class="btn btn-sm btn-primary" :class="editLayers.wellStyle" v-show="wellLayerStatus" @click="tagEditWellLayer()">窨井盖</button>
-      <button type="button" class="btn btn-sm btn-primary" :class="editLayers.waterPipeStyle" v-show="waterPipeLayerStatus">下水管道</button>
+      <button type="button" class="btn btn-sm btn-primary btn-outline" :class="EditWellStyle" v-show="wellLayerStatus" @click="tagEditWellLayer()">窨井盖</button>
+      <button type="button" class="btn btn-sm btn-primary btn-outline" :class="EditWaterPipeStyle" v-show="waterPipeLayerStatus" @click="tagEditWaterPipeLayer()">下水管道</button>
 
       <button type="button" class="btn btn-sm btn-danger" style="float:right; margin-top: 17px; margin-left: 10px"
               data-toggle="modal" data-target="#deleteLayerModal" @click="toggleDeleteLayer()">删除</button>
@@ -92,14 +93,14 @@
         },
         showLayers: {
           show: false,
-          wellStyle: 'btn-outline',
-          waterPipeStyle: 'btn-outline',
+          well: false,
+          waterPipe: false,
+          wellStyle: '',
+          waterPipeStyle: '',
         },
         editLayers: {
           show: false,
           editLayerName: null,
-          wellStyle: 'btn-outline',
-          waterPipeStyle: 'btn-outline',
         },
         layers: {
           well: {},
@@ -116,6 +117,21 @@
       waterPipeLayerStatus: function () {
         return (this.layers.waterPipe.id !== undefined)
       },
+
+      // 编辑条 图层状态
+      /**
+       * @return {string}
+       */
+      EditWellStyle: function() {
+        return (this.editLayers.editLayerName===this.defaultLayerList.well) ? 'active' : ''
+      },
+      /**
+       * @return {string}
+       */
+      EditWaterPipeStyle: function () {
+        return (this.editLayers.editLayerName===this.defaultLayerList.waterPipe) ? 'active' : ''
+      },
+
     },
     methods: {
       showLayersFun: function () {
@@ -126,9 +142,10 @@
       },
 
       tagEditWellLayer: function () {
-        this.editLayers.editLayerName = this.editLayers.editLayerName? null : this.defaultLayerList.well
-        this.editLayers.wellStyle = (this.editLayers.wellStyle==='')? 'btn-outline' : ''
-
+        this.editLayers.editLayerName = (this.editLayers.editLayerName===this.defaultLayerList.well) ? null : this.defaultLayerList.well
+      },
+      tagEditWaterPipeLayer: function () {
+        this.editLayers.editLayerName = (this.editLayers.editLayerName===this.defaultLayerList.waterPipe) ? null : this.defaultLayerList.waterPipe
       },
 
       // 窨井盖
@@ -148,22 +165,22 @@
       addWellLayer: function () {
         this.$http.post(global.server+'/layer/well/'+this.mapId).then(response => {
             if (response.bodyText === 'EXITS') {
-              toastr.warning("图层已经存在")
+              toastr.warning("窨井盖图层已经存在")
               return
             }
             this.getWellLayer()
-            toastr.success("添加图层成功")
+            toastr.success("添加窨井盖图层成功")
           }, response => {
-            toastr.error("添加图层失败")
+            toastr.error("添加窨井盖图层失败")
           }
         )
       },
       deleteWellLayer: function () {
-        this.$http.delete(global.server+'/layer/water/'+this.layers.well.id).then(response => {
+        this.$http.delete(global.server+'/layer/well/'+this.layers.well.id).then(response => {
           this.getWellLayer()
-          toastr.success("删除图层成功")
+          toastr.success("删除窨井盖图层成功")
         }, response => {
-          toastr.error("删除图层失败")
+          toastr.error("删除窨井盖图层失败")
         })
       },
 
@@ -184,53 +201,68 @@
       addWaterPipeLayer: function () {
         this.$http.post(global.server+'/layer/water/'+this.mapId).then(response => {
             if (response.bodyText === 'EXITS') {
-              toastr.warning("图层已经存在")
+              toastr.warning("下水管道图层已经存在")
               return
             }
             this.getWaterPipeLayer()
-            toastr.success("添加图层成功")
+            toastr.success("添加下水管道图层成功")
           }, response => {
-            toastr.error("添加图层失败")
+            toastr.error("添加下水管道图层失败")
           }
         )
       },
       deleteWaterPipeLayer: function () {
-        this.$http.delete(global.server+'/layer/well/'+this.layers.well.id).then(response => {
+        this.$http.delete(global.server+'/layer/water/'+this.layers.waterPipe.id).then(response => {
           this.getWaterPipeLayer()
-          toastr.success("删除图层成功")
+          toastr.success("删除下水管道图层成功")
         }, response => {
-          toastr.error("删除图层失败")
+          toastr.error("删除下水管道图层失败")
         })
       },
 
       // 通用操作
       addLayer: function () {
-        if (this.editLayers.editLayerName === this.defaultLayerList.well) {
-          this.addWellLayer()
-        } else if (this.editLayers.editLayerName === this.defaultLayerList.waterPipe) {
-          this.addWaterPipeLayer()
+        switch (this.editLayers.editLayerName) {
+          case this.defaultLayerList.well:
+            this.addWellLayer()
+            break
+          case this.defaultLayerList.waterPipe:
+            this.addWaterPipeLayer()
+            break
+          default:
+            toastr.error("请选择：要添加的图层")
+            break
         }
       },
       toggleDeleteLayer: function () {
-        if (this.editLayers.editLayerName !== null) {
+        if (this.editLayers.editLayerName) {
           this.deleteMessage = '请确认是否删除图层： ' + this.editLayers.editLayerName
         } else {
-          this.deleteMessage = '请选择要删除的图层'
+          this.deleteMessage = '请选择：要删除的图层'
         }
       },
       deleteLayer: function () {
-        if (this.editLayers.editLayerName === this.defaultLayerList.well) {
-          this.deleteWellLayer()
-        } else if (this.editLayers.editLayerName === this.defaultLayerList.waterPipe) {
-          this.deleteWaterPipeLayer()
+        switch (this.editLayers.editLayerName) {
+          case this.defaultLayerList.well:
+            this.deleteWellLayer()
+            break
+          case this.defaultLayerList.waterPipe:
+            this.deleteWaterPipeLayer()
+            break
+          default:
+            toastr.error("请选择：要删除的图层")
+            break
         }
+        this.editLayers.editLayerName = null
       },
       importFile: function () {
 
       }
     },
+
+    // 初始化
     mounted () {
-      // 初始化地图
+      // 构建Google地图
       let mapProp = {
         center: new google.maps.LatLng(31.285, 121.215),
         zoom: 17,
@@ -238,8 +270,9 @@
       }
       new google.maps.Map(document.getElementById('map'), mapProp);
 
-      // 获取窨井盖图层
+      // 获取各个图层
       this.getWellLayer()
+      this.getWaterPipeLayer()
     }
 
 
