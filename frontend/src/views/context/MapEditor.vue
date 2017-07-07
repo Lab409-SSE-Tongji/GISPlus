@@ -4,12 +4,15 @@
       <button type="button" class="btn btn-primary"  @click="showLayersFun()">显示图层</button>
       <button type="button" class="btn btn-primary"  @click="editLayersFun()">编辑图层</button>
       <button type="button" class="btn btn-primary" >{{mapId}}</button>
-      <button type="button" class="btn btn-primary" >{{layers}}</button>
+      <!--<button type="button" class="btn btn-primary" >{{showLayers.well}}</button>-->
+      <!--<button type="button" class="btn btn-primary" >{{showLayers.waterPipe}}</button>-->
       <button type="button" class="btn btn-primary" >{{editLayers.editLayerName}}</button>
+      <button type="button" class="btn btn-primary" >{{layers}}</button>
+
     </div>
     <div class="col-lg-12 btn-content" v-show="showLayers.show">
-      <!--<button type="button" class="btn btn-sm btn-primary" :class="showLayers.wellStyle" v-show="wellLayerStatus">窨井盖</button>-->
-      <!--<button type="button" class="btn btn-sm btn-primary" :class="showLayers.waterPipeStyle" v-show="waterPipeLayerStatus">下水管道</button>-->
+      <button type="button" class="btn btn-sm btn-primary btn-outline" :class="showLayers.wellStyle" v-show="wellLayerStatus" @click="toggleShowWellLayer()">窨井盖</button>
+      <button type="button" class="btn btn-sm btn-primary btn-outline" :class="showLayers.waterPipeStyle" v-show="waterPipeLayerStatus" @click="toggleShowWaterPipeLayer()">下水管道</button>
 
     </div>
     <div class="col-lg-12 btn-content" v-show="editLayers.show">
@@ -141,11 +144,22 @@
         this.editLayers.show = !this.editLayers.show
       },
 
+      // 编辑条 操作
       tagEditWellLayer: function () {
         this.editLayers.editLayerName = (this.editLayers.editLayerName===this.defaultLayerList.well) ? null : this.defaultLayerList.well
       },
       tagEditWaterPipeLayer: function () {
         this.editLayers.editLayerName = (this.editLayers.editLayerName===this.defaultLayerList.waterPipe) ? null : this.defaultLayerList.waterPipe
+      },
+
+      // 显示条 操作
+      toggleShowWellLayer: function () {
+        this.showLayers.well = !this.showLayers.well
+        this.showLayers.wellStyle = this.showLayers.well ? 'active' : ''
+      },
+      toggleShowWaterPipeLayer: function () {
+        this.showLayers.waterPipe = !this.showLayers.waterPipe
+        this.showLayers.waterPipeStyle = this.showLayers.waterPipe ? 'active' : ''
       },
 
       // 窨井盖
