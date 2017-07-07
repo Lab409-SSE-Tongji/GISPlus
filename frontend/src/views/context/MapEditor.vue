@@ -8,8 +8,8 @@
       <!--<button type="button" class="btn btn-primary" >{{showLayers.waterPipe}}</button>-->
       <button type="button" class="btn btn-primary" >{{editLayers.editLayerName}}</button>
       <button type="button" class="btn btn-primary" >{{layers}}</button>
-
     </div>
+
     <div class="col-lg-12 btn-content" v-show="showLayers.show">
       <button type="button" class="btn btn-sm btn-primary btn-outline" :class="showLayers.wellStyle" v-show="wellLayerStatus" @click="toggleShowWellLayer()">窨井盖</button>
       <button type="button" class="btn btn-sm btn-primary btn-outline" :class="showLayers.waterPipeStyle" v-show="waterPipeLayerStatus" @click="toggleShowWaterPipeLayer()">下水管道</button>
@@ -23,7 +23,8 @@
       <button type="button" class="btn btn-sm btn-danger" style="float:right; margin-top: 17px; margin-left: 10px"
               data-toggle="modal" data-target="#deleteLayerModal" @click="toggleDeleteLayer()">删除</button>
       <button type="button" class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px">导出</button>
-      <button type="button" class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px" @click="importFile()">导入</button>
+      <input id="fileUpLoader" type="file" style="display: none" @change="importFile()" ref="input"/>
+      <label for="fileUpLoader" class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px">导入</label>
 
     </div>
 
@@ -142,6 +143,7 @@
       },
       editLayersFun: function () {
         this.editLayers.show = !this.editLayers.show
+        this.editLayers.editLayerName = null
       },
 
       // 编辑条 操作
@@ -182,8 +184,8 @@
               toastr.warning("窨井盖图层已经存在")
               return
             }
-            this.getWellLayer()
             toastr.success("添加窨井盖图层成功")
+            this.getWellLayer()
           }, response => {
             toastr.error("添加窨井盖图层失败")
           }
@@ -191,10 +193,20 @@
       },
       deleteWellLayer: function () {
         this.$http.delete(global.server+'/layer/well/'+this.layers.well.id).then(response => {
-          this.getWellLayer()
           toastr.success("删除窨井盖图层成功")
+          this.getWellLayer()
         }, response => {
           toastr.error("删除窨井盖图层失败")
+        })
+      },
+      importWellLayer: function (file) {
+        let formData = new FormData();
+        formData.append('file', file)
+        this.$http.post(global.server+'/layer/well/excel/'+this.layers.well.id, formData).then(response => {
+          toastr.success("上传窨井盖图层成功")
+          this.getWellLayer()
+        }, response => {
+          toastr.error("上传窨井盖图层失败")
         })
       },
 
@@ -218,8 +230,8 @@
               toastr.warning("下水管道图层已经存在")
               return
             }
-            this.getWaterPipeLayer()
             toastr.success("添加下水管道图层成功")
+            this.getWaterPipeLayer()
           }, response => {
             toastr.error("添加下水管道图层失败")
           }
@@ -227,11 +239,14 @@
       },
       deleteWaterPipeLayer: function () {
         this.$http.delete(global.server+'/layer/water/'+this.layers.waterPipe.id).then(response => {
-          this.getWaterPipeLayer()
           toastr.success("删除下水管道图层成功")
+          this.getWaterPipeLayer()
         }, response => {
           toastr.error("删除下水管道图层失败")
         })
+      },
+      importWaterPipeLayer: function () {
+
       },
 
       // 通用操作
@@ -269,8 +284,21 @@
         }
         this.editLayers.editLayerName = null
       },
+      // todo @onchange 缺陷　两次上传同一文件不会触发
+      // todo 如何优雅的接收上传文件
       importFile: function () {
-
+        let file = this.$refs.input.files[0]
+        switch (this.editLayers.editLayerName) {
+          case this.defaultLayerList.well:
+            this.importWellLayer(file)
+            break
+          case this.defaultLayerList.waterPipe:
+            this.importWaterPipeLayer(file)
+            break
+          default:
+            toastr.error("请选择：要导入的图层")
+            break
+        }
       }
     },
 

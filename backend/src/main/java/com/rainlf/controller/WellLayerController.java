@@ -4,6 +4,7 @@ import com.rainlf.service.WellLayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by Administrator on 2017/7/6.
@@ -29,6 +30,11 @@ public class WellLayerController {
     @RequestMapping(value = "{layerId}", method = RequestMethod.DELETE)
     public ResponseEntity deleteWellLayer(@PathVariable("layerId") String layerId) {
         return ResponseEntity.ok(wellLayerService.deleteWellLayer(layerId));
+    }
+
+    @RequestMapping(value = "excel/{layerId}", method = RequestMethod.POST)
+    public ResponseEntity importWellLayer(@PathVariable("layerId") String layerId, @RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(wellLayerService.importWellLayer(layerId, file));
     }
 
 }

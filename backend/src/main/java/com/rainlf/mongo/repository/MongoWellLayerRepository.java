@@ -8,7 +8,9 @@ import java.util.List;
 /**
  * Created by Administrator on 2017/7/6.
  */
-public interface MongoWellLayerRepository extends MongoRepository<WellLayer, String > {
+public interface MongoWellLayerRepository extends MongoRepository<WellLayer, String> {
 
     WellLayer findByMapId(String mapId);
+
+    WellLayer findById(String layerId);
 }

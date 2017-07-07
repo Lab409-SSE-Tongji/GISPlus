@@ -16,6 +16,9 @@ public class WellLayer {
     private String mapId;
     private List<WellDomain> wellDomains;
 
+    public WellLayer() {
+    }
+
     public WellLayer(String mapId) {
         this.mapId = mapId;
     }

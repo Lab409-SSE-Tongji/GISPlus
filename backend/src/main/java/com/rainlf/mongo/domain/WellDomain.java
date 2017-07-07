@@ -10,6 +10,16 @@ public class WellDomain {
     private String z;
     private String status;
 
+    public WellDomain() {
+    }
+
+    public WellDomain(String x, String y, String z, String status) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.status = status;
+    }
+
     public String getX() {
         return x;
     }

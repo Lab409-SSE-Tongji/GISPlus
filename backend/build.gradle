@@ -37,5 +37,10 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('io.jsonwebtoken:jjwt:0.7.0')
 
+	// excel read & write
+	compile group: 'org.apache.poi', name: 'poi', version: '3.15'
+	compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.15'
+
+
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
