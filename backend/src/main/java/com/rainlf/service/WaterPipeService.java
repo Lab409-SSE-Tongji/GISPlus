@@ -1,6 +1,7 @@
 package com.rainlf.service;
 
 import com.rainlf.mongo.entity.WaterPipeLayer;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.xml.ws.Service;
 
@@ -14,4 +15,6 @@ public interface WaterPipeService {
     String addWaterPipeLayer(String mapId);
 
     String deleteWaterPipeLayer(String layerId);
+
+    String importWaterPipeLayer(String layerId, MultipartFile file);
 }

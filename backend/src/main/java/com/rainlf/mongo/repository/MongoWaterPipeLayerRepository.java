@@ -9,4 +9,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface MongoWaterPipeLayerRepository extends MongoRepository<WaterPipeLayer, String> {
 
     WaterPipeLayer findByMapId(String mapId);
+
+    WaterPipeLayer findById(String LayerId);
 }

@@ -13,6 +13,22 @@ public class WaterPipeDomain {
     private String z2;
     private String status;
 
+    public WaterPipeDomain() {
+
+    }
+
+    public WaterPipeDomain(String x1, String y1, String z1, String x2, String y2, String z2, String status) {
+        this.x1 = x1;
+        this.y1 = y1;
+        this.z1 = z1;
+        this.x2 = x2;
+        this.y2 = y2;
+        this.z2 = z2;
+        this.status = status;
+    }
+
+
+
     public String getX1() {
         return x1;
     }

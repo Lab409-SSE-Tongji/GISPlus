@@ -16,6 +16,9 @@ public class WaterPipeLayer {
     private String mapId;
     List<WaterPipeDomain> waterPipeDomains;
 
+    public WaterPipeLayer() {
+    }
+
     public WaterPipeLayer(String mapId) {
         this.mapId = mapId;
     }

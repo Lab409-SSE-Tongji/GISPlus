@@ -7,7 +7,8 @@
       <!--<button type="button" class="btn btn-primary" >{{showLayers.well}}</button>-->
       <!--<button type="button" class="btn btn-primary" >{{showLayers.waterPipe}}</button>-->
       <button type="button" class="btn btn-primary" >{{editLayers.editLayerName}}</button>
-      <button type="button" class="btn btn-primary" >{{layers}}</button>
+      <button type="button" class="btn btn-primary" >{{layers.well}}</button>
+      <button type="button" class="btn btn-primary" >{{layers.waterPipe}}</button>
     </div>
 
     <div class="col-lg-12 btn-content" v-show="showLayers.show">
@@ -245,8 +246,15 @@
           toastr.error("删除下水管道图层失败")
         })
       },
-      importWaterPipeLayer: function () {
-
+      importWaterPipeLayer: function (file) {
+        let formData = new FormData();
+        formData.append('file', file)
+        this.$http.post(global.server+'/layer/water/excel/'+this.layers.waterPipe.id, formData).then(response => {
+          toastr.success("上传下水管道图层成功")
+          this.getWaterPipeLayer()
+        }, response => {
+          toastr.error("上传下水管道图层失败")
+        })
       },
 
       // 通用操作
