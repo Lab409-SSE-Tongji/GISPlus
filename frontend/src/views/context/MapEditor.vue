@@ -141,10 +141,13 @@
     methods: {
       showLayersFun: function () {
         this.showLayers.show = !this.showLayers.show
+        this.editLayers.show = false
+        this.editLayers.editLayerName = null
       },
       editLayersFun: function () {
         this.editLayers.show = !this.editLayers.show
         this.editLayers.editLayerName = null
+        this.showLayers.show = false
       },
 
       // 编辑条 操作
