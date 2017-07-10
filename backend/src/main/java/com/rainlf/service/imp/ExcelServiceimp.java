@@ -4,13 +4,13 @@ import com.rainlf.mongo.domain.WaterPipeDomain;
 import com.rainlf.mongo.domain.WellDomain;
 import com.rainlf.mongo.entity.WaterPipeLayer;
 import com.rainlf.mongo.entity.WellLayer;
-import com.rainlf.mongo.repository.MongoWellLayerRepository;
 import com.rainlf.service.ExcelService;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -86,6 +86,37 @@ public class ExcelServiceimp implements ExcelService {
         }
 
         return waterPipeLayer;
+    }
+
+    @Override
+    public Workbook exportWellLayerFile(WellLayer wellLayer) {
+        Workbook workbook = workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("窨井盖");
+
+        // 表头
+        int index = 0;
+        Row row = sheet.createRow(index);
+        row.createCell(0).setCellValue("x");
+        row.createCell(1).setCellValue("y");
+        row.createCell(2).setCellValue("z");
+        row.createCell(3).setCellValue("Status");
+
+        // 内容
+        List<WellDomain> wellDomains = wellLayer.getWellDomains();
+        for (WellDomain wellDomain : wellDomains) {
+            row = sheet.createRow(++index);
+            row.createCell(0).setCellValue(wellDomain.getX());
+            row.createCell(1).setCellValue(wellDomain.getY());
+            row.createCell(2).setCellValue(wellDomain.getZ());
+            row.createCell(3).setCellValue(wellDomain.getStatus());
+        }
+
+        return workbook;
+    }
+
+    @Override
+    public Workbook exportWaterPipeLayerFile(WaterPipeLayer waterPipeLayer) {
+        return null;
     }
 
 }

@@ -23,7 +23,7 @@
 
       <button type="button" class="btn btn-sm btn-danger" style="float:right; margin-top: 17px; margin-left: 10px"
               data-toggle="modal" data-target="#deleteLayerModal" @click="toggleDeleteLayer()">删除</button>
-      <button type="button" class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px">导出</button>
+      <button type="button" class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px" @click="exportFile()">导出</button>
       <input id="fileUpLoader" type="file" style="display: none" @change="importFile()" ref="input"/>
       <label for="fileUpLoader" class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px">导入</label>
 
@@ -210,6 +210,23 @@
           toastr.error("上传窨井盖图层失败")
         })
       },
+      exportWellLayer: function () {
+        this.$http.get(global.server+'/layer/well/excel/'+this.layers.well.id).then(response => {
+          // 下载文件
+          let hiddenElement  = document.createElement('a')
+          hiddenElement.href = response.bodyText
+          hiddenElement.target  = '_blank'
+          hiddenElement.download =  response.bodyText.split('/').slice(-1)[0]
+
+          console.log(hiddenElement)
+          hiddenElement.click()
+
+
+          toastr.success("导出窨井盖图层成功")
+        }, response => {
+          toastr.error("导出窨井盖图层失败")
+        })
+      },
 
       // 下水管道
       getWaterPipeLayer: function () {
@@ -307,7 +324,20 @@
             toastr.error("请选择：要导入的图层")
             break
         }
-      }
+      },
+      exportFile: function () {
+        switch (this.editLayers.editLayerName) {
+          case this.defaultLayerList.well:
+            this.exportWellLayer()
+            break
+          case this.defaultLayerList.waterPipe:
+//            this.exportWaterPipeLayer()
+            break
+          default:
+            toastr.error("请选择：要导出的图层")
+            break
+        }
+      },
     },
 
     // 初始化
