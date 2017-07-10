@@ -6,7 +6,10 @@ import Signup from '@/views/Signup'
 
 import MainPage from '@/views/MainPage'
 
+import Welcome from '@/views/context/Welcome'
 import MapManager from '@/views/context/MapManager'
+import MapShowManager from '@/views/context/MapShowManager'
+import MapShow from '@/views/context/MapShow'
 import Recycle from '@/views/context/Recycle'
 import UserManager from '@/views/context/UserManager'
 import UserProfile from '@/views/context/UserProfile'
@@ -17,39 +20,92 @@ Vue.use(Router)
 
 const router = new Router({
   routes: [
+    // 重定向 优化路由
+    {
+      path: '/',
+      redirect: '/mainPage'
+    },
+    {
+      path: '/mapManager',
+      redirect: '/mainPage/mapManager'
+    },
+    {
+      path: '/edit/:mapId',
+      redirect: '/mainPage/edit/:mapId'
+    },
+    {
+      path: '/mapShowManager',
+      redirect: '/mainPage/mapShowManager'
+    },
+    {
+      path: '/show/:mapId',
+      redirect: '/mainPage/show/:mapId'
+    },
+    {
+      path: '/userManager',
+      redirect: '/mainPage/userManager'
+    },
+    {
+      path: '/userProfile',
+      redirect: '/mainPage/userProfile'
+    },
+    {
+      path: '/recycle',
+      redirect: '/mainPage/recycle'
+    },
+
+    // 配置路由
     {
       path: '/login',
       name:'login',
       components: {
-        login: Login
+        root: Login
       }
     },
     {
       path: '/signup',
       name: 'signup',
       components:{
-        login: Signup
+        root: Signup
       }
     },
     {
-      path: '/',
-      redirect: '/mapManager',
-      name: 'mainpage',
+      path: '/mainPage',
+      name: 'mainPage',
+      redirect: '/mainPage/welcome',  // 默认子页面
       components: {
-        login: MainPage
+        root: MainPage,
       },
       children: [
+        {
+          path: 'welcome',
+          components: {
+            context: Welcome
+          }
+        },
         {
           path: 'mapManager',
           components: {
             context: MapManager
-          },
-          children: [
-            {
-              path: ':mapId',
-              redirect: '/:mapId'
-            }
-          ]
+          }
+        },
+        {
+          path: 'edit/:mapId',
+          components: {
+            context: MapEditor
+          }
+        },
+        {
+          path: 'mapShowManager',
+          components: {
+            context: MapShowManager
+          }
+        },
+        {
+          path: 'show/:mapId',
+          components: {
+            context: MapShow
+          }
         },
         {
           path: 'userManager',
@@ -69,19 +125,16 @@ const router = new Router({
             context: Recycle
           }
         },
-        {
-          path: ':mapId',
-          components: {
-            context: MapEditor
-          }
-        },
       ]
     },
-    {
-      path: '*',
-      name: 'others',
-      redirect: '/'
-    }
+
+
+
+    // {
+    //   path: '*',
+    //   name: 'others',
+    //   redirect: '/'
+    // }
   ]
 })
 

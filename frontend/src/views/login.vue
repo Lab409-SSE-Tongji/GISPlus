@@ -43,7 +43,7 @@
         this.$http.post(global.server+'/auth/login', formData).then(response => {
           let userData = JSON.parse(response.bodyText)
           this.login(userData)
-          this.$router.push('/')
+          this.$router.push('/mainPage')
         }, response => {
           toastr.error("用户名或密码错误")
         })

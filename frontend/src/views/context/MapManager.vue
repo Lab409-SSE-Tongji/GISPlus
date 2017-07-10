@@ -172,7 +172,7 @@ export default {
     },
     enterMap: function (index) {
       console.log('1')
-      this.$router.push(this.maps[index].id)
+      this.$router.push('/edit/'+this.maps[index].id)
     }
   },
   created () {

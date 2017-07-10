@@ -36,7 +36,12 @@
         items: [
           {
             target: '/mapManager',
-            title: '地图管理',
+            title: '地图管理 admin',
+            iconName: 'fa-map-o'
+          },
+          {
+            target: '/mapShowManager',
+            title: '地图管理 user',
             iconName: 'fa-map-o'
           },
           {
