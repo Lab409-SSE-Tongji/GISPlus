@@ -2,8 +2,8 @@
   <div class="row btns white-bg ">
     <div class="col-lg-12 btn-content">
       <button type="button" class="btn btn-success">选择显示图层</button>
-      <button type="button" class="btn btn-primary btn-outline" :class="wellStyle" style="margin-left: 20px" v-show="wellLayerStatus" @click="toggleWellLayer()">窨井盖</button>
-      <button type="button" class="btn btn-primary btn-outline" :class="waterPipeStyle" v-show="waterPipeLayerStatus" @click="toggleWaterPipeLayer()">下水管道</button>
+      <button type="button" class="btn btn-primary btn-outline" :class="wellLayer.style" style="margin-left: 20px" v-show="wellLayerStatus" @click="toggleWellLayer()">窨井盖</button>
+      <button type="button" class="btn btn-primary btn-outline" :class="waterPipeLayer.style" v-show="waterPipeLayerStatus" @click="toggleWaterPipeLayer()">下水管道</button>
       <button type="button" class="btn btn-primary">{{layers}}</button>
     </div>
 
@@ -24,8 +24,14 @@
           well: {},
           waterPipe: {},
         },
-        wellStyle: '',
-        waterPipeStyle: '',
+        wellLayer: {
+          style: '',
+          wellList: []
+        },
+        waterPipeLayer: {
+          style: '',
+          waterPipeList: []
+        },
       }
     },
     computed: {
@@ -46,6 +52,21 @@
             this.$set(this.layers, 'well', {})
           } else {
             this.$set(this.layers, 'well', JSON.parse(response.bodyText))
+            // 初始化 markers
+            let wells = JSON.parse(response.bodyText).wellDomains
+            for (let well of wells) {
+              let position = {lat: well.y*1, lng: well.x*1}
+              let icon = {
+                url: '../../../static/img/well/well_blue.png',
+                scaledSize: new google.maps.Size(30, 30)
+              }
+              let marker = new google.maps.Marker({
+                position: position,
+                icon: icon,
+                animation: google.maps.Animation.DROP,
+              })
+              this.wellLayer.wellList.push(marker)
+            }
           }
           toastr.success("获取窨井盖层成功")
         }, response => {
@@ -70,24 +91,22 @@
 
       // 渲染图层
       toggleWellLayer: function () {
-        this.wellStyle = (this.wellStyle==='active') ? '' : 'active'
-          // todo 错误检验？
-        let wells = this.layers.well.wellDomains
-        for (let well of wells) {
-          console.log(well)
-          let position = {lat: well.y*1, lng: well.x*1}
-          let icon = {
-            url: '../../../static/img/well/well_blue.png',
-            scaledSize: new google.maps.Size(30, 30)
-          }
-          let marker = new google.maps.Marker({
-            position: position,
-            icon: icon,
-            animation: google.maps.Animation.DROP,
-            map: this.baseMap,
-          });
+        switch (this.wellLayer.style) {
+          case '':
+            // 显示
+            this.wellLayer.style = 'active'
+            for (let well of this.wellLayer.wellList) {
+              well.setMap(this.baseMap)
+            }
+            break
+          case 'active':
+            // 删除
+            this.wellLayer.style = ''
+            for (let well of this.wellLayer.wellList) {
+                well.setMap(null)
+            }
+            break
         }
-
       },
       toggleWaterPipeLayer: function () {
 
