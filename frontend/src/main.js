@@ -22,7 +22,6 @@ Vue.config.productionTip = false
 //   // modify headers
 //   request.headers.set('X-CSRF-TOKEN', 'TOKEN');
 //   request.headers.set('Authorization', 'Bearer TOKEN');
-//   console.log(1111111111)
 //
 //   // continue to next interceptor
 //   next();

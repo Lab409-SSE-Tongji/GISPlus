@@ -171,7 +171,6 @@ export default {
       this.closeOp()
     },
     enterMap: function (index) {
-      console.log('1')
       this.$router.push('/edit/'+this.maps[index].id)
     }
   },
