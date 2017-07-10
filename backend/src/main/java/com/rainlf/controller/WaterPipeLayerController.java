@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
 /**
  * Created by Administrator on 2017/7/6.
  */
@@ -18,22 +19,27 @@ public class WaterPipeLayerController {
     private WaterPipeService waterPipeService;
 
     @RequestMapping(value = "{mapId}", method = RequestMethod.GET)
-    public ResponseEntity getWellLayer(@PathVariable("mapId") String mapId) {
+    public ResponseEntity getWaterPipeLayer(@PathVariable("mapId") String mapId) {
         return ResponseEntity.ok(waterPipeService.getWaterPipeLayer(mapId));
     }
 
     @RequestMapping(value = "{mapId}", method = RequestMethod.POST)
-    public ResponseEntity addWellLayer(@PathVariable("mapId") String mapId) {
+    public ResponseEntity addWaterPipeLayer(@PathVariable("mapId") String mapId) {
         return ResponseEntity.ok(waterPipeService.addWaterPipeLayer(mapId));
     }
 
     @RequestMapping(value = "{layerId}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteWellLayer(@PathVariable("layerId") String layerId) {
+    public ResponseEntity deleteWaterPipeLayer(@PathVariable("layerId") String layerId) {
         return ResponseEntity.ok(waterPipeService.deleteWaterPipeLayer(layerId));
     }
 
     @RequestMapping(value = "excel/{layerId}", method = RequestMethod.POST)
-    public ResponseEntity importWellLayer(@PathVariable("layerId") String layerId, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity importWaterPipeLayer(@PathVariable("layerId") String layerId, @RequestParam("file") MultipartFile file) {
         return ResponseEntity.ok(waterPipeService.importWaterPipeLayer(layerId, file));
+    }
+
+    @RequestMapping(value = "excel/{layerId}", method = RequestMethod.GET)
+    public ResponseEntity exportWaterPipeLayer(@PathVariable("layerId") String layerId) {
+        return ResponseEntity.ok(waterPipeService.exportWaterPipeLayer(layerId));
     }
 }

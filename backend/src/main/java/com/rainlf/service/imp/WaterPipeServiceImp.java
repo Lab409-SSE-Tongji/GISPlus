@@ -1,12 +1,16 @@
 package com.rainlf.service.imp;
 
 import com.rainlf.mongo.entity.WaterPipeLayer;
+import com.rainlf.mongo.repository.MongoMapRepository;
 import com.rainlf.mongo.repository.MongoWaterPipeLayerRepository;
 import com.rainlf.service.ExcelService;
 import com.rainlf.service.WaterPipeService;
+import com.rainlf.util.ExcelUtil;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 
 /**
  * Created by Administrator on 2017/7/6.
@@ -15,7 +19,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class WaterPipeServiceImp implements WaterPipeService {
 
     @Autowired
+    private ExcelUtil excelUtil;
+
+    @Autowired
     private ExcelService excelService;
+
+    @Autowired
+    private MongoMapRepository mongoMapRepository;
 
     @Autowired
     private MongoWaterPipeLayerRepository mongoWaterPipeLayerRepository;
@@ -49,5 +59,15 @@ public class WaterPipeServiceImp implements WaterPipeService {
 
         mongoWaterPipeLayerRepository.save(waterPipeLayerRemote);
         return null;
+    }
+
+    @Override
+    public String exportWaterPipeLayer(String layerId) {
+        WaterPipeLayer waterPipeLayer = mongoWaterPipeLayerRepository.findById(layerId);
+        String mapName = mongoMapRepository.findById(waterPipeLayer.getMapId()).getMapName();
+
+        Workbook workbook = excelService.exportWaterPipeLayerFile(waterPipeLayer);
+        String fileName = mapName+"_下水管道.xlsx";
+        return excelUtil.writeToFile(fileName, workbook);
     }
 }

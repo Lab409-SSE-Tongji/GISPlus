@@ -217,11 +217,7 @@
           hiddenElement.href = response.bodyText
           hiddenElement.target  = '_blank'
           hiddenElement.download =  response.bodyText.split('/').slice(-1)[0]
-
-          console.log(hiddenElement)
           hiddenElement.click()
-
-
           toastr.success("导出窨井盖图层成功")
         }, response => {
           toastr.error("导出窨井盖图层失败")
@@ -271,6 +267,19 @@
           this.getWaterPipeLayer()
         }, response => {
           toastr.error("上传下水管道图层失败")
+        })
+      },
+      exportWaterPipeLayer: function () {
+        this.$http.get(global.server+'/layer/water/excel/'+this.layers.waterPipe.id).then(response => {
+          // 下载文件
+          let hiddenElement  = document.createElement('a')
+          hiddenElement.href = response.bodyText
+          hiddenElement.target  = '_blank'
+          hiddenElement.download =  response.bodyText.split('/').slice(-1)[0]
+          hiddenElement.click()
+          toastr.success("导出下水管道图层成功")
+        }, response => {
+          toastr.error("导出下水管道图层失败")
         })
       },
 
@@ -331,7 +340,7 @@
             this.exportWellLayer()
             break
           case this.defaultLayerList.waterPipe:
-//            this.exportWaterPipeLayer()
+            this.exportWaterPipeLayer()
             break
           default:
             toastr.error("请选择：要导出的图层")

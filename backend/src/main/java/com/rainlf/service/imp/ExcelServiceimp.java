@@ -96,9 +96,9 @@ public class ExcelServiceimp implements ExcelService {
         // 表头
         int index = 0;
         Row row = sheet.createRow(index);
-        row.createCell(0).setCellValue("x");
-        row.createCell(1).setCellValue("y");
-        row.createCell(2).setCellValue("z");
+        row.createCell(0).setCellValue("X");
+        row.createCell(1).setCellValue("Y");
+        row.createCell(2).setCellValue("Z");
         row.createCell(3).setCellValue("Status");
 
         // 内容
@@ -116,7 +116,34 @@ public class ExcelServiceimp implements ExcelService {
 
     @Override
     public Workbook exportWaterPipeLayerFile(WaterPipeLayer waterPipeLayer) {
-        return null;
+        Workbook workbook = workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("下水管道");
+
+        // 表头
+        int index = 0;
+        Row row = sheet.createRow(index);
+        row.createCell(0).setCellValue("X1");
+        row.createCell(1).setCellValue("Y1");
+        row.createCell(2).setCellValue("Z1");
+        row.createCell(3).setCellValue("X2");
+        row.createCell(4).setCellValue("Y2");
+        row.createCell(5).setCellValue("Z2");
+        row.createCell(6).setCellValue("Status");
+
+        // 内容
+        List<WaterPipeDomain> waterPipeLayers = waterPipeLayer.getWaterPipeDomains();
+        for (WaterPipeDomain wellDomains : waterPipeLayers) {
+            row = sheet.createRow(++index);
+            row.createCell(0).setCellValue(wellDomains.getX1());
+            row.createCell(1).setCellValue(wellDomains.getY1());
+            row.createCell(2).setCellValue(wellDomains.getZ1());
+            row.createCell(3).setCellValue(wellDomains.getX2());
+            row.createCell(4).setCellValue(wellDomains.getY2());
+            row.createCell(5).setCellValue(wellDomains.getZ2());
+            row.createCell(6).setCellValue(wellDomains.getStatus());
+        }
+
+        return workbook;
     }
 
 }

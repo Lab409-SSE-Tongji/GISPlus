@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by Administrator on 2017/7/6.
@@ -40,7 +39,7 @@ public class WellLayerController {
     }
 
     @RequestMapping(value = "excel/{layerId}", method = RequestMethod.GET)
-    public ResponseEntity exportWellLayer(HttpServletResponse response, @PathVariable("layerId") String layerId) {
+    public ResponseEntity exportWellLayer(@PathVariable("layerId") String layerId) {
         return ResponseEntity.ok(wellLayerService.exportWellLayer(layerId));
     }
 

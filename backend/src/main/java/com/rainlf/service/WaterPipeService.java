@@ -17,4 +17,6 @@ public interface WaterPipeService {
     String deleteWaterPipeLayer(String layerId);
 
     String importWaterPipeLayer(String layerId, MultipartFile file);
+
+    String exportWaterPipeLayer(String layerId);
 }
