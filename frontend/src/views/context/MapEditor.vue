@@ -4,18 +4,18 @@
       <button type="button" class="btn btn-primary"  @click="showLayersFun()">显示图层</button>
       <button type="button" class="btn btn-primary"  @click="editLayersFun()">编辑图层</button>
       <button type="button" class="btn btn-primary" >{{mapId}}</button>
-      <!--<button type="button" class="btn btn-primary" >{{showLayers.well}}</button>-->
-      <!--<button type="button" class="btn btn-primary" >{{showLayers.waterPipe}}</button>-->
       <button type="button" class="btn btn-primary" >{{editLayers.editLayerName}}</button>
       <button type="button" class="btn btn-primary" >{{layers.well}}</button>
       <button type="button" class="btn btn-primary" >{{layers.waterPipe}}</button>
     </div>
 
+    <!--显示条-->
     <div class="col-lg-12 btn-content" v-show="showLayers.show">
       <button type="button" class="btn btn-sm btn-primary btn-outline" :class="showLayers.wellStyle" v-show="wellLayerStatus" @click="toggleShowWellLayer()">窨井盖</button>
       <button type="button" class="btn btn-sm btn-primary btn-outline" :class="showLayers.waterPipeStyle" v-show="waterPipeLayerStatus" @click="toggleShowWaterPipeLayer()">下水管道</button>
-
     </div>
+
+    <!--操作条-->
     <div class="col-lg-12 btn-content" v-show="editLayers.show">
       <button type="button" class="btn btn-sm btn-success" style="margin-right: 10px" data-toggle="modal" data-target="#addLayerModal">新建</button>
       <button type="button" class="btn btn-sm btn-primary btn-outline" :class="EditWellStyle" v-show="wellLayerStatus" @click="tagEditWellLayer()">窨井盖</button>
@@ -26,7 +26,6 @@
       <button type="button" class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px" @click="exportFile()">导出</button>
       <input id="fileUpLoader" type="file" style="display: none" @change="importFile()" ref="input"/>
       <label for="fileUpLoader" class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px">导入</label>
-
     </div>
 
     <!--添加图层模态框-->
@@ -91,6 +90,7 @@
       return {
         map: null,
         mapId: this.$route.params.mapId,
+        baseMap: null,
         defaultLayerList: {
           addLayerName: '',
           well: '窨井盖',
@@ -102,6 +102,8 @@
           waterPipe: false,
           wellStyle: '',
           waterPipeStyle: '',
+          wellList: [],
+          waterPipeList: []
         },
         editLayers: {
           show: false,
@@ -148,6 +150,22 @@
         this.editLayers.show = !this.editLayers.show
         this.editLayers.editLayerName = null
         this.showLayers.show = false
+
+        // 还原展示条状态
+        if (this.showLayers.well) {
+          this.showLayers.well = false
+          this.showLayers.wellStyle = ''
+          for (let well of this.showLayers.wellList) {
+            well.setMap(null)
+          }
+        }
+        if (this.showLayers.waterPipe) {
+          this.showLayers.waterPipe = false
+          this.showLayers.waterPipeStyle = ''
+          for (let waterPipe of this.showLayers.waterPipeList) {
+            waterPipe.setMap(null)
+          }
+        }
       },
 
       // 编辑条 操作
@@ -162,10 +180,28 @@
       toggleShowWellLayer: function () {
         this.showLayers.well = !this.showLayers.well
         this.showLayers.wellStyle = this.showLayers.well ? 'active' : ''
+        if (this.showLayers.well) {
+          for (let well of this.showLayers.wellList) {
+            well.setMap(this.baseMap)
+          }
+        } else {
+          for (let well of this.showLayers.wellList) {
+            well.setMap(null)
+          }
+        }
       },
       toggleShowWaterPipeLayer: function () {
         this.showLayers.waterPipe = !this.showLayers.waterPipe
         this.showLayers.waterPipeStyle = this.showLayers.waterPipe ? 'active' : ''
+        if (this.showLayers.waterPipe) {
+          for (let waterPipe of this.showLayers.waterPipeList) {
+            waterPipe.setMap(this.baseMap)
+          }
+        } else {
+          for (let waterPipe of this.showLayers.waterPipeList) {
+            waterPipe.setMap(null)
+          }
+        }
       },
 
       // 窨井盖
@@ -176,6 +212,21 @@
             this.$set(this.layers, 'well', {})
           } else {
             this.$set(this.layers, 'well', JSON.parse(response.bodyText))
+            // 初始化 窨井盖 markers
+            let wells = this.layers.well.wellDomains
+            for (let well of wells) {
+              let position = {lat: well.y*1, lng: well.x*1}
+              let icon = {
+                url: '../../../static/img/well/well_blue.png',
+                scaledSize: new google.maps.Size(30, 30)
+              }
+              let marker = new google.maps.Marker({
+                position: position,
+                icon: icon,
+                animation: google.maps.Animation.DROP,
+              })
+              this.showLayers.wellList.push(marker)
+            }
           }
           toastr.success("获取窨井盖层成功")
         }, response => {
@@ -235,6 +286,20 @@
             this.$set(this.layers, 'waterPipe', {})
           } else {
             this.$set(this.layers, 'waterPipe', JSON.parse(response.bodyText))
+            // 初始化 polylines
+            let waterPipes = this.layers.waterPipe.waterPipeDomains
+            for (let waterPipe of waterPipes) {
+              let start = new google.maps.LatLng(waterPipe.y1 * 1, waterPipe.x1 * 1)
+              let end = new google.maps.LatLng(waterPipe.y2 * 1, waterPipe.x2 * 1)
+              let path = [start, end]
+              let polyline = new google.maps.Polyline({
+                path: path,
+                strokeColor: "#0000FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2
+              })
+              this.showLayers.waterPipeList.push(polyline)
+            }
           }
           toastr.success("获取下水管道层成功")
         }, response => {
@@ -360,7 +425,7 @@
         zoom: 17,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       }
-      new google.maps.Map(document.getElementById('map'), mapProp);
+      this.baseMap = new google.maps.Map(document.getElementById('map'), mapProp);
 
       // 获取各个图层
       this.getWellLayer()
