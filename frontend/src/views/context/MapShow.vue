@@ -4,7 +4,8 @@
       <button type="button" class="btn btn-success">选择显示图层</button>
       <button type="button" class="btn btn-primary btn-outline" :class="wellLayer.style" style="margin-left: 20px" v-show="wellLayerStatus" @click="toggleWellLayer()">窨井盖</button>
       <button type="button" class="btn btn-primary btn-outline" :class="waterPipeLayer.style" v-show="waterPipeLayerStatus" @click="toggleWaterPipeLayer()">下水管道</button>
-      <button type="button" class="btn btn-primary">{{layers}}</button>
+      <button type="button" class="btn btn-primary">{{layers.well}}</button>
+      <button type="button" class="btn btn-primary">{{layers.waterPipe}}</button>
     </div>
 
     <!--todo 自适应地图高度-->
@@ -53,7 +54,7 @@
           } else {
             this.$set(this.layers, 'well', JSON.parse(response.bodyText))
             // 初始化 markers
-            let wells = JSON.parse(response.bodyText).wellDomains
+            let wells = this.layers.well.wellDomains
             for (let well of wells) {
               let position = {lat: well.y*1, lng: well.x*1}
               let icon = {
@@ -82,6 +83,20 @@
             this.$set(this.layers, 'waterPipe', {})
           } else {
             this.$set(this.layers, 'waterPipe', JSON.parse(response.bodyText))
+            // 初始化 polylines
+            let waterPipes = this.layers.waterPipe.waterPipeDomains
+            for (let waterPipe of waterPipes) {
+              let start = new google.maps.LatLng(waterPipe.y1 * 1, waterPipe.x1 * 1)
+              let end = new google.maps.LatLng(waterPipe.y2 * 1, waterPipe.x2 * 1)
+              let path = [start, end]
+              let polyline = new google.maps.Polyline({
+                path: path,
+                strokeColor: "#0000FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2
+              })
+              this.waterPipeLayer.waterPipeList.push(polyline)
+            }
           }
           toastr.success("获取下水管道层成功")
         }, response => {
@@ -109,7 +124,22 @@
         }
       },
       toggleWaterPipeLayer: function () {
-
+        switch (this.waterPipeLayer.style) {
+          case '':
+            // 显示
+            this.waterPipeLayer.style = 'active'
+            for (let waterPipe of this.waterPipeLayer.waterPipeList) {
+              waterPipe.setMap(this.baseMap)
+            }
+            break
+          case 'active':
+            // 删除
+            this.waterPipeLayer.style = ''
+            for (let waterPipe of this.waterPipeLayer.waterPipeList) {
+              waterPipe.setMap(null)
+            }
+            break
+        }
       }
     },
     mounted () {
