@@ -79,48 +79,56 @@ const router = new Router({
       children: [
         {
           path: 'welcome',
+          name: 'welcome',
           components: {
             context: Welcome
           }
         },
         {
           path: 'mapManager',
+          name: 'mapManager',
           components: {
             context: MapManager
           }
         },
         {
           path: 'edit/:mapId',
+          name: 'edit',
           components: {
             context: MapEditor
           }
         },
         {
           path: 'mapShowManager',
+          name: 'mapShowManager',
           components: {
             context: MapShowManager
           }
         },
         {
           path: 'show/:mapId',
+          name: 'show',
           components: {
             context: MapShow
           }
         },
         {
           path: 'userManager',
+          name: 'userManager',
           components: {
             context: UserManager
           }
         },
         {
           path: 'userProfile',
+          name: 'userProfile',
           components: {
             context: UserProfile
           }
         },
         {
           path: 'recycle',
+          name: 'recycle',
           components: {
             context: Recycle
           }

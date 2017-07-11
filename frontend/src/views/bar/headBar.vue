@@ -3,6 +3,8 @@
       <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
           <div class="navbar-header">
               <a class="minimalize-styl-2 btn btn-primary" @click="toggleMenu"><i class="fa fa-bars"></i> </a>
+              <button type="button" class="btn btn-sm btn-primary" style="margin-left: 20px; margin-top: 14px">{{path}}</button>
+              <button type="button" class="btn btn-sm btn-primary" style="margin-left: 5px; margin-top: 14px" v-show="recycle">清空回收站</button>
           </div>
           <ul class="nav navbar-top-links navbar-right">
               <li>
@@ -20,9 +22,38 @@ import {mapGetters, mapMutations} from 'vuex'
 export default {
   name: 'headBar',
   computed: {
-      // todo: 获取当前路径显示
     path: function () {
-      return this.$route.name
+      let title = null
+      switch (this.$route.name) {
+        case 'welcome':
+          title = '欢迎XTD'
+          break
+        case 'mapManager':
+          title = '地图管理'
+          break
+        case 'edit':
+          title = '地图管理'
+          break
+        case 'mapShowManager':
+          title = '地图管理'
+          break
+        case 'show':
+          title = '地图管理'
+          break
+        case 'userManager':
+          title = '用户管理'
+          break
+        case 'userProfile':
+          title = '个人信息'
+          break
+        case 'recycle':
+          title = '回收站'
+          break
+      }
+      return title
+    },
+    recycle: function () {
+      return this.path === '回收站'
     }
   },
   methods: {
@@ -40,7 +71,7 @@ export default {
     }
   },
   created () {
-//    this.toggleMenu()
+    this.toggleMenu()
   }
 }
 </script>
