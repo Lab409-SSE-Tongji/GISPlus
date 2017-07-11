@@ -61,11 +61,26 @@
           }
         })
       },
+      registerWaterPipeClick: function (self, polyline) {
+        google.maps.event.addListener(polyline, 'click', function() {
+          if (polyline.statusInfo.show) {
+            polyline.infoWindow.close(self.baseMap, polyline)
+            polyline.statusInfo.show = false
+          } else {
+            polyline.infoWindow = new google.maps.InfoWindow({
+              // todo 下拉选择框
+              content: polyline.statusInfo.status,
+              position: polyline.statusInfo.position,
+            })
+            polyline.infoWindow.open(self.baseMap, polyline)
+            polyline.statusInfo.show = true
+          }
+        })
+      },
 
       // 初始化
       initWell: function () {
         let wells = this.layers.well.wellDomains
-        console.log(wells)
         for (let well of wells) {
           let position = {lat: well.y*1, lng: well.x*1}
           let icon = {
@@ -83,6 +98,30 @@
           })
           this.registerWellClick(this, marker)
           this.wellLayer.wellList.push(marker)
+        }
+      },
+      initWaterPipe: function () {
+        let waterPipes = this.layers.waterPipe.waterPipeDomains
+        for (let waterPipe of waterPipes) {
+          let start = new google.maps.LatLng(waterPipe.y1 * 1, waterPipe.x1 * 1)
+          let end = new google.maps.LatLng(waterPipe.y2 * 1, waterPipe.x2 * 1)
+          let path = [start, end]
+          let polyline = new google.maps.Polyline({
+            path: path,
+            strokeColor: "#0000FF",
+            strokeOpacity: 0.8,
+            strokeWeight: 4,
+            statusInfo: {
+              show: false,
+              status: waterPipe.status,
+              position: {
+                lat: (waterPipe.y1*1 + waterPipe.y2*1) / 2,
+                lng: (waterPipe.x1*1 + waterPipe.x2*1) / 2,
+              },
+            }
+          })
+          this.registerWaterPipeClick(this, polyline)
+          this.waterPipeLayer.waterPipeList.push(polyline)
         }
       },
 
@@ -111,20 +150,7 @@
             this.$set(this.layers, 'waterPipe', {})
           } else {
             this.$set(this.layers, 'waterPipe', JSON.parse(response.bodyText))
-            // 初始化 polylines
-            let waterPipes = this.layers.waterPipe.waterPipeDomains
-            for (let waterPipe of waterPipes) {
-              let start = new google.maps.LatLng(waterPipe.y1 * 1, waterPipe.x1 * 1)
-              let end = new google.maps.LatLng(waterPipe.y2 * 1, waterPipe.x2 * 1)
-              let path = [start, end]
-              let polyline = new google.maps.Polyline({
-                path: path,
-                strokeColor: "#0000FF",
-                strokeOpacity: 0.8,
-                strokeWeight: 2
-              })
-              this.waterPipeLayer.waterPipeList.push(polyline)
-            }
+            this.initWaterPipe()
           }
           toastr.success("获取下水管道层成功")
         }, response => {
