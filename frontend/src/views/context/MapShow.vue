@@ -4,8 +4,6 @@
       <button type="button" class="btn btn-success">选择显示图层</button>
       <button type="button" class="btn btn-primary btn-outline" :class="wellLayer.style" style="margin-left: 20px" v-show="wellLayerStatus" @click="toggleWellLayer()">窨井盖</button>
       <button type="button" class="btn btn-primary btn-outline" :class="waterPipeLayer.style" v-show="waterPipeLayerStatus" @click="toggleWaterPipeLayer()">下水管道</button>
-      <button type="button" class="btn btn-primary">{{layers.well}}</button>
-      <button type="button" class="btn btn-primary">{{layers.waterPipe}}</button>
     </div>
 
     <!--todo 自适应地图高度-->

@@ -13,6 +13,15 @@ public class Map {
     private String userId;
     private String mapName;
 
+    public Map() {
+    }
+
+    public Map(String id, String userId, String mapName) {
+        this.id = id;
+        this.userId = userId;
+        this.mapName = mapName;
+    }
+
     public String getId() {
         return id;
     }

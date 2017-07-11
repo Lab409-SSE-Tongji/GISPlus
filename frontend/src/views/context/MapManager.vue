@@ -99,7 +99,7 @@ export default {
   name: 'manManager',
   data () {
     return {
-      loading: false,
+      loading: true,
       operation: false,
       mapName: '',
       maps: [],
@@ -130,6 +130,7 @@ export default {
       let userId = this.userId
       this.$http.get(global.server+'/map/'+userId+'/maps').then(response => {
         this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
+        this.loading = false
         toastr.success("获取用户地图成功")
       }, response => {
         toastr.error("获取用户地图失败")
@@ -161,8 +162,6 @@ export default {
     deleteMap: function (index) {
       let id = this.maps[index].id
       this.$http.delete(global.server+'/map/'+id).then(response => {
-          // todo 优化数组检测
-//        delete this.maps[index]
         this.getMaps()
         toastr.success("放入回收站成功")
       }, response => {
