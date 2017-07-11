@@ -132,7 +132,7 @@ export default {
         this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
         toastr.success("获取用户地图成功")
       }, response => {
-        toastr.success("获取用户地图失败")
+        toastr.error("获取用户地图失败")
       })
     },
     openOp: function (index) {
@@ -154,7 +154,7 @@ export default {
         this.maps[editIndex].mapName = this.mapName
         toastr.success("更新地图信息成功")
       }, response => {
-        toastr.success("更新地图信息失败")
+        toastr.error("更新地图信息失败")
       })
       this.closeOp()
     },
@@ -166,7 +166,7 @@ export default {
         this.getMaps()
         toastr.success("放入回收站成功")
       }, response => {
-        toastr.success("放入回收站失败")
+        toastr.error("放入回收站失败")
       })
       this.closeOp()
     },

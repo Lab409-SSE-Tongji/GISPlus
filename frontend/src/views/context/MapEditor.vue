@@ -119,10 +119,10 @@
     computed: {
       // 图层存在状态
       wellExist: function () {
-        return (this.layers.well.id === undefined) ? false : true
+        return (this.layers.well.id !== undefined)
       },
       waterPipeExist: function () {
-        return (this.layers.waterPipe.id === undefined) ? false : true
+        return (this.layers.waterPipe.id !== undefined)
       },
 
 

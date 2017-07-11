@@ -20,4 +20,9 @@ public class UserController {
     public ResponseEntity getUserInfo(@PathVariable("username") String username) {
         return ResponseEntity.ok(userService.getUser(username));
     }
+
+    @RequestMapping(value = "id/{userId}", method = RequestMethod.GET)
+    public ResponseEntity getUserInfoById(@PathVariable("userId") String userId) {
+        return ResponseEntity.ok(userService.getUserById(userId));
+    }
 }

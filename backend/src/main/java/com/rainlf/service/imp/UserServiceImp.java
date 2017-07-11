@@ -25,4 +25,9 @@ public class UserServiceImp implements UserService {
     public User getUser(String username) {
         return mongoUserRepository.findByUsername(username);
     }
+
+    @Override
+    public User getUserById(String userId) {
+        return mongoUserRepository.findOne(userId);
+    }
 }

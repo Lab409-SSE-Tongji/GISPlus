@@ -8,8 +8,14 @@
         <div class="grid-content">
           <div class="bg-purple-light">
             <img class="user-logo" src="../../../static/img/img.jpg">
-            <h2>{{realname}}</h2>
+            <h2>{{name}}</h2>
+            <h2>{{userId}}</h2>
           </div>
+
+          <!--todo 按钮布局-->
+          <button type="button" class="btn btn-primary" @click="openEditor()">编辑</button>
+          <button type="button" class="btn btn-primary">取消</button>
+          <button type="button" class="btn btn-primary">保存</button>
 
 
           <div class="contact">
@@ -24,7 +30,7 @@
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <span class="email">recall52@163.com</span>
+                    <span class="email">{{email}}</span>
                   </div>
                 </div>
               </el-col>
@@ -39,7 +45,7 @@
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <span class="phone">17621060896</span>
+                    <span class="phone">{{phone}}</span>
                   </div>
                 </div>
               </el-col>
@@ -58,7 +64,7 @@
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <span class="realname">{{realname}}</span>
+                    <span class="realname">{{name}}</span>
                   </div>
                 </div>
               </el-col>
@@ -67,29 +73,13 @@
             <el-row :gutter="10">
               <el-col :xs="8" :sm="6" :md="4" :lg="3">
                 <div class="item-head">
-                  <span>性别</span>
+                  <span>职务</span>
                 </div>
               </el-col>
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <span class="gender" v-if="gender==1">男</span>
-                    <span class="gender" v-else>女</span>
-                  </div>
-                </div>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10">
-              <el-col :xs="8" :sm="6" :md="4" :lg="3">
-                <div class="item-head">
-                  <span>职业</span>
-                </div>
-              </el-col>
-              <el-col :xs="4" :sm="6" :md="8" :lg="9">
-                <div class="bg-purple-light item-content">
-                  <div class="input-message">
-                    <span class="profession">{{profession}}</span>
+                    <span>{{role}}</span>
                   </div>
                 </div>
               </el-col>
@@ -109,22 +99,34 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 export default {
   data() {
     return {
-      realname: '徐啊歪',
-      gender: 1,
-      profession: '学生'
+      name: '我是名字',
+      email: '我是邮箱',
+      phone: '我是电话',
+      role: '我是谁',
     }
   },
   computed: {
+    ...mapGetters({
+      userId: 'userId'
+    })
 
   },
   methods: {
-    
+    getUserInfo: function () {
+      this.$http.get(global.server+'/user/id/'+this.userId).then(response => {
+        console.log(response.bodyText)
+        toastr.success("获取用户信息成功")
+      }, response => {
+        toastr.error("获取用户信息失败")
+      })
+    }
   },
-  created:function(){
-
+  created () {
+    this.getUserInfo()
   }
 }
 </script>
