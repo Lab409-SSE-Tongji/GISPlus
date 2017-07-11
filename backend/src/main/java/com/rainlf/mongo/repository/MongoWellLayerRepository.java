@@ -13,4 +13,6 @@ public interface MongoWellLayerRepository extends MongoRepository<WellLayer, Str
     WellLayer findByMapId(String mapId);
 
     WellLayer findById(String layerId);
+
+    WellLayer deleteByMapId(String mapId);
 }

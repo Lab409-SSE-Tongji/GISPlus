@@ -57,4 +57,19 @@ public class RecycleServiceImp implements RecycleService {
         mongoRecycleRepository.delete(recycleId);
         return null;
     }
+
+    @Override
+    public String deleteRecycles(String userId) {
+        List<Map> maps = mongoMapRepository.findAllByUserId(userId);
+        try {
+            for (Map map : maps) {
+                mongoWellLayerRepository.deleteByMapId(map.getId());
+                mongoWaterPipeLayerRepository.deleteByMapId(map.getId());
+            }
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
+        mongoRecycleRepository.deleteByUserId(userId);
+        return null;
+    }
 }

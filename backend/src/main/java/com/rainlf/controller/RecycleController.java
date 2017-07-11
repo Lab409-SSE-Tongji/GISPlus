@@ -32,4 +32,9 @@ public class RecycleController {
     public ResponseEntity deleteRecycle(@PathVariable("recycleId") String recycleId) {
         return ResponseEntity.ok(recycleService.deleteRecycle(recycleId));
     }
+
+    @RequestMapping(value = "all/{userId}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteRecycles(@PathVariable("userId") String userId) {
+        return ResponseEntity.ok(recycleService.deleteRecycles(userId));
+    }
 }

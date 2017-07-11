@@ -65,9 +65,9 @@
         this.$http.get(global.server+'/recycle/'+this.userId).then(response => {
           this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
           this.loading = false
-          toastr.success("获取用户地图成功")
+          toastr.success("获取回收站地图成功")
         }, response => {
-          toastr.error("获取用户地图失败")
+          toastr.error("获取回收站地图失败")
         })
       },
       openOp: function (index) {

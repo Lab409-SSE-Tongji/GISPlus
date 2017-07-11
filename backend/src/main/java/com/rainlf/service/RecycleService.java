@@ -14,4 +14,6 @@ public interface RecycleService {
     String restoreRecycle(String recycleId);
 
     String deleteRecycle(String recycleId);
+
+    String deleteRecycles(String userId);
 }

@@ -10,5 +10,7 @@ public interface MongoWaterPipeLayerRepository extends MongoRepository<WaterPipe
 
     WaterPipeLayer findByMapId(String mapId);
 
-    WaterPipeLayer findById(String LayerId);
+    WaterPipeLayer findById(String layerId);
+
+    WaterPipeLayer deleteByMapId(String mapId);
 }

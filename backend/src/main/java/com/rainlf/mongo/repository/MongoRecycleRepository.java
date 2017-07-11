@@ -11,4 +11,6 @@ import java.util.List;
 public interface MongoRecycleRepository extends MongoRepository<Recycle, String>{
 
     List<Recycle> findAllByUserId(String userId);
+
+    List<Recycle> deleteByUserId(String userId);
 }
