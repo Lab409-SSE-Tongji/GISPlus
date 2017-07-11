@@ -1,5 +1,6 @@
 package com.rainlf.controller;
 
+import com.rainlf.mongo.entity.User;
 import com.rainlf.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,5 +25,10 @@ public class UserController {
     @RequestMapping(value = "id/{userId}", method = RequestMethod.GET)
     public ResponseEntity getUserInfoById(@PathVariable("userId") String userId) {
         return ResponseEntity.ok(userService.getUserById(userId));
+    }
+
+    @RequestMapping(value = "id/{userId}", method = RequestMethod.PUT)
+    public ResponseEntity updateUserInfo(@PathVariable("userId") String userId, @RequestParam("userInfo")User user) {
+        return ResponseEntity.ok(userService.updateUserInfo(user));
     }
 }

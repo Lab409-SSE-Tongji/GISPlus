@@ -30,4 +30,10 @@ public class UserServiceImp implements UserService {
     public User getUserById(String userId) {
         return mongoUserRepository.findOne(userId);
     }
+
+    @Override
+    public String updateUserInfo(User user) {
+        mongoUserRepository.save(user);
+        return null;
+    }
 }

@@ -23,6 +23,9 @@ public class User {
     private Date lastPasswordResetDate;
     private List<String> roles;
 
+    private String email;
+    private String phone;
+
     public User(String username, String password, String name, Date lastPasswordResetDate, List<String> roles) {
         this.username = username;
         this.password = password;
