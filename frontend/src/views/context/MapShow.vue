@@ -45,6 +45,48 @@
       },
     },
     methods: {
+      // 标记点击事件
+      registerWellClick: function (self, marker) {
+        google.maps.event.addListener(marker, 'click', function() {
+          if (marker.statusInfo.show) {
+              marker.infoWindow.close(self.baseMap, marker)
+            marker.statusInfo.show = false
+          } else {
+            marker.infoWindow = new google.maps.InfoWindow({
+              // todo 下拉选择框
+              content: marker.statusInfo.status,
+            })
+            marker.infoWindow.open(self.baseMap, marker)
+            marker.statusInfo.show = true
+          }
+        })
+      },
+
+      // 初始化
+      initWell: function () {
+        let wells = this.layers.well.wellDomains
+        console.log(wells)
+        for (let well of wells) {
+          let position = {lat: well.y*1, lng: well.x*1}
+          let icon = {
+            url: '../../../static/img/well/well_blue.png',
+            scaledSize: new google.maps.Size(30, 30)
+          }
+          let marker = new google.maps.Marker({
+            position: position,
+            icon: icon,
+            animation: google.maps.Animation.DROP,
+            statusInfo: {
+              show: false,
+              status: well.status,
+            }
+          })
+          this.registerWellClick(this, marker)
+          this.wellLayer.wellList.push(marker)
+        }
+      },
+
+
       // 窨井盖
       getWellLayer: function () {
         this.$http.get(global.server+'/layer/well/'+this.mapId).then(response => {
@@ -53,23 +95,9 @@
             this.$set(this.layers, 'well', {})
           } else {
             this.$set(this.layers, 'well', JSON.parse(response.bodyText))
-            // 初始化 markers
-            let wells = this.layers.well.wellDomains
-            for (let well of wells) {
-              let position = {lat: well.y*1, lng: well.x*1}
-              let icon = {
-                url: '../../../static/img/well/well_blue.png',
-                scaledSize: new google.maps.Size(30, 30)
-              }
-              let marker = new google.maps.Marker({
-                position: position,
-                icon: icon,
-                animation: google.maps.Animation.DROP,
-              })
-              this.wellLayer.wellList.push(marker)
-            }
+            this.initWell()
           }
-          toastr.success("获取窨井盖层成功")
+          toastr.success("获取窨井盖层成功22")
         }, response => {
           toastr.error("获取窨井盖层失败")
         })
@@ -150,6 +178,7 @@
         mapTypeId: google.maps.MapTypeId.ROADMAP
       }
       this.baseMap = new google.maps.Map(document.getElementById('map'), mapProp);
+
 
       // 获取各个图层
       this.getWellLayer()
