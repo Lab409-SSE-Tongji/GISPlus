@@ -4,7 +4,7 @@
   <div id="page-wrapper" class="gray-bg">
     <headBar></headBar>
     <router-view name="context"></router-view>
-    <footBar></footBar>
+    <!--<footBar></footBar>-->
     </div>
   </div>
 </template>

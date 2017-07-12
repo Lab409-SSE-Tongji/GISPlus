@@ -43,7 +43,7 @@
       },
     },
     methods: {
-      // 标记点击事件
+      // 注册点击事件
       registerWellClick: function (self, marker) {
         google.maps.event.addListener(marker, 'click', function() {
           if (marker.statusInfo.show) {
@@ -107,7 +107,7 @@
           let polyline = new google.maps.Polyline({
             path: path,
             strokeColor: "#0000FF",
-            strokeOpacity: 0.8,
+            strokeOpacity: 1,
             strokeWeight: 4,
             statusInfo: {
               show: false,

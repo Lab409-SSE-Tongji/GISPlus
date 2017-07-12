@@ -4,12 +4,7 @@
     <div class="col-lg-12 btn-content">
       <button type="button" class="btn btn-primary"  @click="toggleShowLayers()">显示图层</button>
       <button type="button" class="btn btn-primary"  @click="toggleEditLayers()">编辑图层</button>
-      <button type="button" class="btn btn-primary" >{{mapId}}</button>
-      <button type="button" class="btn btn-primary" >{{editLayers.editLayerName}}</button>
-      <button type="button" class="btn btn-primary" >{{layers.well}}</button>
-      <!--<button type="button" class="btn btn-primary" >{{layers.waterPipe}}</button>-->
-      <!--<button type="button" class="btn btn-primary" >{{layers.wellList}}</button>-->
-      <!--<button type="button" class="btn btn-primary" >{{layers.waterPipeList}}</button>-->
+      <!--<button type="button" class="btn btn-primary" >{{mapId}}</button>-->
     </div>
 
     <!--显示条-->
@@ -125,7 +120,6 @@
         return (this.layers.waterPipe.id !== undefined)
       },
 
-
       // 编辑条 图层显示
       editWellStyle: function() {
         return (this.editLayers.editLayerName===this.defaultLayer.well) ? 'active' : ''
@@ -137,22 +131,101 @@
 
     },
     methods: {
+      // 注册点击事件
+      registerWellClick: function (self, marker) {
+        google.maps.event.addListener(marker, 'click', function() {
+          if (marker.statusInfo.show) {
+            marker.infoWindow.close(self.baseMap, marker)
+            marker.statusInfo.show = false
+          } else {
+            marker.infoWindow = new google.maps.InfoWindow({
+              // todo 下拉选择框
+              content: marker.statusInfo.status,
+            })
+            marker.infoWindow.open(self.baseMap, marker)
+            marker.statusInfo.show = true
+          }
+        })
+      },
+      registerWaterPipeClick: function (self, polyline) {
+        google.maps.event.addListener(polyline, 'click', function() {
+          if (polyline.statusInfo.show) {
+            polyline.infoWindow.close(self.baseMap, polyline)
+            polyline.statusInfo.show = false
+          } else {
+            polyline.infoWindow = new google.maps.InfoWindow({
+              // todo 下拉选择框
+              content: polyline.statusInfo.status,
+              position: polyline.statusInfo.position,
+            })
+            polyline.infoWindow.open(self.baseMap, polyline)
+            polyline.statusInfo.show = true
+          }
+        })
+      },
+
+      // 同步Google对象
+      syncGoogleWell: function () {
+        for (let well of this.layers.well.wellDomains) {
+          let position = {lat: well.y*1, lng: well.x*1}
+          let icon = {
+            url: '../../../static/img/well/well_blue.png',
+            scaledSize: new google.maps.Size(30, 30)
+          }
+          let marker = new google.maps.Marker({
+            position: position,
+            icon: icon,
+            animation: google.maps.Animation.DROP,
+            statusInfo: {
+              show: false,
+              status: well.status,
+            }
+          })
+          this.registerWellClick(this, marker)
+          this.layers.wellList.push(marker)
+          this.layers.wellList.push(undefined)
+        }
+      },
+      syncGoogleWaterPipe: function () {
+        for (let waterPipe of this.layers.waterPipe.waterPipeDomains) {
+          let start = new google.maps.LatLng(waterPipe.y1 * 1, waterPipe.x1 * 1)
+          let end = new google.maps.LatLng(waterPipe.y2 * 1, waterPipe.x2 * 1)
+          let path = [start, end]
+          let polyline = new google.maps.Polyline({
+            path: path,
+            strokeColor: "#0000FF",
+            strokeOpacity: 1,
+            strokeWeight: 4,
+            statusInfo: {
+              show: false,
+              status: waterPipe.status,
+              position: {
+                lat: (waterPipe.y1*1 + waterPipe.y2*1) / 2,
+                lng: (waterPipe.x1*1 + waterPipe.x2*1) / 2,
+              },
+            }
+          })
+          this.registerWaterPipeClick(this, polyline)
+          this.layers.waterPipeList.push(polyline)
+        }
+      },
+
       // 渲染图层  op: true 渲染， false 移除
       renderWellLayer: function (op = true) {
         for (let well of this.layers.wellList) {
           if (op) {
-            well.setMap(this.baseMap)
+            well && well.setMap(this.baseMap)
           } else {
-            well.setMap(null)
+            well && well.setMap(null)
           }
         }
       },
       renderWaterPipeLayer: function (op = true) {
         for (let waterPipe of this.layers.waterPipeList) {
           if (op) {
-            waterPipe.setMap(this.baseMap)
+            waterPipe && waterPipe.setMap(this.baseMap)
           } else {
-            waterPipe.setMap(null)
+            waterPipe && waterPipe.setMap(null)
           }
         }
       },
@@ -226,21 +299,7 @@
             this.$set(this.layers, 'well', {})
           } else {
             this.$set(this.layers, 'well', JSON.parse(response.bodyText))
-            // 初始化 窨井盖 markers
-            let wells = this.layers.well.wellDomains
-            for (let well of wells) {
-              let position = {lat: well.y*1, lng: well.x*1}
-              let icon = {
-                url: '../../../static/img/well/well_blue.png',
-                scaledSize: new google.maps.Size(30, 30)
-              }
-              let marker = new google.maps.Marker({
-                position: position,
-                icon: icon,
-                animation: google.maps.Animation.DROP,
-              })
-              this.layers.wellList.push(marker)
-            }
+            this.syncGoogleWell()
           }
           toastr.success("获取窨井盖层成功")
         }, response => {
@@ -301,20 +360,7 @@
             this.$set(this.layers, 'waterPipe', {})
           } else {
             this.$set(this.layers, 'waterPipe', JSON.parse(response.bodyText))
-            // 初始化 polylines
-            let waterPipes = this.layers.waterPipe.waterPipeDomains
-            for (let waterPipe of waterPipes) {
-              let start = new google.maps.LatLng(waterPipe.y1 * 1, waterPipe.x1 * 1)
-              let end = new google.maps.LatLng(waterPipe.y2 * 1, waterPipe.x2 * 1)
-              let path = [start, end]
-              let polyline = new google.maps.Polyline({
-                path: path,
-                strokeColor: "#0000FF",
-                strokeOpacity: 1,
-                strokeWeight: 2
-              })
-              this.layers.waterPipeList.push(polyline)
-            }
+            this.syncGoogleWaterPipe()
           }
           toastr.success("获取下水管道层成功")
         }, response => {
@@ -402,7 +448,6 @@
         this.editLayers.editLayerName = null
       },
       // todo @onchange 缺陷　两次上传同一文件不会触发
-      // todo 如何优雅的接收上传文件
       importFile: function () {
         let file = this.$refs.input.files[0]
         switch (this.editLayers.editLayerName) {
