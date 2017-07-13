@@ -4,10 +4,16 @@
       <button type="button" class="btn btn-success">选择显示图层</button>
       <button type="button" class="btn btn-primary btn-outline" :class="wellLayer.style" style="margin-left: 20px" v-show="wellLayerStatus" @click="toggleWellLayer()">窨井盖</button>
       <button type="button" class="btn btn-primary btn-outline" :class="waterPipeLayer.style" v-show="waterPipeLayerStatus" @click="toggleWaterPipeLayer()">下水管道</button>
+
+      <button type="button" class="btn btn-sm btn-info" :class="style3D" style="float:right; margin-top: 17px; margin-left: 10px" @click="show3D()">3D</button>
     </div>
 
     <!--todo 自适应地图高度-->
-    <div class="ibox-content" id="map" style="position: relative; height: 700px">
+    <div>
+      <div id="main-canvas" style="height:100%;width:50%;">
+      </div>
+      <div class="ibox-content" id="map" style="position: relative; height: 700px">
+      </div>
     </div>
 
   </div>
@@ -31,6 +37,7 @@
           style: '',
           waterPipeList: []
         },
+        style3D: ''
       }
     },
     computed: {
@@ -60,19 +67,22 @@
         })
       },
       registerWaterPipeClick: function (self, polyline) {
-        google.maps.event.addListener(polyline, 'click', function() {
-          if (polyline.statusInfo.show) {
-            polyline.infoWindow.close(self.baseMap, polyline)
-            polyline.statusInfo.show = false
-          } else {
-            polyline.infoWindow = new google.maps.InfoWindow({
-              // todo 下拉选择框
-              content: polyline.statusInfo.status,
-              position: polyline.statusInfo.position,
-            })
-            polyline.infoWindow.open(self.baseMap, polyline)
-            polyline.statusInfo.show = true
-          }
+        google.maps.event.addListener(polyline, 'click', function(event) {
+//            状态显示框
+//          if (polyline.statusInfo.show) {
+//            polyline.infoWindow.close(self.baseMap, polyline)
+//            polyline.statusInfo.show = false
+//          } else {
+//            polyline.infoWindow = new google.maps.InfoWindow({
+//              content: polyline.statusInfo.status,
+//              position: polyline.statusInfo.position,
+//            })
+//            polyline.infoWindow.open(self.baseMap, polyline)
+//            polyline.statusInfo.show = true
+//          }
+          // todo bug @ 谢天帝
+          let originPoint = {x: event.latLng.lng(), y: event.latLng.lat()}
+          render3D(originPoint, self.layers.waterPipe)
         })
       },
 
@@ -192,6 +202,12 @@
             }
             break
         }
+      },
+
+      show3D: function () {
+        this.style3D = (this.style3D==='') ? 'active' : ''
+
+
       }
     },
     mounted () {
@@ -201,8 +217,7 @@
         zoom: 17,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       }
-      this.baseMap = new google.maps.Map(document.getElementById('map'), mapProp);
-
+      this.baseMap = new google.maps.Map(document.getElementById('map'), mapProp)
 
       // 获取各个图层
       this.getWellLayer()
@@ -211,5 +226,18 @@
   }
 </script>
 <style>
-
+  div#main-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    display: none;
+    margin-right: -15px;
+    margin-left: -15px;
+    width: 600px;
+    height: 600px;
+    border-right: 3px solid dimgrey;
+    /*background: transparent;*/
+    background-color: rgba(238, 238, 238, 0.6);
+  }
 </style>
