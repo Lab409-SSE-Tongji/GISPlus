@@ -44,6 +44,15 @@ public class WellLayerServiceImp implements WellLayerService {
     }
 
     @Override
+    public String updateWellLayer(WellLayer wellLayer) {
+        if (mongoWellLayerRepository.findById(wellLayer.getId()) == null) {
+            return "NOT EXITS";
+        }
+        mongoWellLayerRepository.save(wellLayer);
+        return null;
+    }
+
+    @Override
     public String deleteWellLayer(String layerId) {
         mongoWellLayerRepository.delete(layerId);
         return null;

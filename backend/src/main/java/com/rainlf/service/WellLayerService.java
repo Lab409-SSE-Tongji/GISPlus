@@ -12,6 +12,8 @@ public interface WellLayerService {
 
     String addWellLayer(String mapId);
 
+    String updateWellLayer(WellLayer wellLayer);
+
     String deleteWellLayer(String layerId);
 
     String importWellLayer(String layerId, MultipartFile file);

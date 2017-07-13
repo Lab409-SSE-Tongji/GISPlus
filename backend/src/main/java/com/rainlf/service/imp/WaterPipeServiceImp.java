@@ -45,6 +45,15 @@ public class WaterPipeServiceImp implements WaterPipeService {
     }
 
     @Override
+    public String updateWaterPipeLayer(WaterPipeLayer waterPipeLayer) {
+        if (mongoWaterPipeLayerRepository.findById(waterPipeLayer.getId()) == null) {
+            return "LAYER NOT EXITS";
+        }
+        mongoWaterPipeLayerRepository.save(waterPipeLayer);
+        return null;
+    }
+
+    @Override
     public String deleteWaterPipeLayer(String layerId) {
         mongoWaterPipeLayerRepository.delete(layerId);
         return null;

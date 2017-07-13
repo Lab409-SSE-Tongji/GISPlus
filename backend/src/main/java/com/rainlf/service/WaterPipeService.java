@@ -14,6 +14,8 @@ public interface WaterPipeService {
 
     String addWaterPipeLayer(String mapId);
 
+    String updateWaterPipeLayer(WaterPipeLayer waterPipeLayer);
+
     String deleteWaterPipeLayer(String layerId);
 
     String importWaterPipeLayer(String layerId, MultipartFile file);

@@ -14,6 +14,7 @@
 
       <button type="button" class="btn btn-sm btn-info" :class="statusStyle" style="float:right; margin-top: 17px; margin-left: 10px"v-show="rightOpShow" @click="showStatusBar()">状态</button>
       <button type="button" class="btn btn-sm btn-info" :class="style3D" style="float:right; margin-top: 17px; margin-left: 10px" v-show="rightOpShow" @click="show3DFun()">3D</button>
+      <button type="button" class="btn btn-sm btn-primary" @click="show3DFun()">3D</button>
     </div>
 
     <!--状态选择条-->
@@ -86,6 +87,62 @@
       </div>
     </div>
 
+    <div class="hide" id="map-msg-point-parent">
+      <div id="map-msg-point">
+        <div class="form-group form-group-sm ">
+          <i class="fa fa-map-marker icon"></i>
+          <label>坐标</label>
+          <span>12, 23</span>
+        </div>
+        <div class="form-group form-group-sm">
+          <select v-model="curPointStatus" class="form-control">
+            <option value="0">选择状态</option>
+            <option value="GOOD">GOOD</option>
+            <option value="BROKEN">BROKEN</option>
+            <option value="LOST">LOST</option>
+          </select>
+        </div>
+
+        <div class="form-group form-group-sm">
+          <button type="button" @click="deletePointBtnClick()" class="btn btn-info btn-half-left">删除</button>
+          <button type="button" class="btn btn-danger btn-half-right" id="pointMapMsgBtn">关闭</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hide" id="map-msg-line-parent">
+      <div id="map-msg-line">
+        <div class="form-group form-group-sm ">
+          <i class="fa fa-map-marker icon"></i>
+          <label>起点</label>
+          <span>12, 23</span>
+        </div>
+        <div class="form-group form-group-sm ">
+          <i class="fa fa-map-marker icon"></i>
+          <label>终点</label>
+          <span>12, 23</span>
+        </div>
+        <div class="form-group form-group-sm">
+          <i class="fa fa-line-chart icon"></i>
+          <label>距离</label>
+          <span>666</span>
+        </div>
+        <div class="form-group form-group-sm">
+          <select v-model="curLineStatus" class="form-control">
+            <option value="0">选择状态</option>
+            <option value="GOOD">GOOD</option>
+            <option value="BROKEN">BROKEN</option>
+            <option value="LOST">LOST</option>
+          </select>
+        </div>
+
+        <div class="form-group form-group-sm">
+          <button type="button" @click="deleteLineBtnClick()" class="btn btn-info btn-half-left">删除</button>
+          <button type="button" class="btn btn-danger btn-half-right" id="lineMapMsgBtn">关闭</button>
+        </div>
+      </div>
+    </div>
+
     <!--todo 自适应地图高度-->
     <div class="ibox-content" id="map" style="position: relative; height: 700px">
     </div>
@@ -99,6 +156,10 @@
       return {
         mapId: this.$route.params.mapId,
         baseMap: null,
+        curPoint: null,
+        curPointStatus: null,
+        curLine: null,
+        curLineStatus: null,
         defaultLayer: {
           well: '窨井盖',
           waterPipe: '下水管道'
@@ -116,9 +177,11 @@
         layers: {
           well: {},
           waterPipe: {},
-          wellList: [],
+          wellList: [],  //google 同步用
           waterPipeList: [],
         },
+        curWellList: [],
+        curWaterPipeList: [], //更新数据库用
         style3D: '',
         show3D: true, // todo 改为false
         statusStyle: '',
@@ -166,14 +229,37 @@
       registerWellClick: function (self, marker) {
         google.maps.event.addListener(marker, 'click', function() {
           if (marker.statusInfo.show) {
-            marker.infoWindow.close(self.baseMap, marker)
+            document.getElementById('map-msg-point-parent').append(document.getElementById('map-msg-point'));
+            marker.infoWindow.close(self.baseMap, marker);
             marker.statusInfo.show = false
           } else {
+            if(self.curPoint !== null){
+              self.curPoint.infoWindow.ownClose();
+              self.curPoint.statusInfo.show = false;
+              self.curPoint = null;
+              self.curPointStatus = null;
+            }
+            self.curPointStatus = marker.statusInfo.status;
+            self.curPoint = marker;
             marker.infoWindow = new google.maps.InfoWindow({
               // todo 下拉选择框
-              content: marker.statusInfo.status,
+                content: document.getElementById('map-msg-point')
             })
-            marker.infoWindow.open(self.baseMap, marker)
+            marker.infoWindow.open(self.baseMap, marker);
+
+            marker.infoWindow.ownClose = () => {
+              document.getElementById('map-msg-point-parent').append(document.getElementById('map-msg-point'))
+              marker.infoWindow.close(self.baseMap, marker)
+            }
+
+            google.maps.event.addListener(marker.infoWindow, 'domready', function () {
+              var closeBtn = $('.gm-style-iw').next()
+              closeBtn.hide()
+              $('#pointMapMsgBtn').on('click', function (event) {
+                marker.infoWindow.ownClose()
+                marker.statusInfo.show = false
+              })
+            })
             marker.statusInfo.show = true
           }
         })
@@ -181,15 +267,40 @@
       registerWaterPipeClick: function (self, polyline) {
         google.maps.event.addListener(polyline, 'click', function() {
           if (polyline.statusInfo.show) {
+            document.getElementById('map-msg-line-parent').append(document.getElementById('map-msg-line'));
             polyline.infoWindow.close(self.baseMap, polyline)
             polyline.statusInfo.show = false
           } else {
+            if(self.curLine !== null){
+              self.curLine.infoWindow.ownClose();
+              self.curLine.statusInfo.show = false;
+              self.curLine = null;
+              self.curLineStatus = null;
+            }
+            self.curLineStatus = polyline.statusInfo.status;
+            self.curLine = polyline;
             polyline.infoWindow = new google.maps.InfoWindow({
               // todo 下拉选择框
-              content: polyline.statusInfo.status,
+//              content: polyline.statusInfo.status,
+              content: document.getElementById('map-msg-line'),
               position: polyline.statusInfo.position,
             })
-            polyline.infoWindow.open(self.baseMap, polyline)
+            polyline.infoWindow.open(self.baseMap, polyline);
+
+            polyline.infoWindow.ownClose = () => {
+              document.getElementById('map-msg-line-parent').append(document.getElementById('map-msg-line'));
+              polyline.infoWindow.close(self.baseMap, polyline);
+            }
+
+            google.maps.event.addListener(polyline.infoWindow, 'domready', function () {
+              var closeBtn = $('.gm-style-iw').next();
+              closeBtn.hide();
+              $('#lineMapMsgBtn').on('click', function (event) {
+                polyline.infoWindow.ownClose()
+                polyline.statusInfo.show = false
+              })
+            })
+
             polyline.statusInfo.show = true
           }
         })
@@ -225,7 +336,8 @@
             statusInfo: {
               show: false,
               status: well.status,
-            }
+            },
+            originInfo: well,
           })
           this.registerWellClick(this, marker)
           this.layers.wellList.push(marker)
@@ -263,6 +375,7 @@
                 lat: (waterPipe.y1*1 + waterPipe.y2*1) / 2,
                 lng: (waterPipe.x1*1 + waterPipe.x2*1) / 2,
               },
+              originInfo: polyline,
             }
           })
           this.registerWaterPipeClick(this, polyline)
@@ -359,7 +472,8 @@
             this.$set(this.layers, 'well', {})
           } else {
             this.$set(this.layers, 'well', JSON.parse(response.bodyText))
-            this.syncGoogleWell()
+            this.syncGoogleWell();
+            this.curWellList = this.layers.well.wellDomains.concat();
           }
           toastr.success("获取窨井盖层成功")
         }, response => {
@@ -421,6 +535,7 @@
           } else {
             this.$set(this.layers, 'waterPipe', JSON.parse(response.bodyText))
             this.syncGoogleWaterPipe()
+            this.curWaterPipeList = this.layers.waterPipe.waterPipeDomains.concat();
           }
           toastr.success("获取下水管道层成功")
         }, response => {
@@ -652,6 +767,31 @@
         this.style3D = (this.style3D==='') ? 'active' : ''
 //        this.show3D = !this.show3D
       },
+
+      /* utils */
+      removeListByValue: function (arr, val) {
+        for(let i=0; i<arr.length; i++) {
+          if(arr[i] === val) {
+            arr.splice(i, 1);
+            break;
+          }
+        }
+      },
+
+      deleteLineBtnClick: function () {
+        this.curLine.infoWindow.ownClose();
+        this.curLine.setMap(null);
+        this.removeListByValue(this.curWaterPipeList,this.curLine.originInfo);
+        this.curLine = null;
+      },
+
+      deletePointBtnClick: function () {
+          this.curPoint.infoWindow.ownClose();
+          this.curPoint.setMap(null);
+          this.removeListByValue(this.curWellList,this.curPoint.originInfo);
+          this.curPoint = null;
+      },
+
     },
 
     // 初始化
