@@ -7,6 +7,7 @@
 
       <button type="button" class="btn btn-sm btn-info" :class="statusStyle" style="float:right; margin-top: 17px; margin-left: 10px"v-show="rightOpShow" @click="showStatusBar()">状态</button>
       <button type="button" class="btn btn-sm btn-info" :class="style3D" style="float:right; margin-top: 17px; margin-left: 10px" v-show="rightOpShow" @click="show3DFun()">3D</button>
+
     </div>
     <!--状态选择条-->
     <div class="col-lg-12 btn-content" v-show="statusBar.show">
@@ -19,10 +20,10 @@
 
 
     <!--todo 自适应地图高度-->
-    <div>
-      <div id="main-canvas" style="height:100%;width:50%;" v-show="show3D">
+    <div class="ibox-content" style="position: relative; padding: 0 0 0 0">
+      <div id="main-canvas" style="position: absolute; height: 700px; width:50%; z-index: 1; border-right: 3px solid dimgrey; background-color: rgba(238, 238, 238, 0.6);" v-show="show3D">
       </div>
-      <div class="ibox-content" id="map" style="position: relative; height: 700px">
+      <div id="map" style="position: relative; height: 700px">
       </div>
     </div>
 
@@ -48,7 +49,7 @@
           waterPipeList: []
         },
         style3D: '',
-        show3D: true, // todo 改为false
+        show3D: false,
         statusStyle: '',
         statusBar: {
           show: false,
@@ -102,9 +103,9 @@
 //            polyline.infoWindow.open(self.baseMap, polyline)
 //            polyline.statusInfo.show = true
 //          }
-          // todo bug @ 谢天帝
           let originPoint = {x: event.latLng.lng(), y: event.latLng.lat()}
-          render3D(originPoint, self.layers.waterPipe)
+          $("#main-canvas").html("")
+          render3D(originPoint, self.layers.waterPipe.waterPipeDomains)
         })
       },
 
@@ -369,7 +370,7 @@
 
       show3DFun: function () {
         this.style3D = (this.style3D==='') ? 'active' : ''
-//        this.show3D = !this.show3D
+        this.show3D = !this.show3D
       }
     },
     mounted () {
@@ -388,18 +389,5 @@
   }
 </script>
 <style>
-  div#main-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    display: none;
-    margin-right: -15px;
-    margin-left: -15px;
-    width: 600px;
-    height: 600px;
-    border-right: 3px solid dimgrey;
-    /*background: transparent;*/
-    background-color: rgba(238, 238, 238, 0.6);
-  }
+
 </style>

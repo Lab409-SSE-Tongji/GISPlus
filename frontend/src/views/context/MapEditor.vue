@@ -87,7 +87,11 @@
     </div>
 
     <!--todo 自适应地图高度-->
-    <div class="ibox-content" id="map" style="position: relative; height: 700px">
+    <div class="ibox-content" style="position: relative; padding: 0 0 0 0">
+      <div id="main-canvas" style="position: absolute; height: 700px; width:50%; z-index: 1; border-right: 3px solid dimgrey; background-color: rgba(238, 238, 238, 0.6);" v-show="show3D">
+      </div>
+      <div id="map" style="position: relative; height: 700px">
+      </div>
     </div>
   </div>
 </template>
@@ -120,7 +124,7 @@
           waterPipeList: [],
         },
         style3D: '',
-        show3D: true, // todo 改为false
+        show3D: false,
         statusStyle: '',
         statusBar: {
           show: false,
@@ -179,19 +183,22 @@
         })
       },
       registerWaterPipeClick: function (self, polyline) {
-        google.maps.event.addListener(polyline, 'click', function() {
-          if (polyline.statusInfo.show) {
-            polyline.infoWindow.close(self.baseMap, polyline)
-            polyline.statusInfo.show = false
-          } else {
-            polyline.infoWindow = new google.maps.InfoWindow({
-              // todo 下拉选择框
-              content: polyline.statusInfo.status,
-              position: polyline.statusInfo.position,
-            })
-            polyline.infoWindow.open(self.baseMap, polyline)
-            polyline.statusInfo.show = true
-          }
+        google.maps.event.addListener(polyline, 'click', function(event) {
+//          if (polyline.statusInfo.show) {
+//            polyline.infoWindow.close(self.baseMap, polyline)
+//            polyline.statusInfo.show = false
+//          } else {
+//            polyline.infoWindow = new google.maps.InfoWindow({
+//              // todo 下拉选择框
+//              content: polyline.statusInfo.status,
+//              position: polyline.statusInfo.position,
+//            })
+//            polyline.infoWindow.open(self.baseMap, polyline)
+//            polyline.statusInfo.show = true
+//          }
+          let originPoint = {x: event.latLng.lng(), y: event.latLng.lat()}
+          $("#main-canvas").html("")
+          render3D(originPoint, self.layers.waterPipe.waterPipeDomains)
         })
       },
 
@@ -650,8 +657,8 @@
 
       show3DFun: function () {
         this.style3D = (this.style3D==='') ? 'active' : ''
-//        this.show3D = !this.show3D
-      },
+        this.show3D = !this.show3D
+      }
     },
 
     // 初始化

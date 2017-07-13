@@ -135,19 +135,19 @@ function addPipeWithLineArray(originPoint,lineArray)
 {
   let zoomsize = 1000000;
   for(let i=0; i<lineArray.length;i++){
-    let color = "#59ea40";
+    let color = "#0aea04";
     let lineInfo = lineArray[i];
-    let xpos = (lineInfo.x - originPoint.x)*zoomsize;
-    let ypos = -(lineInfo.y - originPoint.y)*zoomsize;
-    let zpos = lineInfo.z;
+    let xpos = (lineInfo.x1 - originPoint.x)*zoomsize;
+    let ypos = -(lineInfo.y1 - originPoint.y)*zoomsize;
+    let zpos = lineInfo.z1;
     let startPoint = new THREE.Vector3(xpos, zpos, ypos);
 
     let xpos2 = (lineInfo.x2 - originPoint.x)*zoomsize;
     let ypos2 = -(lineInfo.y2 - originPoint.y)*zoomsize;
     let zpos2 = lineInfo.z2;
     let endPoint = new THREE.Vector3(xpos2, zpos2, ypos2);
-    if(lineInfo.status === "BREAK") color = "#FF0000";
-    if(lineInfo.status === "BAD") color = "#000000";
+    if(lineInfo.status === "BROKEN") color = "#ff038e";
+    if(lineInfo.status === "LOST") color = "#000000";
 
     addSingleTubeWithUserData(startPoint, endPoint,null,color);
   }
