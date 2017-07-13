@@ -25,6 +25,7 @@ public class User {
 
     private String email;
     private String phone;
+    private String imgUrl;
 
     public User(String username, String password, String name, Date lastPasswordResetDate, List<String> roles) {
         this.username = username;
@@ -32,6 +33,30 @@ public class User {
         this.name = name;
         this.lastPasswordResetDate = lastPasswordResetDate;
         this.roles = roles;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public String getId() {

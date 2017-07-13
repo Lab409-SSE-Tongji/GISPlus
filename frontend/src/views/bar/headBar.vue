@@ -81,7 +81,7 @@ export default {
       $("body").toggleClass("mini-navbar");
     },
 
-     cleanRecycle: function () {
+    cleanRecycle: function () {
       this.$http.delete(global.server+'/recycle/all/'+this.userId).then(response => {
         toastr.success("清空回收站成功")
         // todo 向回收站传递消息 组件间通讯 mutation?
@@ -91,7 +91,7 @@ export default {
     }
   },
   created () {
-    this.toggleMenu()
+//    this.toggleMenu()
   }
 }
 </script>
