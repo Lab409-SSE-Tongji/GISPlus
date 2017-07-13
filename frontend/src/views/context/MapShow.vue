@@ -5,8 +5,17 @@
       <button type="button" class="btn btn-primary btn-outline" :class="wellLayer.style" style="margin-left: 20px" v-show="wellLayerStatus" @click="toggleWellLayer()">窨井盖</button>
       <button type="button" class="btn btn-primary btn-outline" :class="waterPipeLayer.style" v-show="waterPipeLayerStatus" @click="toggleWaterPipeLayer()">下水管道</button>
 
+      <button type="button" class="btn btn-sm btn-info" :class="statusBarStyle" style="float:right; margin-top: 17px; margin-left: 10px" @click="showStatus()">状态</button>
       <button type="button" class="btn btn-sm btn-info" :class="style3D" style="float:right; margin-top: 17px; margin-left: 10px" @click="show3D()">3D</button>
     </div>
+    <div class="col-lg-12 btn-content" v-show="statusBarShow">
+      <button type="button" class="btn btn-sm btn-success">选择显示状态</button>
+      <button type="button" class="btn btn-sm btn-primary btn-outline" style="margin-left: 36px" @click="">正常</button>
+      <button type="button" class="btn btn-sm btn-danger btn-outline"  @click="">损坏</button>
+      <button type="button" class="btn btn-sm btn-default btn-outline" @click="">丢失</button>
+    </div>
+
+
 
     <!--todo 自适应地图高度-->
     <div>
@@ -37,7 +46,9 @@
           style: '',
           waterPipeList: []
         },
-        style3D: ''
+        style3D: '',
+        statusBarShow: false,
+        statusBarStyle: '',
       }
     },
     computed: {
@@ -231,6 +242,15 @@
               waterPipe.setMap(null)
             }
             break
+        }
+      },
+
+      showStatus: function () {
+        this.statusBarShow = !this.statusBarShow
+        if (this.statusBarShow) {
+          this.statusBarStyle = 'active'
+        } else {
+          this.statusBarStyle = ''
         }
       },
 
