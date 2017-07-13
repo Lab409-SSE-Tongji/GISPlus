@@ -91,8 +91,23 @@
         let wells = this.layers.well.wellDomains
         for (let well of wells) {
           let position = {lat: well.y*1, lng: well.x*1}
+          let url = null
+          switch (well.status) {
+            case 'GOOD':
+                url = '../../../static/img/well/well_blue.png'
+                  break
+            case 'BROKEN':
+                url = '../../../static/img/well/well_red.png'
+                  break
+            case 'LOST':
+                url = '../../../static/img/well/well_black.png'
+                  break
+            default:
+                url = '../../../static/img/well/well_blue.png'  //default GOOD
+                  break
+          }
           let icon = {
-            url: '../../../static/img/well/well_blue.png',
+            url: url,
             scaledSize: new google.maps.Size(30, 30)
           }
           let marker = new google.maps.Marker({
@@ -114,9 +129,24 @@
           let start = new google.maps.LatLng(waterPipe.y1 * 1, waterPipe.x1 * 1)
           let end = new google.maps.LatLng(waterPipe.y2 * 1, waterPipe.x2 * 1)
           let path = [start, end]
+          let strokeColor = null
+          switch (waterPipe.status) {
+            case 'GOOD':
+                strokeColor = "#0000FF"
+                  break
+            case 'BROKEN':
+                strokeColor = "#ff2a39"
+                  break
+            case 'LOST':
+                strokeColor = "#1e1e1e"
+                  break
+            default:
+                strokeColor = "#0000FF"
+                  break
+          }
           let polyline = new google.maps.Polyline({
             path: path,
-            strokeColor: "#0000FF",
+            strokeColor: strokeColor,
             strokeOpacity: 1,
             strokeWeight: 4,
             statusInfo: {
