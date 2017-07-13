@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WebMapEditorApplication {
+public class GISPlusApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WebMapEditorApplication.class, args);
+		SpringApplication.run(GISPlusApplication.class, args);
 	}
 }
