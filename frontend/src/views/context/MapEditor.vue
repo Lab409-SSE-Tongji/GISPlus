@@ -4,7 +4,6 @@
     <div class="col-lg-12 btn-content">
       <button type="button" class="btn btn-primary"  @click="toggleShowLayers()">显示图层</button>
       <button type="button" class="btn btn-primary"  @click="toggleEditLayers()">编辑图层</button>
-      <!--<button type="button" class="btn btn-primary" >{{mapId}}</button>-->
     </div>
 
     <!--显示条-->
@@ -12,6 +11,17 @@
       <button type="button" class="btn btn-sm btn-success">选择显示图层</button>
       <button type="button" class="btn btn-sm btn-primary btn-outline" :class="showLayers.wellStyle" style="margin-left: 20px" v-show="wellExist" @click="toggleShowWellLayer()">窨井盖</button>
       <button type="button" class="btn btn-sm btn-primary btn-outline" :class="showLayers.waterPipeStyle" v-show="waterPipeExist" @click="toggleShowWaterPipeLayer()">下水管道</button>
+
+      <button type="button" class="btn btn-sm btn-info" :class="statusStyle" style="float:right; margin-top: 17px; margin-left: 10px"v-show="rightOpShow" @click="showStatusBar()">状态</button>
+      <button type="button" class="btn btn-sm btn-info" :class="style3D" style="float:right; margin-top: 17px; margin-left: 10px" v-show="rightOpShow" @click="show3DFun()">3D</button>
+    </div>
+
+    <!--状态选择条-->
+    <div class="col-lg-12 btn-content" v-show="statusBar.show">
+      <button type="button" class="btn btn-sm btn-success">选择显示状态</button>
+      <button type="button" class="btn btn-sm btn-primary btn-outline" :class="statusBar.goodStyle" style="margin-left: 36px" @click="showGoodStatus()">正常</button>
+      <button type="button" class="btn btn-sm btn-danger btn-outline" :class="statusBar.brokenStyle" @click="showBrokenStatus()">损坏</button>
+      <button type="button" class="btn btn-sm btn-default btn-outline" :class="statusBar.lostStyle" @click="showLostStatus()">丢失</button>
     </div>
 
     <!--操作条-->
@@ -109,6 +119,15 @@
           wellList: [],
           waterPipeList: [],
         },
+        style3D: '',
+        show3D: true, // todo 改为false
+        statusStyle: '',
+        statusBar: {
+          show: false,
+          goodStyle: 'active',
+          brokenStyle: 'active',
+          lostStyle: 'active',
+        },
       }
     },
     computed: {
@@ -129,6 +148,18 @@
         return (this.editLayers.editLayerName===this.defaultLayer.waterPipe) ? 'active' : ''
       },
 
+      // 右侧操作按钮显示
+      rightOpShow: function () {
+        return (this.showLayers.wellStyle==='active') || (this.showLayers.waterPipeStyle==='active')
+      },
+
+    },
+    watch: {
+      rightOpShow: function () {
+        if (!this.rightOpShow) {
+            this.statusBar.show = false
+        }
+      }
     },
     methods: {
       // 注册点击事件
@@ -198,7 +229,6 @@
           })
           this.registerWellClick(this, marker)
           this.layers.wellList.push(marker)
-          this.layers.wellList.push(undefined)
         }
       },
       syncGoogleWaterPipe: function () {
@@ -504,6 +534,123 @@
             toastr.error("请选择：要导出的图层")
             break
         }
+      },
+
+      // 状态显示
+      showStatusBar: function () {
+        this.statusBar.show = !this.statusBar.show
+        if (this.statusBar.show) {
+          this.statusStyle = 'active'
+        } else {
+          this.statusStyle = ''
+        }
+      },
+      showGoodStatus: function () {
+        // 触发状态变更
+        this.statusBar.goodStyle = (this.statusBar.goodStyle === '') ? 'active' : ''
+        // 根据变更后的状态(当前状态)，执行处理
+        if (this.showLayers.wellStyle === 'active') {
+          if (this.statusBar.goodStyle === 'active') {
+            for (let googleWell of this.layers.wellList) {
+              if (googleWell.statusInfo.status === 'GOOD') {
+                googleWell.setMap(this.baseMap)
+              }
+            }
+          } else {
+            for (let googleWell of this.layers.wellList) {
+              if (googleWell.statusInfo.status === 'GOOD') {
+                googleWell.setMap(null)
+              }
+            }
+          }
+        }
+        if (this.showLayers.waterPipeStyle === 'active') {
+          if (this.statusBar.goodStyle === 'active') {
+            for (let googleWaterPipe of this.layers.waterPipeList) {
+              if (googleWaterPipe.statusInfo.status === 'GOOD') {
+                googleWaterPipe.setMap(this.baseMap)
+              }
+            }
+          } else {
+            for (let googleWaterPipe of this.layers.waterPipeList) {
+              if (googleWaterPipe.statusInfo.status === 'GOOD') {
+                googleWaterPipe.setMap(null)
+              }
+            }
+          }
+        }
+      },
+      showBrokenStatus: function () {
+        this.statusBar.brokenStyle = (this.statusBar.brokenStyle === '') ? 'active' : ''
+        if (this.showLayers.wellStyle === 'active') {
+          if (this.statusBar.brokenStyle === 'active') {
+            for (let googleWell of this.layers.wellList) {
+              if (googleWell.statusInfo.status === 'BROKEN') {
+                googleWell.setMap(this.baseMap)
+              }
+            }
+          } else {
+            for (let googleWell of this.layers.wellList) {
+              if (googleWell.statusInfo.status === 'BROKEN') {
+                googleWell.setMap(null)
+              }
+            }
+          }
+        }
+        if (this.showLayers.waterPipeStyle === 'active') {
+          if (this.statusBar.brokenStyle === 'active') {
+            for (let googleWaterPipe of this.layers.waterPipeList) {
+              if (googleWaterPipe.statusInfo.status === 'BROKEN') {
+                googleWaterPipe.setMap(this.baseMap)
+              }
+            }
+          } else {
+            for (let googleWaterPipe of this.layers.waterPipeList) {
+              if (googleWaterPipe.statusInfo.status === 'BROKEN') {
+                googleWaterPipe.setMap(null)
+              }
+            }
+          }
+        }
+      },
+      showLostStatus: function () {
+        this.statusBar.lostStyle = (this.statusBar.lostStyle === '') ? 'active' : ''
+        if (this.showLayers.wellStyle === 'active') {
+          if (this.statusBar.lostStyle === 'active') {
+            for (let googleWell of this.layers.wellList) {
+              if (googleWell.statusInfo.status === 'LOST') {
+                googleWell.setMap(this.baseMap)
+              }
+            }
+          } else {
+            for (let googleWell of this.layers.wellList) {
+              if (googleWell.statusInfo.status === 'LOST') {
+                googleWell.setMap(null)
+              }
+            }
+          }
+        }
+        if (this.showLayers.waterPipeStyle === 'active') {
+          if (this.statusBar.lostStyle === 'active') {
+            for (let googleWaterPipe of this.layers.waterPipeList) {
+              if (googleWaterPipe.statusInfo.status === 'LOST') {
+                googleWaterPipe.setMap(this.baseMap)
+              }
+            }
+          } else {
+            for (let googleWaterPipe of this.layers.waterPipeList) {
+              if (googleWaterPipe.statusInfo.status === 'LOST') {
+                googleWaterPipe.setMap(null)
+              }
+            }
+          }
+        }
+      },
+
+
+      show3DFun: function () {
+        this.style3D = (this.style3D==='') ? 'active' : ''
+//        this.show3D = !this.show3D
       },
     },
 

@@ -8,6 +8,7 @@
       <button type="button" class="btn btn-sm btn-info" :class="statusStyle" style="float:right; margin-top: 17px; margin-left: 10px"v-show="rightOpShow" @click="showStatusBar()">状态</button>
       <button type="button" class="btn btn-sm btn-info" :class="style3D" style="float:right; margin-top: 17px; margin-left: 10px" v-show="rightOpShow" @click="show3DFun()">3D</button>
     </div>
+    <!--状态选择条-->
     <div class="col-lg-12 btn-content" v-show="statusBar.show">
       <button type="button" class="btn btn-sm btn-success">选择显示状态</button>
       <button type="button" class="btn btn-sm btn-primary btn-outline" :class="statusBar.goodStyle" style="margin-left: 36px" @click="showGoodStatus()">正常</button>
@@ -264,7 +265,6 @@
           this.statusStyle = ''
         }
       },
-
       showGoodStatus: function () {
         // 触发状态变更
         this.statusBar.goodStyle = (this.statusBar.goodStyle === '') ? 'active' : ''
@@ -366,7 +366,6 @@
           }
         }
       },
-
 
       show3DFun: function () {
         this.style3D = (this.style3D==='') ? 'active' : ''
