@@ -72,7 +72,7 @@
       <div class="ibox-div-map">
         <div class="ibox ibox-map" v-for="(map, index) in maps">
           <div class="img-box img-box-map" @click="enterMap(index)">
-            <img class="map-img" src="../../assets/myMap.jpg">
+            <img class="map-img" src="../../assets/defaultMap.jpg">
           </div>
           <label class="name">{{map.mapName}}</label>
           <div class="checkBox-map">
