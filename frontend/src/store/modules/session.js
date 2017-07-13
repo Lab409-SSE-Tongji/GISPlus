@@ -9,6 +9,7 @@ const state = {
   username: localStorage.username || '',
   token: localStorage.token || '',
   userId: localStorage.userId || '',
+  roles: localStorage.roles || '',
 }
 
 const getters = {
@@ -16,6 +17,7 @@ const getters = {
   username: state => state.username,
   token: state => state.token,
   userId: state => state.userId,
+  roles: state => state.roles,
 }
 
 const actions = {
@@ -31,24 +33,28 @@ const mutations = {
     localStorage.login = state.login
     localStorage.username = state.username
     localStorage.token = state.token
+    localStorage.roles = state.roles
 	},
 
 	[LOG_OUT] (state) {
     state.login = false
 		state.username = ""
     state.token = ""
+    state.roles = ""
 
     localStorage.login = state.login
     localStorage.username = state.username
     localStorage.token = state.token
+    localStorage.roles = state.roles
 	},
 
+  // 补全 user session 信息
   [USER_INIT] (state, userInfo) {
-	  state.userId  = userInfo.id
+    state.userId  = userInfo.id
+    state.roles  = userInfo.roles
 
     localStorage.userId = state.userId
   }
-
 }
 
 export default {

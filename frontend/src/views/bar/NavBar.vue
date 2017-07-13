@@ -29,49 +29,70 @@
 <script>
   import {mapGetters} from 'vuex'
   export default {
-    name: "",
+    name: "navBar",
     data () {
       return {
         activeItem:0,
-        items: [
-          {
-            target: '/mapManager',
-            title: '地图管理 admin',
-            iconName: 'fa-map-o'
-          },
-          {
-            target: '/mapShowManager',
-            title: '地图管理 user',
-            iconName: 'fa-map-o'
-          },
-          {
-            target: '/userManager',
-            title: '用户管理',
-            iconName: 'fa-address-book'
-          },
-          {
-            target: '/userProfile',
-            title: '个人信息',
-            iconName: 'fa-user-o'
-          },
-          {
-            target: '/recycle',
-            title: '回收站',
-            iconName: 'fa-recycle'
-          },
-        ]
+        items: [],
       }
     },
     computed: {
       ...mapGetters({
-        username: 'username'
+        username: 'username',
+        roles: 'roles',
       })
+    },
+    watch: {
+      roles: function () {
+        if (this.roles.includes('ROLE_ADMIN')) {
+            this.items = [
+              {
+                target: '/mapManager',
+                title: '地图管理 admin',
+                iconName: 'fa-map-o'
+              },
+              {
+                target: '/mapShowManager',    // todo 删除
+                title: '地图管理 user',
+                iconName: 'fa-map-o'
+              },
+              {
+                target: '/userManager',
+                title: '用户管理',
+                iconName: 'fa-address-book'
+              },
+              {
+                target: '/userProfile',
+                title: '个人信息',
+                iconName: 'fa-user-o'
+              },
+              {
+                target: '/recycle',
+                title: '回收站',
+                iconName: 'fa-recycle'
+              },
+            ]
+        } else if (this.roles.includes('ROLE_USER')) {
+          this.items = [
+            {
+              target: '/mapShowManager',
+              title: '地图管理 user',
+              iconName: 'fa-map-o'
+            },
+            {
+              target: '/userProfile',
+              title: '个人信息',
+              iconName: 'fa-user-o'
+            },
+          ]
+        }
+      }
     },
     methods: {
       itemClick: function(index){
         this.activeItem = index;
       }
-    }
+    },
   }
 </script>
 
