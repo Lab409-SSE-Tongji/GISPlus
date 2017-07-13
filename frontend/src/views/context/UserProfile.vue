@@ -12,10 +12,7 @@
             <h2>{{userId}}</h2>
           </div>
 
-          <!--todo 按钮布局-->
-          <button type="button" class="btn btn-primary" @click="openEditor()">编辑</button>
-          <button type="button" class="btn btn-primary">取消</button>
-          <button type="button" class="btn btn-primary">保存</button>
+          
 
 
           <div class="contact">
@@ -24,13 +21,13 @@
             <el-row :gutter="10">
               <el-col :xs="8" :sm="6" :md="4" :lg="3">
                 <div class="item-head">
-                  <span>邮箱</span>
+                  <span>邮箱<span style="color:red;" v-show="isShow">*</span></span>
                 </div>
               </el-col>
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <span class="email">{{email}}</span>
+                    <span v-bind:CONTENTEDITABLE=isEdit class="email" v-on:blur="changeEmail()">{{email}}</span>
                   </div>
                 </div>
               </el-col>
@@ -39,13 +36,13 @@
             <el-row :gutter="10">
               <el-col :xs="8" :sm="6" :md="4" :lg="3">
                 <div class="item-head">
-                  <span>手机</span>
+                  <span>手机<span style="color:red;" v-show="isShow">*</span></span>
                 </div>
               </el-col>
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <span class="phone">{{phone}}</span>
+                    <span v-bind:CONTENTEDITABLE=isEdit class="phone" v-on:blur="changePhone()">{{phone}}</span>
                   </div>
                 </div>
               </el-col>
@@ -58,13 +55,13 @@
             <el-row :gutter="10">
               <el-col :xs="8" :sm="6" :md="4" :lg="3">
                 <div class="item-head">
-                  <span>姓名</span>
+                  <span>姓名<span style="color:red;" v-show="isShow">*</span></span>
                 </div>
               </el-col>
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <span class="realname">{{name}}</span>
+                    <span v-bind:CONTENTEDITABLE=isEdit class="realname" v-on:blur="changeName()">{{name}}</span>
                   </div>
                 </div>
               </el-col>
@@ -73,13 +70,13 @@
             <el-row :gutter="10">
               <el-col :xs="8" :sm="6" :md="4" :lg="3">
                 <div class="item-head">
-                  <span>职务</span>
+                  <span>职务<span style="color:red;" v-show="isShow">*</span></span>
                 </div>
               </el-col>
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <span>{{role}}</span>
+                    <span v-bind:CONTENTEDITABLE=isEdit v-on:blur="changeRole()">{{role}}</span>
                   </div>
                 </div>
               </el-col>
@@ -89,6 +86,10 @@
           <div class="edit">
             <hr>
             <!-- <el-button :plain="true" type="success">修改资料</el-button> -->
+            <!--todo 按钮布局-->
+            <button type="button" class="btn btn-primary" v-show="!isShow" @click="openEditor()">编辑</button>
+            <button type="button" class="btn btn-primary" v-show="isShow" @click="cancel()">取消</button>
+            <button type="button" class="btn btn-primary" v-show="isShow" @click="save()">保存</button>
           </div>
         </div>
       </el-col>
@@ -99,7 +100,7 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex';
 export default {
   data() {
     return {
@@ -107,6 +108,10 @@ export default {
       email: '我是邮箱',
       phone: '我是电话',
       role: '我是谁',
+      isEdit: false,
+      isShow: false,
+      isEditableSpan: false,
+      tempData:[]
     }
   },
   computed: {
@@ -123,6 +128,43 @@ export default {
       }, response => {
         toastr.error("获取用户信息失败")
       })
+    },
+ 	changeName: function() {
+      this.name = event.srcElement.innerHTML;
+    },
+    changeEmail: function() {
+      this.email = event.srcElement.innerHTML;
+    },
+    changePhone: function() {
+      this.phone = event.srcElement.innerHTML;
+    },
+    changeRole: function() {
+      this.role = event.srcElement.innerHTML;
+    },
+    openEditor: function(){
+    	this.isEdit = true;
+    	this.isShow = true;
+    	this.isEditableSpan = true;
+    	//保存历史数据，用于“取消”按钮
+    	this.tempData.push(this.name);
+    	this.tempData.push(this.email);
+    	this.tempData.push(this.phone);
+    	this.tempData.push(this.role);
+    },
+    cancel: function(){
+    	this.isEdit = false;
+    	this.isShow = false;
+    	this.isEditableSpan = false;
+    	this.role = this.tempData[3];
+    	this.phone = this.tempData[2];
+    	this.email = this.tempData[1];
+    	this.name = this.tempData[0];
+    },
+    save: function(){
+    	this.isEdit = false;
+    	this.isShow = false;
+    	this.isEditableSpan = false;
+    	this.tempData = [];
     }
   },
   created () {
@@ -132,6 +174,12 @@ export default {
 </script>
 
 <style scoped>
+.editable-span{
+	background: blue;
+}
+.notEditable-span{
+	
+}
 .ms-doc {
   margin-top: 3%;
   width: 100%;
