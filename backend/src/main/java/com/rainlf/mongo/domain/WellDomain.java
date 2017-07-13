@@ -9,6 +9,7 @@ public class WellDomain {
     private String y;
     private String z;
     private String status;
+    private String imgUrl;
 
     public WellDomain() {
     }
@@ -18,6 +19,14 @@ public class WellDomain {
         this.y = y;
         this.z = z;
         this.status = status;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public String getX() {

@@ -135,14 +135,11 @@ const router = new Router({
         },
       ]
     },
-
-
-
-    // {
-    //   path: '*',
-    //   name: 'others',
-    //   redirect: '/'
-    // }
+    {
+      path: '*',
+      name: 'others',
+      redirect: '/'
+    }
   ]
 })
 

@@ -14,7 +14,8 @@
 
       <button type="button" class="btn btn-sm btn-info" :class="statusStyle" style="float:right; margin-top: 17px; margin-left: 10px"v-show="rightOpShow" @click="showStatusBar()">状态</button>
       <button type="button" class="btn btn-sm btn-info" :class="style3D" style="float:right; margin-top: 17px; margin-left: 10px" v-show="rightOpShow" @click="show3DFun()">3D</button>
-      <button type="button" class="btn btn-sm btn-primary" @click="show3DFun()">3D</button>
+      <button type="button" class="btn btn-sm btn-primary" @click="submitChange()">提交更改</button>
+      <button type="button" class="btn btn-sm btn-primary" @click="addPoint()">添加点</button>
     </div>
 
     <!--状态选择条-->
@@ -92,7 +93,8 @@
         <div class="form-group form-group-sm ">
           <i class="fa fa-map-marker icon"></i>
           <label>坐标</label>
-          <span>12, 23</span>
+          <br>
+          <span>{{lat}}, {{lng}}</span>
         </div>
         <div class="form-group form-group-sm">
           <select v-model="curPointStatus" class="form-control">
@@ -115,17 +117,17 @@
         <div class="form-group form-group-sm ">
           <i class="fa fa-map-marker icon"></i>
           <label>起点</label>
-          <span>12, 23</span>
+          <span>{{linex1}}, {{liney1}}</span>
         </div>
         <div class="form-group form-group-sm ">
           <i class="fa fa-map-marker icon"></i>
           <label>终点</label>
-          <span>12, 23</span>
+          <span>{{linex2}}, {{liney2}}</span>
         </div>
         <div class="form-group form-group-sm">
           <i class="fa fa-line-chart icon"></i>
           <label>距离</label>
-          <span>666</span>
+          <span>{{lineDis}}</span>
         </div>
         <div class="form-group form-group-sm">
           <select v-model="curLineStatus" class="form-control">
@@ -144,7 +146,11 @@
     </div>
 
     <!--todo 自适应地图高度-->
-    <div class="ibox-content" id="map" style="position: relative; height: 700px">
+    <div class="ibox-content" style="position: relative; padding: 0 0 0 0">
+      <div id="main-canvas" style="position: absolute; height: 700px; width:50%; z-index: 1; border-right: 3px solid dimgrey; background-color: rgba(238, 238, 238, 0.6);" v-show="show3D">
+      </div>
+      <div id="map" style="position: relative; height: 700px">
+      </div>
     </div>
   </div>
 </template>
@@ -156,6 +162,13 @@
       return {
         mapId: this.$route.params.mapId,
         baseMap: null,
+        lat: null,
+        lng: null,
+        linex1:null,
+        liney1:null,
+        linex2:null,
+        liney2:null,
+        lineDis:null,
         curPoint: null,
         curPointStatus: null,
         curLine: null,
@@ -183,7 +196,7 @@
         curWellList: [],
         curWaterPipeList: [], //更新数据库用
         style3D: '',
-        show3D: true, // todo 改为false
+        show3D: false,
         statusStyle: '',
         statusBar: {
           show: false,
@@ -222,6 +235,34 @@
         if (!this.rightOpShow) {
             this.statusBar.show = false
         }
+      },
+      curPointStatus:function (val) {
+        if(val === "GOOD"){
+            this.curPoint.icon.url = '../../../static/img/well/well_blue.png';
+        }else if(val === "BROKEN"){
+            this.curPoint.icon.url = '../../../static/img/well/well_red.png';
+        }else{
+            this.curPoint.icon.url = '../../../static/img/well/well_black.png';
+        }
+        this.curPoint.statusInfo.status = val;
+        this.curPoint.setMap(null);
+        this.curPoint.setMap(this.baseMap);
+        let i = this.findIndexFromListByValue(this.curWellList,this.curPoint.originInfo);
+        this.curWellList[i].status = val;
+      },
+      curLineStatus:function (val) {
+        if(val === "GOOD"){
+          this.curLine.strokeColor = "#0000FF";
+        }else if(val === "BROKEN"){
+          this.curLine.strokeColor = "#ff2a39";
+        }else{
+          this.curLine.strokeColor = "#1e1e1e"
+        }
+        this.curLine.statusInfo.status = val;
+        this.curLine.setMap(null);
+        this.curLine.setMap(this.baseMap);
+        let i = this.findIndexFromListByValue(this.curWaterPipeList,this.curLine.originInfo);
+        this.curWaterPipeList[i].status = val;
       }
     },
     methods: {
@@ -241,6 +282,8 @@
             }
             self.curPointStatus = marker.statusInfo.status;
             self.curPoint = marker;
+            self.lat = marker.position.lat().toFixed(6);
+            self.lng = marker.position.lng().toFixed(6);
             marker.infoWindow = new google.maps.InfoWindow({
               // todo 下拉选择框
                 content: document.getElementById('map-msg-point')
@@ -265,7 +308,7 @@
         })
       },
       registerWaterPipeClick: function (self, polyline) {
-        google.maps.event.addListener(polyline, 'click', function() {
+        google.maps.event.addListener(polyline, 'click', function(event) {
           if (polyline.statusInfo.show) {
             document.getElementById('map-msg-line-parent').append(document.getElementById('map-msg-line'));
             polyline.infoWindow.close(self.baseMap, polyline)
@@ -279,6 +322,14 @@
             }
             self.curLineStatus = polyline.statusInfo.status;
             self.curLine = polyline;
+
+            let vertices = polyline.getPath();
+            self.linex1 = vertices.getAt(0).lat().toFixed(6);
+            self.liney1 = vertices.getAt(0).lng().toFixed(6);
+            self.linex2 = vertices.getAt(1).lat().toFixed(6);
+            self.liney2 = vertices.getAt(1).lng().toFixed(6);
+            self.lineDis = self.getTwoPointsDis(vertices.getAt(0),vertices.getAt(1));
+
             polyline.infoWindow = new google.maps.InfoWindow({
               // todo 下拉选择框
 //              content: polyline.statusInfo.status,
@@ -302,7 +353,12 @@
             })
 
             polyline.statusInfo.show = true
+
+            let originPoint = {x: event.latLng.lng(), y: event.latLng.lat()};
+            $("#main-canvas").html("");
+            render3D(originPoint, self.layers.waterPipe.waterPipeDomains)
           }
+
         })
       },
 
@@ -375,8 +431,8 @@
                 lat: (waterPipe.y1*1 + waterPipe.y2*1) / 2,
                 lng: (waterPipe.x1*1 + waterPipe.x2*1) / 2,
               },
-              originInfo: polyline,
-            }
+            },
+            originInfo: waterPipe,
           })
           this.registerWaterPipeClick(this, polyline)
           this.layers.waterPipeList.push(polyline)
@@ -765,7 +821,7 @@
 
       show3DFun: function () {
         this.style3D = (this.style3D==='') ? 'active' : ''
-//        this.show3D = !this.show3D
+        this.show3D = !this.show3D
       },
 
       /* utils */
@@ -774,6 +830,14 @@
           if(arr[i] === val) {
             arr.splice(i, 1);
             break;
+          }
+        }
+      },
+
+      findIndexFromListByValue: function (arr, val) {
+        for(let i=0; i<arr.length; i++) {
+          if(arr[i] === val) {
+            return i;
           }
         }
       },
@@ -790,6 +854,93 @@
           this.curPoint.setMap(null);
           this.removeListByValue(this.curWellList,this.curPoint.originInfo);
           this.curPoint = null;
+      },
+
+      submitChange: function(){
+        let well = this.layers.well;
+        well.wellDomains = this.curWellList.concat();
+
+        let waterPipe = this.layers.waterPipe;
+        waterPipe.waterPipeDomains = this.curWaterPipeList.concat();
+
+        this.$http.put(global.server+'/layer/well/update', well).then(response => {
+          // vue 更新对象属性的方式
+          if (response.bodyText === '') {
+
+          } else {
+
+          }
+          toastr.success("更新窨井盖成功")
+        }, response => {
+          toastr.error("更新窨井盖层失败")
+        });
+
+        this.$http.put(global.server+'/layer/water/update', waterPipe).then(response => {
+          // vue 更新对象属性的方式
+          if (response.bodyText === '') {
+
+          } else {
+
+          }
+          toastr.success("更新下水管成功")
+        }, response => {
+          toastr.error("更新下水管失败")
+        })
+      },
+
+      addPoint: function () {
+        let radius = 1;
+
+        var mapClickListener = google.maps.event.addListener(this.baseMap, 'click', (event) => {
+          var latLng = event.latLng;
+          this.lng = latLng.lng();
+          this.lat = latLng.lat();
+
+          let originInfo = {x:this.lng,y:this.lat,z:0,status:"GOOD"};
+          if(this.checkPointConflict(latLng, radius)){
+            google.maps.event.removeListener(mapClickListener);
+
+            toastr.error('当前窨井盖与其他窨井盖有覆盖关系，无法创建！');
+            return;
+          }
+
+          let position = {lat: this.lat, lng: this.lng};
+          let url = '../../../static/img/well/well_blue.png';
+          let icon = {
+            url: url,
+            scaledSize: new google.maps.Size(30, 30)
+          };
+          let marker = new google.maps.Marker({
+            position: position,
+            icon: icon,
+            animation: google.maps.Animation.DROP,
+            statusInfo: {
+              show: false,
+              status: "GOOD",
+            },
+            originInfo: originInfo,
+          });
+          marker.setMap(this.baseMap);
+          this.registerWellClick(this, marker)
+          this.layers.wellList.push(marker)
+          this.curWellList.push(originInfo)
+
+          google.maps.event.removeListener(mapClickListener);
+        });
+      },
+      checkPointConflict: function (point, radius) {
+        let self = this;
+        let flag = false;
+
+        this.layers.wellList.forEach(function (point2) {
+          if(self.getTwoPointsDis(point2.getPosition(), point) <= Math.abs(point2.radius+radius))
+            flag = true;
+        });
+        return flag;
+      },
+      /* google map utils */
+      getTwoPointsDis: function (point1, point2 ) {
+        return google.maps.geometry.spherical.computeDistanceBetween(point1, point2);
       },
 
     },
