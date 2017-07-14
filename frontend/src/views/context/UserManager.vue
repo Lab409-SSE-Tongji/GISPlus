@@ -1,8 +1,208 @@
 <template>
- <div>user manager</div>
+  <div class="wrapper wrapper-content animated fadeInRight">
+
+  <!--普通用户列表-->
+  <div class="col-lg-3" v-for="(user, index) in userList" @click="">
+    <div class="contact-box center-version">
+      <a href="#">
+        <img alt="image" class="img-circle" src="../../assets/rename-icon.png">
+        <h3 class="m-b-xs"><strong>{{user.username}}</strong></h3>
+        <address class="m-t-md">
+          <strong>邮箱: {{user.email}}</strong><br>
+          <abbr>电话: {{user.phone}}</abbr>
+        </address>
+      </a>
+      <div class="contact-box-footer">
+        <div class="m-t-xs btn-group">
+          <a class="btn btn-sm btn-white" data-toggle="modal" data-target="#modifyUserInfo" @click="toggleEditUser(index)"><i class="fa fa-asterisk"></i> 修改 </a>
+          <a class="btn btn-sm btn-white" data-toggle="modal" data-target="#deleteUserInfo" @click="toggleDeleteUser(index)"><i class="fa fa-trash-o"></i> 删除 </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--添加普通用户按钮-->
+  <div class="col-lg-3">
+    <div class="contact-box center-version">
+      <a data-toggle="modal" data-target="#addUser">
+        <!--todo 图片改成 + 号-->
+        <img alt="image" class="img-circle" style="margin-top: 50px" src="../../assets/rename-icon.png">
+      </a>
+      <div class="contact-box-footer" style="margin-top: 38px; margin-bottom: 12px">
+        <div class="m-t-xs btn-group">
+          <abbr>新建普通用户</abbr>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--各类模态框-->
+  <!--添加普通用户模态框-->
+  <div class="modal fade" id="addUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">修改基础用户信息</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group has-success">
+            用户名<input class="form-control" v-model="addUser.username" :placeholder="addUser.username"/>
+            密码<input class="form-control" v-model="addUser.password" :placeholder="addUser.password"/>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" @click="addUserInfo()">&nbsp;确认&nbsp;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--修改用户信息模态框-->
+  <div class="modal fade" id="modifyUserInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">修改基础用户信息</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group has-success">
+            用户名<input class="form-control" v-model="editUserInfo.username" :placeholder="editUserInfo.username"/>
+            密码<input class="form-control" v-model="editUserInfo.password" :placeholder="editUserInfo.password"/>
+            邮箱<input class="form-control" v-model="editUserInfo.email" :placeholder="editUserInfo.email"/>
+            电话<input class="form-control" v-model="editUserInfo.phone" :placeholder="editUserInfo.phone"/>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" @click="updateUserInfo()">&nbsp;确认&nbsp;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!--删除图层模态框-->
+    <div class="modal fade" id="deleteUserInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">删除普通用户</h4>
+          </div>
+          <div class="modal-body">
+            <label>请确认是否删除用户：{{editUserInfo.username}}</label>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" @click="deleteUserInfo()">&nbsp;确认&nbsp;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
+  export default {
+    name: 'userManager',
+    data () {
+      return {
+        addUser: {
+          username: '',
+          password: '',
+        },
+        editUserInfo: {
+          index: '',
+          id: '',
+          username: '',
+          password: '******',
+          email: '',
+          phone: '',
+        },
+        userList: [],
+      }
+    },
+    computed: {
+      ...mapGetters({
+        userId: 'userId'
+      })
+    },
+    methods: {
+      toggleEditUser: function (index) {
+        this.editUserInfo.index = index
+        this.editUserInfo.username = this.userList[index].username
+//        this.editUserInfo.password = this.userList[index].password
+        this.editUserInfo.email = this.userList[index].email
+        this.editUserInfo.phone = this.userList[index].phone
+      },
+      toggleDeleteUser: function (index) {
+        this.editUserInfo.index = index
+        this.editUserInfo.id = this.userList[index].id
+        this.editUserInfo.username = this.userList[index].username
+      },
+
+      getAllUserInfo: function () {
+        this.$http.get(global.server+'/user/'+this.userId+'/commons').then(response => {
+          this.userList = JSON.parse(response.bodyText)
+          toastr.success("获取所有普通用户成功")
+        }, response => {
+          toastr.error("获取所有普通用户失败")
+        })
+      },
+      addUserInfo: function () {
+        let userInfo = {
+          parentId: this.userId,
+          username: this.addUser.username,
+          password: this.addUser.password,
+        }
+        this.$http.post(global.server+'/user/common', userInfo).then(response => {
+            console.log(response)
+          if (response.bodyText === 'EXIT') {
+            toastr.warning("用户名已经存在")
+            return
+          }
+          toastr.success("添加普通用户成功")
+          this.getAllUserInfo()
+        }, response => {
+          toastr.error("添加普通用户失败")
+        })
+      },
+      updateUserInfo: function () {
+        let userInfo = {
+          id: this.userList[this.editUserInfo.index].id,
+          username: this.editUserInfo.username,
+          password: this.editUserInfo.password,
+          email: this.editUserInfo.email,
+          phone: this.editUserInfo.phone,
+        }
+        this.$http.put(global.server+'/user/id/'+userInfo.id, userInfo).then(response => {
+          toastr.success("更新普通用户信息成功")
+          this.getAllUserInfo()
+        }, response => {
+          toastr.error("更新普通用户信息失败")
+        })
+      },
+      deleteUserInfo: function () {
+        this.$http.delete(global.server+'/user/id/'+this.editUserInfo.id).then(response => {
+          toastr.success("删除普通用户信息成功")
+          this.getAllUserInfo()
+        }, response => {
+          toastr.error("删除普通用户信息失败")
+        })
+      }
+    },
+    created () {
+      this.getAllUserInfo()
+    }
+  }
 
 </script>
 

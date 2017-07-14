@@ -26,6 +26,11 @@ public class User {
     private String email;
     private String phone;
     private String imgUrl;
+    private String parentId;
+    private List<String> mapId;
+
+    public User() {
+    }
 
     public User(String username, String password, String name, Date lastPasswordResetDate, List<String> roles) {
         this.username = username;
@@ -33,6 +38,22 @@ public class User {
         this.name = name;
         this.lastPasswordResetDate = lastPasswordResetDate;
         this.roles = roles;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public List<String> getMapId() {
+        return mapId;
+    }
+
+    public void setMapId(List<String> mapId) {
+        this.mapId = mapId;
     }
 
     public String getEmail() {
