@@ -16,6 +16,7 @@
       <button type="button" class="btn btn-sm btn-info" :class="style3D" style="float:right; margin-top: 17px; margin-left: 10px" v-show="rightOpShow" @click="show3DFun()">3D</button>
       <button type="button" class="btn btn-sm btn-primary" @click="submitChange()">提交更改</button>
       <button type="button" class="btn btn-sm btn-primary" @click="addPoint()">添加点</button>
+      <button type="button" class="btn btn-sm btn-primary" @click="addLine()">添加线</button>
     </div>
 
     <!--状态选择条-->
@@ -117,12 +118,14 @@
         <div class="form-group form-group-sm ">
           <i class="fa fa-map-marker icon"></i>
           <label>起点</label>
-          <span>{{linex1}}, {{liney1}}</span>
+          <span>{{linex1}}, {{liney1}},</span>
+          <input id="linez1" v-model="linez1" type="number" step="0.01" style="width: 40px">
         </div>
         <div class="form-group form-group-sm ">
           <i class="fa fa-map-marker icon"></i>
           <label>终点</label>
-          <span>{{linex2}}, {{liney2}}</span>
+          <span>{{linex2}}, {{liney2}},</span>
+          <input id="linez2" v-model="linez2" type="number" step="0.01" style="width: 40px">
         </div>
         <div class="form-group form-group-sm">
           <i class="fa fa-line-chart icon"></i>
@@ -141,6 +144,7 @@
         <div class="form-group form-group-sm">
           <button type="button" @click="deleteLineBtnClick()" class="btn btn-info btn-half-left">删除</button>
           <button type="button" class="btn btn-danger btn-half-right" id="lineMapMsgBtn">关闭</button>
+          <!--<button type="button" class="btn btn-half-right" id="lineMapCommitBtn">提交</button>-->
         </div>
       </div>
     </div>
@@ -166,8 +170,11 @@
         lng: null,
         linex1:null,
         liney1:null,
+        linez1:0,
         linex2:null,
         liney2:null,
+        linez2:0,
+        clickTime:0,
         lineDis:null,
         curPoint: null,
         curPointStatus: null,
@@ -263,6 +270,16 @@
         this.curLine.setMap(this.baseMap);
         let i = this.findIndexFromListByValue(this.curWaterPipeList,this.curLine.originInfo);
         this.curWaterPipeList[i].status = val;
+      },
+      linez1:function (val) {
+        let i = this.findIndexFromListByValue(this.curWaterPipeList,this.curLine.originInfo);
+        this.curWaterPipeList[i].z1 = val;
+        this.curLine.originInfo.z1 = val;
+      },
+      linez2:function (val) {
+        let i = this.findIndexFromListByValue(this.curWaterPipeList,this.curLine.originInfo);
+        this.curWaterPipeList[i].z2 = val;
+        this.curLine.originInfo.z2 = val;
       }
     },
     methods: {
@@ -282,8 +299,8 @@
             }
             self.curPointStatus = marker.statusInfo.status;
             self.curPoint = marker;
-            self.lat = marker.position.lat().toFixed(6);
-            self.lng = marker.position.lng().toFixed(6);
+            self.lat = marker.position.lat().toFixed(3);
+            self.lng = marker.position.lng().toFixed(3);
             marker.infoWindow = new google.maps.InfoWindow({
               // todo 下拉选择框
                 content: document.getElementById('map-msg-point')
@@ -324,10 +341,12 @@
             self.curLine = polyline;
 
             let vertices = polyline.getPath();
-            self.linex1 = vertices.getAt(0).lat().toFixed(6);
-            self.liney1 = vertices.getAt(0).lng().toFixed(6);
-            self.linex2 = vertices.getAt(1).lat().toFixed(6);
-            self.liney2 = vertices.getAt(1).lng().toFixed(6);
+            self.linex1 = vertices.getAt(0).lat().toFixed(3);
+            self.liney1 = vertices.getAt(0).lng().toFixed(3);
+            self.linez1 = polyline.originInfo.z1;
+            self.linex2 = vertices.getAt(1).lat().toFixed(3);
+            self.liney2 = vertices.getAt(1).lng().toFixed(3);
+            self.linez2 = polyline.originInfo.z2;
             self.lineDis = self.getTwoPointsDis(vertices.getAt(0),vertices.getAt(1));
 
             polyline.infoWindow = new google.maps.InfoWindow({
@@ -926,6 +945,59 @@
           this.curWellList.push(originInfo)
 
           google.maps.event.removeListener(mapClickListener);
+        });
+      },
+      addLine: function () {
+        let self = this;
+        this.baseMap.setOptions({ draggableCursor: 'crosshair' });
+        let mapClickListener = google.maps.event.addListener(this.baseMap, 'click', (event) => {
+          if(self.clickTime ===0){
+            var latLng = event.latLng;
+            self.linex1 = latLng.lng();
+            self.liney1 = latLng.lat();
+            self.clickTime =1;
+          }else{
+            var latLng = event.latLng;
+            self.linex2 = latLng.lng();
+            self.liney2 = latLng.lat();
+            let originInfo = {
+              x1:self.linex1,
+              x2:self.linex2,
+              y1:self.liney1,
+              y2:self.liney2,
+              z1:self.linez1,
+              z2:self.linez2,
+              status:"GOOD"
+            }
+
+            let start = new google.maps.LatLng(self.liney1 * 1, self.linex1 * 1)
+            let end = new google.maps.LatLng(self.liney2 * 1, self.linex2 * 1)
+            let path = [start, end]
+            let strokeColor = "#0000FF"
+            let polyline = new google.maps.Polyline({
+              path: path,
+              strokeColor: strokeColor,
+              strokeOpacity: 1,
+              strokeWeight: 4,
+              statusInfo: {
+                show: false,
+                status: "GOOD",
+                position: {
+                  lat: (self.liney1*1 + self.liney2*1) / 2,
+                  lng: (self.linex1*1 + self.linex2*1) / 2,
+                },
+              },
+              originInfo: originInfo,
+            })
+            polyline.setMap(self.baseMap);
+            self.registerWaterPipeClick(self, polyline)
+            self.layers.waterPipeList.push(polyline)
+            self.curWaterPipeList.push(originInfo)
+            self.clickTime = 0;
+            this.baseMap.setOptions({ draggableCursor: '' });
+            google.maps.event.removeListener(mapClickListener);
+          }
+
         });
       },
       checkPointConflict: function (point, radius) {

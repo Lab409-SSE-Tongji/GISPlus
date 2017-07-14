@@ -139,12 +139,12 @@ function addPipeWithLineArray(originPoint,lineArray)
     let lineInfo = lineArray[i];
     let xpos = (lineInfo.x1 - originPoint.x)*zoomsize;
     let ypos = -(lineInfo.y1 - originPoint.y)*zoomsize;
-    let zpos = lineInfo.z1;
+    let zpos = lineInfo.z1*1;
     let startPoint = new THREE.Vector3(xpos, zpos, ypos);
 
     let xpos2 = (lineInfo.x2 - originPoint.x)*zoomsize;
     let ypos2 = -(lineInfo.y2 - originPoint.y)*zoomsize;
-    let zpos2 = lineInfo.z2;
+    let zpos2 = lineInfo.z2*1;
     let endPoint = new THREE.Vector3(xpos2, zpos2, ypos2);
     if(lineInfo.status === "BROKEN") color = "#ff038e";
     if(lineInfo.status === "LOST") color = "#000000";
