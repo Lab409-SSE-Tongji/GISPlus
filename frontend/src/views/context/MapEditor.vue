@@ -17,6 +17,7 @@
       <button type="button" class="btn btn-sm btn-primary" @click="submitChange()">提交更改</button>
       <button type="button" class="btn btn-sm btn-primary" @click="addPoint()">添加点</button>
       <button type="button" class="btn btn-sm btn-primary" @click="addLine()">添加线</button>
+
     </div>
 
     <!--状态选择条-->
@@ -38,6 +39,8 @@
       <button type="button" class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px" @click="exportFile()">导出</button>
       <input id="fileUpLoader" type="file" style="display: none" @change="importFile()" ref="input"/>
       <label for="fileUpLoader" class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px">导入</label>
+      <button type="button" class="btn btn-sm btn-primary" style="float:right; margin-top: 17px; margin-left: 10px; margin-right: 20px"  v-show="submitChangeShow" @click="submitChange()">提交更改</button>
+      <button type="button" class="btn btn-sm btn-primary" style="float:right; margin-top: 17px; margin-left: 10px;" v-show="addPointShow" @click="addPoint()">添加点</button>
     </div>
 
     <!--添加图层模态框-->
@@ -89,6 +92,7 @@
       </div>
     </div>
 
+    <!--窨井盖信息窗-->
     <div class="hide" id="map-msg-point-parent">
       <div id="map-msg-point">
         <div class="form-group form-group-sm ">
@@ -113,6 +117,7 @@
       </div>
     </div>
 
+    <!--下水管道信息窗-->
     <div class="hide" id="map-msg-line-parent">
       <div id="map-msg-line">
         <div class="form-group form-group-sm ">
@@ -129,7 +134,7 @@
         </div>
         <div class="form-group form-group-sm">
           <i class="fa fa-line-chart icon"></i>
-          <label>距离</label>
+          <label>长度</label>
           <span>{{lineDis}}</span>
         </div>
         <div class="form-group form-group-sm">
@@ -236,6 +241,15 @@
         return (this.showLayers.wellStyle==='active') || (this.showLayers.waterPipeStyle==='active')
       },
 
+      // 编辑按钮显示
+      addPointShow: function () {
+        return (this.editLayers.editLayerName===this.defaultLayer.well)
+      },
+      submitChangeShow: function () {
+        return (this.editLayers.editLayerName===this.defaultLayer.well) || (this.editLayers.editLayerName===this.defaultLayer.waterPipe)
+      }
+
+
     },
     watch: {
       rightOpShow: function () {
@@ -302,7 +316,6 @@
             self.lat = marker.position.lat().toFixed(3);
             self.lng = marker.position.lng().toFixed(3);
             marker.infoWindow = new google.maps.InfoWindow({
-              // todo 下拉选择框
                 content: document.getElementById('map-msg-point')
             })
             marker.infoWindow.open(self.baseMap, marker);
@@ -908,9 +921,11 @@
       },
 
       addPoint: function () {
+        this.baseMap.setOptions({ draggableCursor: 'crosshair' });
         let radius = 1;
 
         var mapClickListener = google.maps.event.addListener(this.baseMap, 'click', (event) => {
+          this.baseMap.setOptions({ draggableCursor: '' });
           var latLng = event.latLng;
           this.lng = latLng.lng();
           this.lat = latLng.lat();
