@@ -16,4 +16,6 @@ public interface OrganizationService {
     String updateOrganization(Organization organization);
 
     List<Organization> getOrganizations();
+
+    Organization getOrganizationById(String organId);
 }

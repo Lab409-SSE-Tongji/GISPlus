@@ -6,8 +6,8 @@
           <div class="dropdown profile-element">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
               <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">用户: {{username}}</strong> </span> </span>
-              <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">公司: {{organ}}</strong> </span> </span>
-              <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">角色: {{roles}}</strong> </span> </span>
+              <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">公司: {{organId | showOrgan}}</strong> </span> </span>
+              <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">角色: {{roles | showRoles}}</strong> </span> </span>
 
             </a>
           </div>
@@ -42,44 +42,63 @@
     computed: {
       ...mapGetters({
         username: 'username',
-        organ: 'organ',
+        organId: 'organId',
         roles: 'roles',
       })
     },
+    filters: {
+      showRoles: function (value) {
+        switch (value[0]) {
+          case 'superAdmin':
+              return '超级管理员'
+          case 'admin':
+              return '管理员'
+          case 'user':
+              return '用户'
+        }
+      },
+      showOrgan: function (value) {
+        if (value) {
+
+        } else {
+          return 'Root'
+        }
+      }
+    },
     watch: {
       roles: function () {
-            this.items = [
-              {
-                target: '/mapManager',
-                title: '地图管理',
-                iconName: 'fa-map-o'
-              },
-              {
-                target: '/mapShowManager',
-                title: '地图展示',
-                iconName: 'fa-map-o'
-              },
-              {
-                target: '/userManager',
-                title: '用户管理',
-                iconName: 'fa-address-book'
-              },
-              {
-                target: '/organManager',
-                title: '组织管理',
-                iconName: 'fa-address-book'
-              },
-              {
-                target: '/userProfile',
-                title: '个人信息',
-                iconName: 'fa-user-o'
-              },
-              {
-                target: '/recycle',
-                title: '回收站',
-                iconName: 'fa-recycle'
-              },
-            ]
+        this.items = [
+          {
+            target: '/mapManager',
+            title: '地图管理',
+            iconName: 'fa-map-o'
+          },
+          {
+            target: '/mapShowManager',
+            title: '地图展示',
+            iconName: 'fa-map-o'
+          },
+          {
+            target: '/userManager',
+            title: '用户管理',
+            iconName: 'fa-address-book'
+          },
+          {
+            target: '/organManager',
+            title: '组织管理',
+            iconName: 'fa-address-book'
+          },
+          {
+            target: '/userProfile',
+            title: '个人信息',
+            iconName: 'fa-user-o'
+          },
+          {
+            target: '/recycle',
+            title: '回收站',
+            iconName: 'fa-recycle'
+          },
+        ]
       }
     },
     methods: {

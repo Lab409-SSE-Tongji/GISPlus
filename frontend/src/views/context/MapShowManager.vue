@@ -47,20 +47,72 @@
     },
     computed: {
       ...mapGetters({
-        userId: 'userId'
+        userId: 'userId',
+        roles: 'roles',
       })
     },
     methods: {
-      getMaps: function () {
-        let userId = this.userId
-        this.$http.get(global.server+'/map/'+userId+'/maps').then(response => {
+      // 超级管理员获取地图
+      getAllMaps: function () {
+        this.$http.get(global.server+'/map/allMaps').then(response => {
           this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
           this.loading = false
-          console.log(this.maps)
           // toastr.success("获取用户地图成功")
         }, response => {
-          // toastr.success("获取用户地图失败")
+          toastr.error("获取用户地图失败")
         })
+      },
+      // 组织管理员获取地图
+      getMapsByOrganId: function () {
+        let formData = new FormData();
+        formData.append('organId', this.organId)
+        this.$http.get(global.server+'/map/organMaps', formData).then(response => {
+          this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
+          this.loading = false
+          // toastr.success("获取用户地图成功")
+        }, response => {
+          toastr.error("获取用户地图失败")
+        })
+      },
+      // 用户获取地图
+      getMapsByUserId: function () {
+        let formData = new FormData();
+        formData.append('userId', this.userId)
+        this.$http.get(global.server+'/map/userMaps', formData).then(response => {
+          this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
+          this.loading = false
+          // toastr.success("获取用户地图成功")
+        }, response => {
+          toastr.error("获取用户地图失败")
+        })
+      },
+
+      getMaps: function () {
+        if (typeof this.roles === 'string') {
+          switch (this.roles) {
+            case 'superAdmin':
+              this.getAllMaps()
+              break
+            case 'admin':
+              this.getMapsByOrganId()
+              break
+            case 'user':
+              this.getMapsByUserId()
+              break
+          }
+        } else {
+          switch (this.roles[0]) {
+            case 'superAdmin':
+              this.getAllMaps()
+              break
+            case 'admin':
+              this.getMapsByOrganId()
+              break
+            case 'user':
+              this.getMapsByUserId()
+              break
+          }
+        }
       },
       enterMap: function (index) {
         this.$router.push('/show/'+this.maps[index].id)

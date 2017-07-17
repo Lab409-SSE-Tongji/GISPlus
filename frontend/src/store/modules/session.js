@@ -19,7 +19,7 @@ const getters = {
   token: state => state.token,
   userId: state => state.userId,
   roles: state => state.roles,
-  organ: state => state.organ,
+  organId: state => state.organId,
 }
 
 const actions = {

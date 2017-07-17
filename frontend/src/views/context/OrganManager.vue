@@ -3,12 +3,12 @@
     <!--普通用户列表-->
     <div class="col-lg-3" v-for="(organ, index) in organList" @click="">
       <div class="contact-box center-version">
-        <a href="#">
+        <a>
           <img alt="image" class="img-circle" src="../../assets/rename-icon.png">
           <h3 class="m-b-xs"><strong>{{organ.name}}</strong></h3>
           <address class="m-t-md">
-            <strong>邮箱: {{organ.email}}</strong><br>
-            <abbr>电话: {{organ.phone}}</abbr>
+            <!--<strong>邮箱: {{organ.email}}</strong><br>-->
+            <!--<abbr>电话: {{organ.phone}}</abbr>-->
           </address>
         </a>
         <div class="contact-box-footer">
@@ -25,13 +25,13 @@
       <div class="contact-box center-version">
         <a data-toggle="modal" data-target="#addOrgan">
           <!--todo 图片改成 + 号-->
-          <img alt="image" class="img-circle" style="margin-top: 50px" src="../../assets/rename-icon.png">
+          <img alt="image" class="img-circle" style="margin-top: 50px; margin-bottom: 50px" src="../../assets/rename-icon.png">
         </a>
-        <div class="contact-box-footer" style="margin-top: 38px; margin-bottom: 12px">
-          <div class="m-t-xs btn-group">
-            <abbr>新建公司组织</abbr>
-          </div>
-        </div>
+        <!--<div class="contact-box-footer" style="margin-top: 38px; margin-bottom: 12px">-->
+          <!--<div class="m-t-xs btn-group">-->
+            <!--<abbr>新建公司组织</abbr>-->
+          <!--</div>-->
+        <!--</div>-->
       </div>
     </div>
 
@@ -131,7 +131,7 @@
       getOrgans: function () {
         this.$http.get(global.server+'/organ/organs', this.addOrgan).then(response => {
           this.organList = JSON.parse(response.bodyText)
-          console.log(this.organList)
+          this.adder.name = null
         }, response => {
 
         })

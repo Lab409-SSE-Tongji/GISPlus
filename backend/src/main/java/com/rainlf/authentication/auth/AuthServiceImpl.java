@@ -33,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
     @Value("${token.tokenHeader}")
     private String tokenHead;
 
-    @Value("${token.initRole")
+    @Value("${token.initRole}")
     private String initRole;
 
     @Autowired

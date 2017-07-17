@@ -4,14 +4,14 @@
   <!--普通用户列表-->
   <div class="col-lg-3" v-for="(user, index) in userList" @click="">
     <div class="contact-box center-version">
-      <a href="#">
+      <a>
         <img alt="image" class="img-circle" src="../../assets/rename-icon.png">
         <h3 class="m-b-xs"><strong>{{user.username}}</strong></h3>
         <address class="m-t-md">
-          <strong>邮箱: {{user.email}}</strong><br>
-          <abbr>电话: {{user.phone}}</abbr><br>
-          <abbr>公司: {{user.organ}}</abbr><br>
-          <abbr>角色: {{user.roles}}</abbr>
+          <!--<strong>邮箱: {{user.email}}</strong><br>-->
+          <!--<abbr>电话: {{user.phone}}</abbr><br>-->
+          <abbr>公司: {{user.organId | showOrgan}}</abbr><br>
+          <abbr>角色: {{user.roles | showRoles}}</abbr>
         </address>
       </a>
       <div class="contact-box-footer">
@@ -32,7 +32,7 @@
       </a>
       <div class="contact-box-footer" style="margin-top: 38px; margin-bottom: 12px">
         <div class="m-t-xs btn-group">
-          <abbr>新建普通用户</abbr>
+          <abbr>新建用户</abbr>
         </div>
       </div>
     </div>
@@ -47,7 +47,7 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">修改基础用户信息</h4>
+          <h4 class="modal-title">用户信息</h4>
         </div>
         <div class="modal-body">
           <div class="form-group has-success">
@@ -84,7 +84,7 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">修改基础用户信息</h4>
+          <h4 class="modal-title">用户信息</h4>
         </div>
         <div class="modal-body">
           <div class="form-group has-success">
@@ -92,6 +92,18 @@
             密码<input class="form-control" v-model="editUserInfo.password" :placeholder="editUserInfo.password"/>
             邮箱<input class="form-control" v-model="editUserInfo.email" :placeholder="editUserInfo.email"/>
             电话<input class="form-control" v-model="editUserInfo.phone" :placeholder="editUserInfo.phone"/>
+            <span>组织</span>
+            <select v-model="editUserInfo.organ" class="form-control">
+              <!--<option value="0" selected>选择组织</option>-->
+              <option :value="organ.id" v-for="(organ, index) in organList">{{organ.name}}</option>
+            </select>
+            <span>身份</span>
+            <select v-model="editUserInfo.roles" class="form-control">
+              <!--<option value="0" selected>选择角色</option>-->
+              <option value="user">用户</option>
+              <option value="admin">管理员</option>
+              <option value="superAdmin">超级管理员</option>
+            </select>
           </div>
         </div>
         <div class="modal-footer">
@@ -109,7 +121,7 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
               aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">删除普通用户</h4>
+            <h4 class="modal-title">删除用户</h4>
           </div>
           <div class="modal-body">
             <label>请确认是否删除用户：{{editUserInfo.username}}</label>
@@ -144,6 +156,8 @@
           password: '******',
           email: '',
           phone: '',
+          organ: '',
+          roles: '',
         },
         userList: [],
         organList: [],
@@ -151,8 +165,28 @@
     },
     computed: {
       ...mapGetters({
-        userId: 'userId'
+        userId: 'userId',
+        organId: 'organId',
       })
+    },
+    filters: {
+      showRoles: function (value) {
+        switch (value[0]) {
+          case 'superAdmin':
+            return '超级管理员'
+          case 'admin':
+            return '管理员'
+          case 'user':
+            return '用户'
+        }
+      },
+      showOrgan: function (value) {
+        if (value) {
+
+        } else {
+          return 'Root'
+        }
+      }
     },
     methods: {
       toggleEditUser: function (index) {
@@ -171,7 +205,6 @@
       getAllUserInfo: function () {
         this.$http.get(global.server+'/user/users').then(response => {
           this.userList = JSON.parse(response.bodyText)
-          console.log(this.userList)
         }, response => {
 
         })
@@ -183,15 +216,17 @@
           organ: this.addUser.organ,
           roles: [this.addUser.roles],
         }
-        console.log(userInfo)
         this.$http.post(global.server+'/user', userInfo).then(response => {
-            console.log(response)
           if (response.bodyText === 'EXIT') {
             toastr.warning("用户名已经存在")
             return
           }
           // toastr.success("添加普通用户成功")
           this.getAllUserInfo()
+          this.addUser.username = null
+          this.addUser.password = null
+          this.addUser.organ = null
+          this.addUser.roles = null
         }, response => {
           toastr.error("添加普通用户失败")
         })
@@ -223,7 +258,6 @@
       getAllOrganInfo: function () {
         this.$http.get(global.server+'/organ/organs').then(response => {
           this.organList = JSON.parse(response.bodyText)
-          console.log(this.organList)
         }, response => {
 
         })

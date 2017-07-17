@@ -89,25 +89,25 @@
         </div>
       </div>
 
-      <!--分配用户模态框-->
-      <!--<div class="modal fade" id="deliverMap" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">-->
-        <!--<div class="modal-dialog" role="document">-->
-          <!--<div class="modal-content">-->
-            <!--<div class="modal-header">-->
-              <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span-->
-                <!--aria-hidden="true">&times;</span></button>-->
-              <!--<h4 class="modal-title">分配地图</h4>-->
-            <!--</div>-->
-            <!--<div class="modal-body">-->
-              <!--&lt;!&ndash;<button type="button" class="btn btn-block btn-outline btn-primary" :class="{active: commonUserCheck(index)}" v-for="(commonUser, index) in commonUsers">{{commonUser.username}}</button>&ndash;&gt;-->
-            <!--</div>-->
-            <!--<div class="modal-footer">-->
-              <!--<button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>-->
-              <!--<button type="button" class="btn btn-primary" data-dismiss="modal" @click="deliverMap()">&nbsp;确认&nbsp;</button>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
+      分配用户模态框
+      <div class="modal fade" id="deliverMap" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">分配地图</h4>
+            </div>
+            <div class="modal-body">
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" @click="deliverMap()">&nbsp;确认&nbsp;</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -175,6 +175,7 @@ export default {
     addMap: function () {
       let mapInfo = {
         userId : this.userId,
+        organId : this.organId,
         mapName: this.mapName,
       }
       this.mapName = ''
@@ -186,16 +187,30 @@ export default {
       })
     },
     getMaps: function () {
-      switch (this.roles) {
-        case 'superAdmin':
+      if (typeof this.roles === 'string') {
+        switch (this.roles) {
+          case 'superAdmin':
             this.getAllMaps()
-              break
-        case 'admin':
+            break
+          case 'admin':
             this.getMapsByOrganId()
-              break
-        case 'user':
+            break
+          case 'user':
             this.getMapsByUserId()
-              break
+            break
+        }
+      } else {
+        switch (this.roles[0]) {
+          case 'superAdmin':
+            this.getAllMaps()
+            break
+          case 'admin':
+            this.getMapsByOrganId()
+            break
+          case 'user':
+            this.getMapsByUserId()
+            break
+        }
       }
     },
     openOp: function (index) {
@@ -217,6 +232,7 @@ export default {
       this.$http.put(global.server+'/map', mapInfo).then(response => {
         this.maps[editIndex].mapName = this.mapName
         // toastr.success("更新地图信息成功")
+        this.mapName = null
       }, response => {
         toastr.error("更新地图信息失败")
       })

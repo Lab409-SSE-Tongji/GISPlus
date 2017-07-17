@@ -52,4 +52,11 @@ public class OrganizationController {
     public ResponseEntity getOrganizations() {
         return ResponseEntity.ok(organizationService.getOrganizations());
     }
+
+
+    @RequestMapping(value = "{organId}", method = RequestMethod.GET)
+    public ResponseEntity getOrganizationById(@PathVariable("organId") String organId) {
+        return ResponseEntity.ok(organizationService.getOrganizationById(organId));
+    }
 }
+

@@ -43,4 +43,9 @@ public class OrganizationServiceImp implements OrganizationService{
     public List<Organization> getOrganizations() {
         return mongoOrganizationRepository.findAll();
     }
+
+    @Override
+    public Organization getOrganizationById(String organId) {
+        return mongoOrganizationRepository.findOne(organId);
+    }
 }
