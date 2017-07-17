@@ -152,7 +152,7 @@
       getAllUserInfo: function () {
         this.$http.get(global.server+'/user/'+this.userId+'/commons').then(response => {
           this.userList = JSON.parse(response.bodyText)
-          toastr.success("获取所有普通用户成功")
+          // toastr.success("获取所有普通用户成功")
         }, response => {
           toastr.error("获取所有普通用户失败")
         })
@@ -169,7 +169,7 @@
             toastr.warning("用户名已经存在")
             return
           }
-          toastr.success("添加普通用户成功")
+          // toastr.success("添加普通用户成功")
           this.getAllUserInfo()
         }, response => {
           toastr.error("添加普通用户失败")
@@ -184,7 +184,7 @@
           phone: this.editUserInfo.phone,
         }
         this.$http.put(global.server+'/user/id/'+userInfo.id, userInfo).then(response => {
-          toastr.success("更新普通用户信息成功")
+          // toastr.success("更新普通用户信息成功")
           this.getAllUserInfo()
         }, response => {
           toastr.error("更新普通用户信息失败")
@@ -192,7 +192,7 @@
       },
       deleteUserInfo: function () {
         this.$http.delete(global.server+'/user/id/'+this.editUserInfo.id).then(response => {
-          toastr.success("删除普通用户信息成功")
+          // toastr.success("删除普通用户信息成功")
           this.getAllUserInfo()
         }, response => {
           toastr.error("删除普通用户信息失败")

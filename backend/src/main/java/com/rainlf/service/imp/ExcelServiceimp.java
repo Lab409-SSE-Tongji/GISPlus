@@ -22,7 +22,7 @@ import java.util.List;
  * Created by Administrator on 2017/7/7.
  */
 @Service
-public class ExcelServiceimp implements ExcelService {
+public class ExcelServiceImp implements ExcelService {
 
     @Override
     public WellLayer importWellLayerFile(MultipartFile file)  {

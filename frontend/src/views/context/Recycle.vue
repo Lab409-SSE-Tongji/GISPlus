@@ -65,7 +65,7 @@
         this.$http.get(global.server+'/recycle/'+this.userId).then(response => {
           this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
           this.loading = false
-          toastr.success("获取回收站地图成功")
+          // toastr.success("获取回收站地图成功")
         }, response => {
           toastr.error("获取回收站地图失败")
         })
@@ -75,7 +75,7 @@
       },
       restoreMap: function (index) {
         this.$http.post(global.server+'/recycle/restore/'+this.maps[index].id).then(response => {
-          toastr.success("还原用户地图成功")
+          // toastr.success("还原用户地图成功")
           this.getRecycles()
         }, response => {
           toastr.error("还原用户地图失败")
@@ -83,7 +83,7 @@
       },
       deleteMap: function (index) {
         this.$http.delete(global.server+'/recycle/'+this.maps[index].id).then(response => {
-          toastr.success("删除用户地图成功")
+          // toastr.success("删除用户地图成功")
           this.getRecycles()
         }, response => {
           toastr.error("删除用户地图失败")

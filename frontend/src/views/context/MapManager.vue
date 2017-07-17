@@ -146,7 +146,7 @@ export default {
       }
       this.mapName = ''
       this.$http.post(global.server+'/map', mapInfo).then(response => {
-        toastr.success("添加成功")
+        // toastr.success("添加成功")
         this.getMaps()
       }, response => {
         toastr.error("添加失败")
@@ -156,7 +156,7 @@ export default {
       this.$http.get(global.server+'/map/'+this.userId+'/maps').then(response => {
         this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
         this.loading = false
-        toastr.success("获取用户地图成功")
+        // toastr.success("获取用户地图成功")
       }, response => {
         toastr.error("获取用户地图失败")
       })
@@ -179,7 +179,7 @@ export default {
       }
       this.$http.put(global.server+'/map', mapInfo).then(response => {
         this.maps[editIndex].mapName = this.mapName
-        toastr.success("更新地图信息成功")
+        // toastr.success("更新地图信息成功")
       }, response => {
         toastr.error("更新地图信息失败")
       })
@@ -189,7 +189,7 @@ export default {
       let id = this.maps[index].id
       this.$http.delete(global.server+'/map/'+id).then(response => {
         this.getMaps()
-        toastr.success("放入回收站成功")
+        // toastr.success("放入回收站成功")
       }, response => {
         toastr.error("放入回收站失败")
       })
@@ -207,7 +207,7 @@ export default {
       this.$http.get(global.server+'/user/'+this.userId+'/commons').then(response => {
         this.commonUsers = JSON.parse(response.bodyText)
         console.log(this.commonUsers)
-        toastr.success("获取所有普通用户成功")
+        // toastr.success("获取所有普通用户成功")
       }, response => {
         toastr.error("获取所有普通用户失败")
       })

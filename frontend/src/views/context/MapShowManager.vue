@@ -57,9 +57,9 @@
           this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
           this.loading = false
           console.log(this.maps)
-          toastr.success("获取用户地图成功")
+          // toastr.success("获取用户地图成功")
         }, response => {
-          toastr.success("获取用户地图失败")
+          // toastr.success("获取用户地图失败")
         })
       },
       enterMap: function (index) {

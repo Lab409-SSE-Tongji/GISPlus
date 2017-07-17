@@ -563,7 +563,7 @@
             this.syncGoogleWell();
             this.curWellList = this.layers.well.wellDomains.concat();
           }
-          toastr.success("获取窨井盖层成功")
+          // toastr.success("获取窨井盖层成功")
         }, response => {
           toastr.error("获取窨井盖层失败")
         })
@@ -574,7 +574,7 @@
               toastr.warning("窨井盖图层已经存在")
               return
             }
-            toastr.success("添加窨井盖图层成功")
+            // toastr.success("添加窨井盖图层成功")
             this.getWellLayer()
           }, response => {
             toastr.error("添加窨井盖图层失败")
@@ -583,7 +583,7 @@
       },
       deleteWellLayer: function () {
         this.$http.delete(global.server+'/layer/well/'+this.layers.well.id).then(response => {
-          toastr.success("删除窨井盖图层成功")
+          // toastr.success("删除窨井盖图层成功")
           this.getWellLayer()
         }, response => {
           toastr.error("删除窨井盖图层失败")
@@ -593,7 +593,7 @@
         let formData = new FormData();
         formData.append('file', file)
         this.$http.post(global.server+'/layer/well/excel/'+this.layers.well.id, formData).then(response => {
-          toastr.success("上传窨井盖图层成功")
+          // toastr.success("上传窨井盖图层成功")
           this.getWellLayer()
         }, response => {
           toastr.error("上传窨井盖图层失败")
@@ -607,7 +607,7 @@
           hiddenElement.target  = '_blank'
           hiddenElement.download =  response.bodyText.split('/').slice(-1)[0]
           hiddenElement.click()
-          toastr.success("导出窨井盖图层成功")
+          // toastr.success("导出窨井盖图层成功")
         }, response => {
           toastr.error("导出窨井盖图层失败")
         })
@@ -625,7 +625,7 @@
             this.syncGoogleWaterPipe()
             this.curWaterPipeList = this.layers.waterPipe.waterPipeDomains.concat();
           }
-          toastr.success("获取下水管道层成功")
+          // toastr.success("获取下水管道层成功")
         }, response => {
           toastr.error("获取下水管道层失败")
         })
@@ -636,7 +636,7 @@
               toastr.warning("下水管道图层已经存在")
               return
             }
-            toastr.success("添加下水管道图层成功")
+            // toastr.success("添加下水管道图层成功")
             this.getWaterPipeLayer()
           }, response => {
             toastr.error("添加下水管道图层失败")
@@ -645,7 +645,7 @@
       },
       deleteWaterPipeLayer: function () {
         this.$http.delete(global.server+'/layer/water/'+this.layers.waterPipe.id).then(response => {
-          toastr.success("删除下水管道图层成功")
+          // toastr.success("删除下水管道图层成功")
           this.getWaterPipeLayer()
         }, response => {
           toastr.error("删除下水管道图层失败")
@@ -655,7 +655,7 @@
         let formData = new FormData();
         formData.append('file', file)
         this.$http.post(global.server+'/layer/water/excel/'+this.layers.waterPipe.id, formData).then(response => {
-          toastr.success("上传下水管道图层成功")
+          // toastr.success("上传下水管道图层成功")
           this.getWaterPipeLayer()
         }, response => {
           toastr.error("上传下水管道图层失败")
@@ -669,7 +669,7 @@
           hiddenElement.target  = '_blank'
           hiddenElement.download =  response.bodyText.split('/').slice(-1)[0]
           hiddenElement.click()
-          toastr.success("导出下水管道图层成功")
+          // toastr.success("导出下水管道图层成功")
         }, response => {
           toastr.error("导出下水管道图层失败")
         })
@@ -902,7 +902,7 @@
           } else {
 
           }
-          toastr.success("更新窨井盖成功")
+          // toastr.success("更新窨井盖成功")
         }, response => {
           toastr.error("更新窨井盖层失败")
         });
@@ -914,7 +914,7 @@
           } else {
 
           }
-          toastr.success("更新下水管成功")
+          // toastr.success("更新下水管成功")
         }, response => {
           toastr.error("更新下水管失败")
         })

@@ -12,7 +12,7 @@
             <h2>{{userId}}</h2>
           </div>
 
-          
+
 
 
           <div class="contact">
@@ -124,7 +124,7 @@ export default {
     getUserInfo: function () {
       this.$http.get(global.server+'/user/id/'+this.userId).then(response => {
         console.log(response.bodyText)
-        toastr.success("获取用户信息成功")
+        // toastr.success("获取用户信息成功")
       }, response => {
         toastr.error("获取用户信息失败")
       })
@@ -178,7 +178,7 @@ export default {
 	background: blue;
 }
 .notEditable-span{
-	
+
 }
 .ms-doc {
   margin-top: 3%;

@@ -197,7 +197,7 @@
             this.$set(this.layers, 'well', JSON.parse(response.bodyText))
             this.initWell()
           }
-          toastr.success("获取窨井盖层成功22")
+          // toastr.success("获取窨井盖层成功22")
         }, response => {
           toastr.error("获取窨井盖层失败")
         })
@@ -213,7 +213,7 @@
             this.$set(this.layers, 'waterPipe', JSON.parse(response.bodyText))
             this.initWaterPipe()
           }
-          toastr.success("获取下水管道层成功")
+          // toastr.success("获取下水管道层成功")
         }, response => {
           toastr.error("获取下水管道层失败")
         })
