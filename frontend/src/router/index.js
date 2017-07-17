@@ -12,6 +12,7 @@ import MapShowManager from '@/views/context/MapShowManager'
 import MapShow from '@/views/context/MapShow'
 import Recycle from '@/views/context/Recycle'
 import UserManager from '@/views/context/UserManager'
+import OrganManager from '@/views/context/OrganManager'
 import UserProfile from '@/views/context/UserProfile'
 
 import MapEditor from '@/views/context/MapEditor'
@@ -44,6 +45,10 @@ const router = new Router({
     {
       path: '/userManager',
       redirect: '/mainPage/userManager'
+    },
+    {
+      path: '/organManager',
+      redirect: '/mainPage/organManager'
     },
     {
       path: '/userProfile',
@@ -117,6 +122,13 @@ const router = new Router({
           name: 'userManager',
           components: {
             context: UserManager
+          }
+        },
+        {
+          path: 'organManager',
+          name: 'organManager',
+          components: {
+            context: OrganManager
           }
         },
         {

@@ -48,28 +48,14 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUserInfo(user));
     }
 
+    /**
+     * 删除用户
+     * @param userId
+     * @return
+     */
     @RequestMapping(value = "id/{userId}", method = RequestMethod.DELETE)
     public ResponseEntity deleteUserInfo(@PathVariable("userId") String userId) {
         return ResponseEntity.ok(userService.deleteUserInfo(userId));
     }
 
-    /**
-     * 添加普通用户
-     * @param user
-     * @return
-     */
-    @RequestMapping(value = "common", method = RequestMethod.POST)
-    public ResponseEntity addCommonUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.addCommonUser(user));
-    }
-
-    /**
-     * 获取所有普通用户
-     * @param userId
-     * @return
-     */
-    @RequestMapping(value = "{userId}/commons", method = RequestMethod.GET)
-    public ResponseEntity getCommonUsers(@PathVariable("userId") String userId) {
-        return ResponseEntity.ok(userService.getCommonUsers(userId));
-    }
 }

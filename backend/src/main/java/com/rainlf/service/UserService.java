@@ -21,5 +21,4 @@ public interface UserService {
 
     String addCommonUser(User user);
 
-    List<User> getCommonUsers(String userId);
 }

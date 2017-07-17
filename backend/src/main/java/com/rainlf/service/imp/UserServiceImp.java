@@ -74,8 +74,4 @@ public class UserServiceImp implements UserService {
         return null;
     }
 
-    @Override
-    public List<User> getCommonUsers(String userId) {
-        return mongoUserRepository.findAllByParentId(userId);
-    }
 }

@@ -4,12 +4,14 @@ import com.rainlf.mongo.entity.Organization;
 import com.rainlf.mongo.repository.MongoOrganizationRepository;
 import com.rainlf.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by Administrator on 2017/7/17.
  */
+@Service
 public class OrganizationServiceImp implements OrganizationService{
 
     @Autowired

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @CrossOrigin
 @RestController
-@RequestMapping("organization")
+@RequestMapping("organ")
 public class OrganizationController {
 
     @Autowired
@@ -30,7 +30,7 @@ public class OrganizationController {
      * 删除组织
      * @return
      */
-    @RequestMapping(value = "{organId}", method = RequestMethod.POST)
+    @RequestMapping(value = "{organId}", method = RequestMethod.DELETE)
     public ResponseEntity deleteOrganization(@PathVariable("organId") String organId) {
         return ResponseEntity.ok(organizationService.deleteOrganization(organId));
     }
@@ -44,7 +44,11 @@ public class OrganizationController {
         return ResponseEntity.ok(organizationService.updateOrganization(organization));
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    /**
+     * 获取全部组织
+     * @return
+     */
+    @RequestMapping(value = "organs", method = RequestMethod.GET)
     public ResponseEntity getOrganizations() {
         return ResponseEntity.ok(organizationService.getOrganizations());
     }

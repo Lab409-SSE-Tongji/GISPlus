@@ -27,8 +27,8 @@ public class User {
     private String email;
     private String phone;
     private String imgUrl;
-    private String parentId;
-    private List<String> mapIds = new ArrayList<>();    // 被分配
+    private String organId;
+    private List<String> mapIds;
 
     public User() {
     }
@@ -41,12 +41,12 @@ public class User {
         this.roles = roles;
     }
 
-    public String getParentId() {
-        return parentId;
+    public String getOrganId() {
+        return organId;
     }
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    public void setOrganId(String organId) {
+        this.organId = organId;
     }
 
     public List<String> getMapIds() {

@@ -52,6 +52,10 @@ export default {
           title = '用户管理'
           route = '/userManager'
           break
+        case 'organManager':
+          title = '组织管理'
+          route = '/organManager'
+          break
         case 'userProfile':
           title = '个人信息'
           route = '/userProfile'

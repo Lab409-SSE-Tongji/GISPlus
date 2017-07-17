@@ -62,6 +62,11 @@
                 iconName: 'fa-address-book'
               },
               {
+                target: '/organManager',
+                title: '组织管理',
+                iconName: 'fa-address-book'
+              },
+              {
                 target: '/userProfile',
                 title: '个人信息',
                 iconName: 'fa-user-o'
