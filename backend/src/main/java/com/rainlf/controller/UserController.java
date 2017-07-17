@@ -38,6 +38,16 @@ public class UserController {
     }
 
     /**
+     * 获取所有用户
+     * @return
+     */
+    @RequestMapping(value = "users", method = RequestMethod.GET)
+    public ResponseEntity getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+
+    /**
      * 更新用户信息
      * @param userId
      * @param user
@@ -56,6 +66,16 @@ public class UserController {
     @RequestMapping(value = "id/{userId}", method = RequestMethod.DELETE)
     public ResponseEntity deleteUserInfo(@PathVariable("userId") String userId) {
         return ResponseEntity.ok(userService.deleteUserInfo(userId));
+    }
+
+    /**
+     * 增加用户
+     * @param user
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity addUserInfo(@RequestBody User user) {
+        return ResponseEntity.ok(userService.addUserInfo(user));
     }
 
 }

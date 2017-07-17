@@ -74,4 +74,15 @@ public class UserServiceImp implements UserService {
         return null;
     }
 
+    @Override
+    public List<User> getAllUsers() {
+        return mongoUserRepository.findAll();
+    }
+
+    @Override
+    public String addUserInfo(User user) {
+        mongoUserRepository.insert(user);
+        return null;
+    }
+
 }

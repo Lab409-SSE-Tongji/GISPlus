@@ -6,6 +6,9 @@
           <div class="dropdown profile-element">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
               <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">用户: {{username}}</strong> </span> </span>
+              <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">公司: {{organ}}</strong> </span> </span>
+              <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">角色: {{roles}}</strong> </span> </span>
+
             </a>
           </div>
           <div class="logo-element">
@@ -39,21 +42,21 @@
     computed: {
       ...mapGetters({
         username: 'username',
+        organ: 'organ',
         roles: 'roles',
       })
     },
     watch: {
       roles: function () {
-        if (this.roles.includes('ROLE_ADMIN')) {
             this.items = [
               {
                 target: '/mapManager',
-                title: '地图管理 admin',
+                title: '地图管理',
                 iconName: 'fa-map-o'
               },
               {
-                target: '/mapShowManager',    // todo 删除
-                title: '地图管理 user',
+                target: '/mapShowManager',
+                title: '地图展示',
                 iconName: 'fa-map-o'
               },
               {
@@ -77,20 +80,6 @@
                 iconName: 'fa-recycle'
               },
             ]
-        } else if (this.roles.includes('ROLE_USER')) {
-          this.items = [
-            {
-              target: '/mapShowManager',
-              title: '地图管理 user',
-              iconName: 'fa-map-o'
-            },
-            {
-              target: '/userProfile',
-              title: '个人信息',
-              iconName: 'fa-user-o'
-            },
-          ]
-        }
       }
     },
     methods: {

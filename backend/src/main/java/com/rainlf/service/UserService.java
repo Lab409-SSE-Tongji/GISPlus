@@ -21,4 +21,8 @@ public interface UserService {
 
     String addCommonUser(User user);
 
+    List<User> getAllUsers();
+
+    String addUserInfo(User user);
+
 }

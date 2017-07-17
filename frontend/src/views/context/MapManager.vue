@@ -90,24 +90,24 @@
       </div>
 
       <!--分配用户模态框-->
-      <div class="modal fade" id="deliverMap" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">分配地图</h4>
-            </div>
-            <div class="modal-body">
-              <button type="button" class="btn btn-block btn-outline btn-primary" :class="{active: commonUserCheck(index)}" v-for="(commonUser, index) in commonUsers">{{commonUser.username}}</button>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal" @click="deliverMap()">&nbsp;确认&nbsp;</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!--<div class="modal fade" id="deliverMap" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">-->
+        <!--<div class="modal-dialog" role="document">-->
+          <!--<div class="modal-content">-->
+            <!--<div class="modal-header">-->
+              <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span-->
+                <!--aria-hidden="true">&times;</span></button>-->
+              <!--<h4 class="modal-title">分配地图</h4>-->
+            <!--</div>-->
+            <!--<div class="modal-body">-->
+              <!--&lt;!&ndash;<button type="button" class="btn btn-block btn-outline btn-primary" :class="{active: commonUserCheck(index)}" v-for="(commonUser, index) in commonUsers">{{commonUser.username}}</button>&ndash;&gt;-->
+            <!--</div>-->
+            <!--<div class="modal-footer">-->
+              <!--<button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>-->
+              <!--<button type="button" class="btn btn-primary" data-dismiss="modal" @click="deliverMap()">&nbsp;确认&nbsp;</button>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
 
     </div>
   </div>
@@ -124,7 +124,6 @@ export default {
       operation: false,
       mapName: '',
       maps: [],
-      commonUsers: [],
       editIndex: null,
       editId: null,
       editName: null,
@@ -136,9 +135,6 @@ export default {
     })
   },
   methods: {
-    commonUserCheck: function (index) {
-      return this.commonUsers[index].mapIds.includes(this.editId)
-    },
     addMap: function () {
       let mapInfo = {
         userId : this.userId,
@@ -203,23 +199,12 @@ export default {
       console.log(this.maps[index].id)
     },
 
-    getCommonUsers: function () {
-      this.$http.get(global.server+'/user/'+this.userId+'/commons').then(response => {
-        this.commonUsers = JSON.parse(response.bodyText)
-        console.log(this.commonUsers)
-        // toastr.success("获取所有普通用户成功")
-      }, response => {
-        toastr.error("获取所有普通用户失败")
-      })
-    },
-
     enterMap: function (index) {
       this.$router.push('/edit/'+this.maps[index].id)
     },
   },
   created () {
     this.getMaps()
-    this.getCommonUsers()
   }
 }
 </script>

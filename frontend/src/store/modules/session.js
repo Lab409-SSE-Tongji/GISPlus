@@ -10,6 +10,7 @@ const state = {
   token: localStorage.token || '',
   userId: localStorage.userId || '',
   roles: localStorage.roles || '',
+  organ: localStorage.organ || '',
 }
 
 const getters = {
@@ -18,6 +19,7 @@ const getters = {
   token: state => state.token,
   userId: state => state.userId,
   roles: state => state.roles,
+  organ: state => state.organ,
 }
 
 const actions = {
@@ -52,8 +54,11 @@ const mutations = {
   [USER_INIT] (state, userInfo) {
     state.userId  = userInfo.id
     state.roles  = userInfo.roles
+    state.organ  = userInfo.organ
 
     localStorage.userId = state.userId
+    localStorage.roles = state.roles
+    localStorage.organ = state.organ
   }
 }
 

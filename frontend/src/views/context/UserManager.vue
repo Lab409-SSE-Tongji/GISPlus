@@ -9,7 +9,9 @@
         <h3 class="m-b-xs"><strong>{{user.username}}</strong></h3>
         <address class="m-t-md">
           <strong>邮箱: {{user.email}}</strong><br>
-          <abbr>电话: {{user.phone}}</abbr>
+          <abbr>电话: {{user.phone}}</abbr><br>
+          <abbr>公司: {{user.organ}}</abbr><br>
+          <abbr>角色: {{user.roles}}</abbr>
         </address>
       </a>
       <div class="contact-box-footer">
@@ -150,11 +152,11 @@
       },
 
       getAllUserInfo: function () {
-        this.$http.get(global.server+'/user/'+this.userId+'/commons').then(response => {
-          this.userList = JSON.parse(response.bodyText)
-          // toastr.success("获取所有普通用户成功")
+        this.$http.get(global.server+'/user/users').then(response => {
+            this.userList = JSON.parse(response.bodyText)
+          console.log(this.userList)
         }, response => {
-          toastr.error("获取所有普通用户失败")
+
         })
       },
       addUserInfo: function () {
@@ -163,7 +165,7 @@
           username: this.addUser.username,
           password: this.addUser.password,
         }
-        this.$http.post(global.server+'/user/common', userInfo).then(response => {
+        this.$http.post(global.server+'/user', userInfo).then(response => {
             console.log(response)
           if (response.bodyText === 'EXIT') {
             toastr.warning("用户名已经存在")
