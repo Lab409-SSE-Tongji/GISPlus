@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class User {
     private String phone;
     private String imgUrl;
     private String parentId;
-    private List<String> mapId;
+    private List<String> mapIds = new ArrayList<>();    // 被分配
 
     public User() {
     }
@@ -48,12 +49,12 @@ public class User {
         this.parentId = parentId;
     }
 
-    public List<String> getMapId() {
-        return mapId;
+    public List<String> getMapIds() {
+        return mapIds;
     }
 
-    public void setMapId(List<String> mapId) {
-        this.mapId = mapId;
+    public void setMapIds(List<String> mapIds) {
+        this.mapIds = mapIds;
     }
 
     public String getEmail() {

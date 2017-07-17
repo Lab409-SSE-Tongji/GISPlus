@@ -14,10 +14,6 @@
 
       <button type="button" class="btn btn-sm btn-info" :class="statusStyle" style="float:right; margin-top: 17px; margin-left: 10px"v-show="rightOpShow" @click="showStatusBar()">状态</button>
       <button type="button" class="btn btn-sm btn-info" :class="style3D" style="float:right; margin-top: 17px; margin-left: 10px" v-show="rightOpShow" @click="show3DFun()">3D</button>
-      <button type="button" class="btn btn-sm btn-primary" @click="submitChange()">提交更改</button>
-      <button type="button" class="btn btn-sm btn-primary" @click="addPoint()">添加点</button>
-      <button type="button" class="btn btn-sm btn-primary" @click="addLine()">添加线</button>
-
     </div>
 
     <!--状态选择条-->
@@ -39,7 +35,8 @@
       <button type="button" class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px" @click="exportFile()">导出</button>
       <input id="fileUpLoader" type="file" style="display: none" @change="importFile()" ref="input"/>
       <label for="fileUpLoader" class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px">导入</label>
-      <button type="button" class="btn btn-sm btn-primary" style="float:right; margin-top: 17px; margin-left: 10px; margin-right: 20px"  v-show="submitChangeShow" @click="submitChange()">提交更改</button>
+      <button type="button" class="btn btn-sm btn-primary" style="float:right; margin-top: 17px; margin-left: 10px; margin-right: 20px" v-show="submitChangeShow" @click="submitChange()">提交更改</button>
+      <button type="button" class="btn btn-sm btn-primary" style="float:right; margin-top: 17px; margin-left: 10px;" v-show="addLineShow" @click="addLine()">添加线</button>
       <button type="button" class="btn btn-sm btn-primary" style="float:right; margin-top: 17px; margin-left: 10px;" v-show="addPointShow" @click="addPoint()">添加点</button>
     </div>
 
@@ -244,6 +241,9 @@
       // 编辑按钮显示
       addPointShow: function () {
         return (this.editLayers.editLayerName===this.defaultLayer.well)
+      },
+      addLineShow: function () {
+        return (this.editLayers.editLayerName===this.defaultLayer.waterPipe)
       },
       submitChangeShow: function () {
         return (this.editLayers.editLayerName===this.defaultLayer.well) || (this.editLayers.editLayerName===this.defaultLayer.waterPipe)

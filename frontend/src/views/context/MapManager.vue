@@ -28,6 +28,27 @@
         </div>
       </div>
 
+      <!--文件-->
+      <div class="ibox-div-map">
+        <div class="ibox ibox-map" v-for="(map, index) in maps">
+          <div class="img-box img-box-map" @click="enterMap(index)">
+            <img class="map-img" src="../../assets/defaultMap.jpg">
+          </div>
+          <label class="name">{{map.mapName}}</label>
+          <div class="checkBox-map">
+          </div>
+          <div class="op-map" @click="openOp(index)">
+            <img class="op-icon" src="../../assets/op-icon.png">
+          </div>
+          <!--文件操作-->
+          <ul class="op-list" v-show="map.opDisplay" style="left:113px; top:12px; display:block">
+            <li data-toggle="modal" data-target="#editMapModal" ><img src="../../assets/rename-icon.png"><label>编辑</label></li>
+            <li @click="deleteMap(index)"><img src="../../assets/delete-icon.png"><label>删除</label></li>
+            <li data-toggle="modal" data-target="#deliverMap" @click="toggleDeliver(index)"><img src="../../assets/manage-icon.png"><label>分配</label></li>
+          </ul>
+        </div>
+      </div>
+
       <!--新建地图模态框-->
       <div class="modal fade" id="addMapModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -68,23 +89,23 @@
         </div>
       </div>
 
-      <!--文件-->
-      <div class="ibox-div-map">
-        <div class="ibox ibox-map" v-for="(map, index) in maps">
-          <div class="img-box img-box-map" @click="enterMap(index)">
-            <img class="map-img" src="../../assets/defaultMap.jpg">
+      <!--分配用户模态框-->
+      <div class="modal fade" id="deliverMap" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">分配地图</h4>
+            </div>
+            <div class="modal-body">
+              <button type="button" class="btn btn-block btn-outline btn-primary" :class="{active: commonUserCheck(index)}" v-for="(commonUser, index) in commonUsers">{{commonUser.username}}</button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" @click="deliverMap()">&nbsp;确认&nbsp;</button>
+            </div>
           </div>
-          <label class="name">{{map.mapName}}</label>
-          <div class="checkBox-map">
-          </div>
-          <div class="op-map" @click="openOp(index)">
-            <img class="op-icon" src="../../assets/op-icon.png">
-          </div>
-          <!--文件操作-->
-          <ul class="op-list" v-show="map.opDisplay" style="left:113px; top:12px; display:block">
-            <li data-toggle="modal" data-target="#editMapModal" ><img src="../../assets/rename-icon.png"><label>编辑</label></li>
-            <li @click="deleteMap(index)"><img src="../../assets/delete-icon.png"><label>删除</label></li>
-          </ul>
         </div>
       </div>
 
@@ -103,7 +124,9 @@ export default {
       operation: false,
       mapName: '',
       maps: [],
+      commonUsers: [],
       editIndex: null,
+      editId: null,
       editName: null,
     }
   },
@@ -113,6 +136,9 @@ export default {
     })
   },
   methods: {
+    commonUserCheck: function (index) {
+      return this.commonUsers[index].mapIds.includes(this.editId)
+    },
     addMap: function () {
       let mapInfo = {
         userId : this.userId,
@@ -127,8 +153,7 @@ export default {
       })
     },
     getMaps: function () {
-      let userId = this.userId
-      this.$http.get(global.server+'/map/'+userId+'/maps').then(response => {
+      this.$http.get(global.server+'/map/'+this.userId+'/maps').then(response => {
         this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
         this.loading = false
         toastr.success("获取用户地图成功")
@@ -139,6 +164,7 @@ export default {
     openOp: function (index) {
       this.maps[index].opDisplay = !this.maps[index].opDisplay
       this.editIndex = index
+      this.editId = this.maps[index].id
       this.editName = this.maps[index].mapName
     },
     closeOp: function () {
@@ -169,12 +195,31 @@ export default {
       })
       this.closeOp()
     },
+
+    toggleDeliver: function (index) {
+      this.editIndex = index
+    },
+    deliverMap: function (index) {
+      console.log(this.maps[index].id)
+    },
+
+    getCommonUsers: function () {
+      this.$http.get(global.server+'/user/'+this.userId+'/commons').then(response => {
+        this.commonUsers = JSON.parse(response.bodyText)
+        console.log(this.commonUsers)
+        toastr.success("获取所有普通用户成功")
+      }, response => {
+        toastr.error("获取所有普通用户失败")
+      })
+    },
+
     enterMap: function (index) {
       this.$router.push('/edit/'+this.maps[index].id)
-    }
+    },
   },
   created () {
     this.getMaps()
+    this.getCommonUsers()
   }
 }
 </script>
