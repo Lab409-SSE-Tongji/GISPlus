@@ -9,7 +9,7 @@
 
       <form class="m-t middle-box loginscreen" role="form">
         <div class="form-group">
-          <input v-validate data-vv-rules="required|email" type="text" class="form-control" placeholder="账号" v-model="username" >
+          <input  type="text" class="form-control" placeholder="账号" v-model="username" >
         </div>
         <div class="form-group">
           <input type="text" class="form-control" placeholder="昵称" v-model="name">
@@ -61,9 +61,8 @@
           toastr.success("请检查输入")
         })
       }
-    }
+      }
   }
-
 </script>
 
 <style scoped>

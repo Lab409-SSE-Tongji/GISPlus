@@ -10,7 +10,7 @@
         <address class="m-t-md">
           <!--<strong>邮箱: {{user.email}}</strong><br>-->
           <!--<abbr>电话: {{user.phone}}</abbr><br>-->
-          <abbr>公司: {{user.organId | showOrgan}}</abbr><br>
+          <abbr>公司: {{showOrgan(user.organId)}}</abbr><br>
           <abbr>角色: {{user.roles | showRoles}}</abbr>
         </address>
       </a>
@@ -55,8 +55,10 @@
             <input class="form-control" v-model="addUser.username" :placeholder="addUser.username"/>
             <span>密码</span>
             <input type="password" class="form-control" v-model="addUser.password" :placeholder="addUser.password"/>
+            <span>姓名</span>
+            <input class="form-control" v-model="addUser.name" :placeholder="addUser.name"/>
             <span>组织</span>
-            <select v-model="addUser.organ" class="form-control">
+            <select v-model="addUser.organId" class="form-control">
               <!--<option value="0" selected>选择组织</option>-->
               <option :value="organ.id" v-for="(organ, index) in organList">{{organ.name}}</option>
             </select>
@@ -89,6 +91,7 @@
         <div class="modal-body">
           <div class="form-group has-success">
             用户名<input class="form-control" v-model="editUserInfo.username" :placeholder="editUserInfo.username"/>
+            姓名<input class="form-control" v-model="editUserInfo.name" :placeholder="editUserInfo.name"/>
             密码<input class="form-control" v-model="editUserInfo.password" :placeholder="editUserInfo.password"/>
             邮箱<input class="form-control" v-model="editUserInfo.email" :placeholder="editUserInfo.email"/>
             电话<input class="form-control" v-model="editUserInfo.phone" :placeholder="editUserInfo.phone"/>
@@ -146,7 +149,8 @@
         addUser: {
           username: '',
           password: '',
-          organ: '',
+          name: '',
+          organId: '',
           roles: '',
         },
         editUserInfo: {
@@ -154,6 +158,7 @@
           id: '',
           username: '',
           password: '******',
+          name: '',
           email: '',
           phone: '',
           organ: '',
@@ -180,15 +185,16 @@
             return '用户'
         }
       },
-      showOrgan: function (value) {
-        if (value) {
-
-        } else {
-          return 'Root'
-        }
-      }
     },
     methods: {
+      showOrgan: function (organId) {
+        if (organId) {
+          return organId
+        } else {
+            return 'Root'
+        }
+
+      },
       toggleEditUser: function (index) {
         this.editUserInfo.index = index
         this.editUserInfo.username = this.userList[index].username
@@ -205,6 +211,7 @@
       getAllUserInfo: function () {
         this.$http.get(global.server+'/user/users').then(response => {
           this.userList = JSON.parse(response.bodyText)
+          console.log(this.userList)
         }, response => {
 
         })
@@ -213,9 +220,10 @@
         let userInfo = {
           username: this.addUser.username,
           password: this.addUser.password,
-          organ: this.addUser.organ,
+          organId: this.addUser.organId,
           roles: [this.addUser.roles],
         }
+        console.log(userInfo)
         this.$http.post(global.server+'/user', userInfo).then(response => {
           if (response.bodyText === 'EXIT') {
             toastr.warning("用户名已经存在")
@@ -225,6 +233,7 @@
           this.getAllUserInfo()
           this.addUser.username = null
           this.addUser.password = null
+          this.addUser.name = null
           this.addUser.organ = null
           this.addUser.roles = null
         }, response => {

@@ -36,38 +36,7 @@
     data () {
       return {
         activeItem:0,
-        items: [],
-      }
-    },
-    computed: {
-      ...mapGetters({
-        username: 'username',
-        organId: 'organId',
-        roles: 'roles',
-      })
-    },
-    filters: {
-      showRoles: function (value) {
-        switch (value[0]) {
-          case 'superAdmin':
-              return '超级管理员'
-          case 'admin':
-              return '管理员'
-          case 'user':
-              return '用户'
-        }
-      },
-      showOrgan: function (value) {
-        if (value) {
-
-        } else {
-          return 'Root'
-        }
-      }
-    },
-    watch: {
-      roles: function () {
-        this.items = [
+        items: [
           {
             target: '/mapManager',
             title: '地图管理',
@@ -98,7 +67,45 @@
             title: '回收站',
             iconName: 'fa-recycle'
           },
-        ]
+        ],
+      }
+    },
+    computed: {
+      ...mapGetters({
+        username: 'username',
+        organId: 'organId',
+        roles: 'roles',
+      })
+    },
+    filters: {
+      showRoles: function (value) {
+        if (typeof value === 'string') {
+          switch (value)
+          {
+            case 'superAdmin':
+              return '超级管理员'
+            case 'admin':
+              return '管理员'
+            case 'user':
+              return '用户'
+          }
+        } else {
+          switch (value[0]) {
+            case 'superAdmin':
+              return '超级管理员'
+            case 'admin':
+              return '管理员'
+            case 'user':
+              return '用户'
+          }
+        }
+      },
+      showOrgan: function (value) {
+        if (value) {
+
+        } else {
+          return 'Root'
+        }
       }
     },
     methods: {

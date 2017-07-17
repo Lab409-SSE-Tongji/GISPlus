@@ -19,8 +19,6 @@ public interface UserService {
 
     String deleteUserInfo(String userId);
 
-    String addCommonUser(User user);
-
     List<User> getAllUsers();
 
     String addUserInfo(User user);

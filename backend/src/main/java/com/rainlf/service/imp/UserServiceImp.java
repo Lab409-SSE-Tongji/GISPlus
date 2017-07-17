@@ -59,20 +59,6 @@ public class UserServiceImp implements UserService {
         return null;
     }
 
-    @Override
-    public String addCommonUser(User user) {
-        final String username = user.getUsername();
-        if (mongoUserRepository.findByUsername(username) != null) {
-            return "EXIT";
-        }
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        final String rawPassword = user.getPassword();
-        user.setPassword(encoder.encode(rawPassword));
-        user.setLastPasswordResetDate(new Date());
-        user.setRoles(Arrays.asList("ROLE_USER"));
-        mongoUserRepository.insert(user);
-        return null;
-    }
 
     @Override
     public List<User> getAllUsers() {
@@ -81,6 +67,14 @@ public class UserServiceImp implements UserService {
 
     @Override
     public String addUserInfo(User user) {
+        final String username = user.getUsername();
+        if (mongoUserRepository.findByUsername(username) != null) {
+            return "EXIT";
+        }
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        final String rawPassword = user.getPassword();
+        user.setPassword(encoder.encode(rawPassword));
+        user.setLastPasswordResetDate(new Date());
         mongoUserRepository.insert(user);
         return null;
     }
