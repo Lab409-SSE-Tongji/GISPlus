@@ -61,7 +61,7 @@
               <option :value="organ.id" v-for="(organ, index) in organList">{{organ.name}}</option>
             </select>
             <span>身份</span>
-            <select v-model="addUser.role" class="form-control">
+            <select v-model="addUser.roles" class="form-control">
               <!--<option value="0" selected>选择角色</option>-->
               <option value="user">用户</option>
               <option value="admin">管理员</option>
@@ -135,7 +135,7 @@
           username: '',
           password: '',
           organ: '',
-          role: '',
+          roles: '',
         },
         editUserInfo: {
           index: '',
@@ -181,7 +181,7 @@
           username: this.addUser.username,
           password: this.addUser.password,
           organ: this.addUser.organ,
-          role: this.addUser.role,
+          roles: [this.addUser.roles],
         }
         console.log(userInfo)
         this.$http.post(global.server+'/user', userInfo).then(response => {

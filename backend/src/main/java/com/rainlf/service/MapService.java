@@ -16,4 +16,8 @@ public interface MapService {
     String updateMapInfo(Map map);
 
     String deleteMap(String mapId);
+
+    List<Map> getMapsByOrganId(String organId);
+
+    List<Map> getAllMaps();
 }

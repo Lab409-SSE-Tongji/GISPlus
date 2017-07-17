@@ -14,4 +14,6 @@ public interface MongoMapRepository extends MongoRepository<Map, String> {
 
     Map findById(String mapId);
 
+    List<Map> findAllByOrganId(String organId);
+
 }

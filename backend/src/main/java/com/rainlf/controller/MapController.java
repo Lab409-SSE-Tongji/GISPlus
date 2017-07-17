@@ -28,14 +28,35 @@ public class MapController {
     }
 
     /**
-     * 获取用户所有地图
+     * 获取用户所有地图 用户
      * @param userId
      * @return
      */
-    @RequestMapping(value = "{userId}/maps", method = RequestMethod.GET)
-    public ResponseEntity getMaps(@PathVariable("userId") String userId) {
+    @RequestMapping(value = "/userMaps", method = RequestMethod.GET)
+    public ResponseEntity getMaps(@RequestParam("userId") String userId) {
         return ResponseEntity.ok(mapService.getMaps(userId));
     }
+
+    /**
+     * 获取用户所有地图 组织管理员
+     * @param organId
+     * @return
+     */
+    @RequestMapping(value = "organMaps", method = RequestMethod.GET)
+    public ResponseEntity getMapsByOrganId(@RequestParam("organId") String organId) {
+        return ResponseEntity.ok(mapService.getMapsByOrganId(organId));
+    }
+
+    /**
+     * 获取用户所有地图 超级管理员
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "allMaps", method = RequestMethod.GET)
+    public ResponseEntity getAllMaps() {
+        return ResponseEntity.ok(mapService.getAllMaps());
+    }
+
 
     /**
      * 更新地图信息

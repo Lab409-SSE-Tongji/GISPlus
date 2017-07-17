@@ -51,4 +51,14 @@ public class MapServiceImp implements MapService {
                 map.getMapName()));
         return null;
     }
+
+    @Override
+    public List<Map> getMapsByOrganId(String organId) {
+        return mongoMapRepository.findAllByOrganId(organId);
+    }
+
+    @Override
+    public List<Map> getAllMaps() {
+        return mongoMapRepository.findAll();
+    }
 }

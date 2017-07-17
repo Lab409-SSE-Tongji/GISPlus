@@ -11,6 +11,7 @@ public class Map {
     private String id;
 
     private String userId;
+    private String organId;
     private String mapName;
 
     public Map() {
@@ -20,6 +21,14 @@ public class Map {
         this.id = id;
         this.userId = userId;
         this.mapName = mapName;
+    }
+
+    public String getOrganId() {
+        return organId;
+    }
+
+    public void setOrganId(String organId) {
+        this.organId = organId;
     }
 
     public String getId() {

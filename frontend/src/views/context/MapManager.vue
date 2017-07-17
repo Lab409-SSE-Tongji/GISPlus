@@ -131,10 +131,47 @@ export default {
   },
   computed: {
     ...mapGetters({
-      userId: 'userId'
+      userId: 'userId',
+      organId: 'organId',
+      roles: 'roles',
     })
   },
   methods: {
+    // 超级管理员获取地图
+    getAllMaps: function () {
+      this.$http.get(global.server+'/map/allMaps').then(response => {
+        this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
+        this.loading = false
+        // toastr.success("获取用户地图成功")
+      }, response => {
+        toastr.error("获取用户地图失败")
+      })
+    },
+    // 组织管理员获取地图
+    getMapsByOrganId: function () {
+      let formData = new FormData();
+      formData.append('organId', this.organId)
+      this.$http.get(global.server+'/map/organMaps', formData).then(response => {
+        this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
+        this.loading = false
+        // toastr.success("获取用户地图成功")
+      }, response => {
+        toastr.error("获取用户地图失败")
+      })
+    },
+    // 用户获取地图
+    getMapsByUserId: function () {
+      let formData = new FormData();
+      formData.append('userId', this.userId)
+      this.$http.get(global.server+'/map/userMaps', formData).then(response => {
+        this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
+        this.loading = false
+        // toastr.success("获取用户地图成功")
+      }, response => {
+        toastr.error("获取用户地图失败")
+      })
+    },
+
     addMap: function () {
       let mapInfo = {
         userId : this.userId,
@@ -149,13 +186,17 @@ export default {
       })
     },
     getMaps: function () {
-      this.$http.get(global.server+'/map/'+this.userId+'/maps').then(response => {
-        this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
-        this.loading = false
-        // toastr.success("获取用户地图成功")
-      }, response => {
-        toastr.error("获取用户地图失败")
-      })
+      switch (this.roles) {
+        case 'superAdmin':
+            this.getAllMaps()
+              break
+        case 'admin':
+            this.getMapsByOrganId()
+              break
+        case 'user':
+            this.getMapsByUserId()
+              break
+      }
     },
     openOp: function (index) {
       this.maps[index].opDisplay = !this.maps[index].opDisplay
