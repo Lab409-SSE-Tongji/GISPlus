@@ -51,8 +51,22 @@
         </div>
         <div class="modal-body">
           <div class="form-group has-success">
-            用户名<input class="form-control" v-model="addUser.username" :placeholder="addUser.username"/>
-            密码<input class="form-control" v-model="addUser.password" :placeholder="addUser.password"/>
+            <span>用户名</span>
+            <input class="form-control" v-model="addUser.username" :placeholder="addUser.username"/>
+            <span>密码</span>
+            <input type="password" class="form-control" v-model="addUser.password" :placeholder="addUser.password"/>
+            <span>组织</span>
+            <select v-model="addUser.organ" class="form-control">
+              <!--<option value="0" selected>选择组织</option>-->
+              <option :value="organ.id" v-for="(organ, index) in organList">{{organ.name}}</option>
+            </select>
+            <span>身份</span>
+            <select v-model="addUser.role" class="form-control">
+              <!--<option value="0" selected>选择角色</option>-->
+              <option value="user">用户</option>
+              <option value="admin">管理员</option>
+              <option value="superAdmin">超级管理员</option>
+            </select>
           </div>
         </div>
         <div class="modal-footer">
@@ -120,6 +134,8 @@
         addUser: {
           username: '',
           password: '',
+          organ: '',
+          role: '',
         },
         editUserInfo: {
           index: '',
@@ -130,6 +146,7 @@
           phone: '',
         },
         userList: [],
+        organList: [],
       }
     },
     computed: {
@@ -153,7 +170,7 @@
 
       getAllUserInfo: function () {
         this.$http.get(global.server+'/user/users').then(response => {
-            this.userList = JSON.parse(response.bodyText)
+          this.userList = JSON.parse(response.bodyText)
           console.log(this.userList)
         }, response => {
 
@@ -161,10 +178,12 @@
       },
       addUserInfo: function () {
         let userInfo = {
-          parentId: this.userId,
           username: this.addUser.username,
           password: this.addUser.password,
+          organ: this.addUser.organ,
+          role: this.addUser.role,
         }
+        console.log(userInfo)
         this.$http.post(global.server+'/user', userInfo).then(response => {
             console.log(response)
           if (response.bodyText === 'EXIT') {
@@ -199,10 +218,20 @@
         }, response => {
           toastr.error("删除普通用户信息失败")
         })
+      },
+
+      getAllOrganInfo: function () {
+        this.$http.get(global.server+'/organ/organs').then(response => {
+          this.organList = JSON.parse(response.bodyText)
+          console.log(this.organList)
+        }, response => {
+
+        })
       }
     },
     created () {
       this.getAllUserInfo()
+      this.getAllOrganInfo()
     }
   }
 
