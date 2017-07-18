@@ -9,12 +9,7 @@
           <div class="bg-purple-light">
             <img class="user-logo" src="../../../static/img/img.jpg">
             <h2>{{name}}</h2>
-            <h2>{{userId}}</h2>
           </div>
-
-
-
-
           <div class="contact">
             <h1>联系方式</h1>
             <hr>
@@ -27,7 +22,7 @@
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <span v-bind:CONTENTEDITABLE=isEdit class="email" v-on:blur="changeEmail()">{{email}}</span>
+                    <input type="text" :disabled="disabled" class="form-control" v-model="email">
                   </div>
                 </div>
               </el-col>
@@ -42,7 +37,7 @@
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <span v-bind:CONTENTEDITABLE=isEdit class="phone" v-on:blur="changePhone()">{{phone}}</span>
+                    <input type="text" :disabled="disabled" class="form-control" v-model="phone">
                   </div>
                 </div>
               </el-col>
@@ -61,7 +56,7 @@
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <span v-bind:CONTENTEDITABLE=isEdit class="realname" v-on:blur="changeName()">{{name}}</span>
+                    <input type="text" :disabled="disabled" class="form-control" v-model="name">
                   </div>
                 </div>
               </el-col>
@@ -76,20 +71,52 @@
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <span v-bind:CONTENTEDITABLE=isEdit v-on:blur="changeRole()">{{role}}</span>
+                    <input type="text" disabled class="form-control" v-model="showRoles">
                   </div>
                 </div>
               </el-col>
             </el-row>
+
+            <el-row :gutter="10" v-show="isShow">
+              <el-col :xs="8" :sm="6" :md="4" :lg="3">
+                <div class="item-head">
+                  <span>密码<span style="color:red;" v-show="isShow">*</span></span>
+                </div>
+              </el-col>
+              <el-col :xs="4" :sm="6" :md="8" :lg="9">
+                <div class="bg-purple-light item-content">
+                  <div class="input-message">
+                    <input type="text" :disabled="disabled" class="form-control" v-model="password">
+                  </div>
+                </div>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" v-show="isShow">
+              <el-col :xs="8" :sm="6" :md="4" :lg="3">
+                <div class="item-head">
+                  <span>确认密码<span style="color:red;" v-show="isShow">*</span></span>
+                </div>
+              </el-col>
+              <el-col :xs="4" :sm="6" :md="8" :lg="9">
+                <div class="bg-purple-light item-content">
+                  <div class="input-message">
+                    <input type="text" :disabled="disabled" class="form-control" v-model="passwordRepeat">
+                  </div>
+                </div>
+              </el-col>
+            </el-row>
+
           </div>
 
           <div class="edit">
             <hr>
             <!-- <el-button :plain="true" type="success">修改资料</el-button> -->
             <!--todo 按钮布局-->
-            <button type="button" class="btn btn-primary" v-show="!isShow" @click="openEditor()">编辑</button>
-            <button type="button" class="btn btn-primary" v-show="isShow" @click="cancel()">取消</button>
-            <button type="button" class="btn btn-primary" v-show="isShow" @click="save()">保存</button>
+            <button type="button" class="btn btn-primary" v-show="!isShow" @click="openEditor()" style="float: right;">编辑</button>
+            <button type="button" class="btn btn-primary" v-show="isShow" @click="save()" style="float: right;">保存</button>
+            <button type="button" class="btn btn-primary" v-show="isShow" @click="cancel()" style="float: right; margin-right: 20px;">取消</button>
+
           </div>
         </div>
       </el-col>
@@ -105,67 +132,85 @@ export default {
   data() {
     return {
       name: '我是名字',
-      email: '我是邮箱',
-      phone: '我是电话',
+      email: 'Lucy@tongji.edu.cn',
+      phone: '13122607767',
+      password: '******',
+      passwordRepeat: '******',
       role: '我是谁',
-      isEdit: false,
       isShow: false,
-      isEditableSpan: false,
-      tempData:[]
+      disabled: true,
     }
+  },
+  filters: {
   },
   computed: {
     ...mapGetters({
       userId: 'userId',
       organId: 'organId',
       roles: 'roles',
-    })
-
+    }),
+    showRoles: function () {
+      if (typeof this.roles === 'string') {
+        switch (this.roles)
+        {
+          case 'superAdmin':
+            return '超级管理员'
+          case 'admin':
+            return '管理员'
+          case 'user':
+            return '用户'
+        }
+      } else {
+        switch (this.roles[0]) {
+          case 'superAdmin':
+            return '超级管理员'
+          case 'admin':
+            return '管理员'
+          case 'user':
+            return '用户'
+        }
+      }
+    }
   },
   methods: {
     getUserInfo: function () {
-      this.$http.get(global.server+'/user/id/'+this.userId).then(response => {
+      this.$http.get(global.server + '/user/id/' + this.userId).then(response => {
+        let userInfo = JSON.parse(response.bodyText)
+        console.log(userInfo)
+        this.name = userInfo.name
+//        this.phone = userInfo.phone
+//        this.email = userInfo.email
         // toastr.success("获取用户信息成功")
       }, response => {
         toastr.error("获取用户信息失败")
       })
     },
- 	changeName: function() {
-      this.name = event.srcElement.innerHTML;
+    updateUserInfo: function () {
+      let formData = {
+        id: this.userId,
+        name: this.name,
+        email: this.email,
+        phone: this.phone,
+        password: this.password,
+      }
+      console.log(this.phone)
+      this.$http.put(global.server+'/user/id/'+this.userId, formData).then(response => {
+        this.getUserInfo()
+      })
     },
-    changeEmail: function() {
-      this.email = event.srcElement.innerHTML;
+    openEditor: function () {
+      this.disabled = false
+      this.isShow = true
     },
-    changePhone: function() {
-      this.phone = event.srcElement.innerHTML;
+    cancel: function () {
+      this.disabled = true
+      this.isShow = false
+      this.getUserInfo()
     },
-    changeRole: function() {
-      this.role = event.srcElement.innerHTML;
-    },
-    openEditor: function(){
-    	this.isEdit = true;
-    	this.isShow = true;
-    	this.isEditableSpan = true;
-    	//保存历史数据，用于“取消”按钮
-    	this.tempData.push(this.name);
-    	this.tempData.push(this.email);
-    	this.tempData.push(this.phone);
-    	this.tempData.push(this.role);
-    },
-    cancel: function(){
-    	this.isEdit = false;
-    	this.isShow = false;
-    	this.isEditableSpan = false;
-    	this.role = this.tempData[3];
-    	this.phone = this.tempData[2];
-    	this.email = this.tempData[1];
-    	this.name = this.tempData[0];
-    },
-    save: function(){
-    	this.isEdit = false;
-    	this.isShow = false;
-    	this.isEditableSpan = false;
-    	this.tempData = [];
+    save: function () {
+      this.disabled = true
+      this.isShow = false
+      this.updateUserInfo()
     }
   },
   created () {
