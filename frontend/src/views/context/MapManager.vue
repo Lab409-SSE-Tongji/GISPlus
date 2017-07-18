@@ -190,7 +190,6 @@ export default {
     getDelierMaps: function () {
       let params = {'userId': this.userId}
       this.$http.get(global.server+'/map/deliverMaps', {params: params}).then(response => {
-          console.log(response.bodyText)
         let maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
         this.maps = this.maps.concat(maps)
       })
@@ -297,7 +296,6 @@ export default {
     getAllUserInfo: function () {
       this.$http.get(global.server+'/user/users').then(response => {
         this.userList = JSON.parse(response.bodyText)
-        console.log(this.userList)
       }, response => {
 
       })

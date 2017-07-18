@@ -125,7 +125,6 @@ export default {
   methods: {
     getUserInfo: function () {
       this.$http.get(global.server+'/user/id/'+this.userId).then(response => {
-        console.log(response.bodyText)
         // toastr.success("获取用户信息成功")
       }, response => {
         toastr.error("获取用户信息失败")

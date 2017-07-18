@@ -91,7 +91,6 @@
       getDelierMaps: function () {
         let params = {'userId': this.userId}
         this.$http.get(global.server+'/map/deliverMaps', {params: params}).then(response => {
-          console.log(response.bodyText)
           let maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
           this.maps = this.maps.concat(maps)
         })
