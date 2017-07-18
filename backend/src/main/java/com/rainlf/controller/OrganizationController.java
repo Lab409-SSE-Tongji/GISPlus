@@ -54,6 +54,11 @@ public class OrganizationController {
     }
 
 
+    /**
+     * 获取组织
+     * @param organId
+     * @return
+     */
     @RequestMapping(value = "{organId}", method = RequestMethod.GET)
     public ResponseEntity getOrganizationById(@PathVariable("organId") String organId) {
         return ResponseEntity.ok(organizationService.getOrganizationById(organId));

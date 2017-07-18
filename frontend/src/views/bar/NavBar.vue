@@ -6,7 +6,7 @@
           <div class="dropdown profile-element">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
               <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">用户: {{username}}</strong> </span> </span>
-              <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">公司: {{organId }}</strong> </span> </span>
+              <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">公司: {{organName }}</strong> </span> </span>
               <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">角色: {{roles | showRoles}}</strong> </span> </span>
 
             </a>
@@ -48,6 +48,7 @@
     data () {
       return {
         activeItem:0,
+        organName: null,
       }
     },
     computed: {
@@ -86,19 +87,20 @@
           }
         }
       },
-      showOrgan: function (value) {
-        if (value) {
-
-        } else {
-          return 'Root'
-        }
-      }
     },
     methods: {
       itemClick: function(index){
         this.activeItem = index;
+      },
+      getOrganName: function () {
+        this.$http.get(global.server+'/organ/'+this.organId).then(response => {
+            this.organName = JSON.parse(response.bodyText).name
+        })
       }
     },
+    created () {
+        this.getOrganName()
+    }
   }
 </script>
 
