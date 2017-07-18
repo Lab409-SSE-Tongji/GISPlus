@@ -116,7 +116,9 @@ export default {
   },
   computed: {
     ...mapGetters({
-      userId: 'userId'
+      userId: 'userId',
+      organId: 'organId',
+      roles: 'roles',
     })
 
   },

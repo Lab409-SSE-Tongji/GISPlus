@@ -168,6 +168,14 @@
         organList: [],
       }
     },
+    watch: {
+      userList: function (value) {
+        let index = value.findIndex((user) => user.id === this.userId)
+        if (index > -1) {
+            value.splice(index, 1)
+        }
+      }
+    },
     computed: {
       ...mapGetters({
         roles: 'roles',
@@ -228,7 +236,6 @@
       getAllUserInfo: function () {
         this.$http.get(global.server+'/user/users').then(response => {
           this.userList = JSON.parse(response.bodyText)
-          console.log(this.userList)
         }, response => {
 
         })
@@ -237,7 +244,6 @@
         let params = {'organId':this.organId}
         this.$http.get(global.server+'/user/organUsers', {params:params}).then(response => {
           this.userList = JSON.parse(response.bodyText)
-          console.log(this.userList)
         }, response => {
 
         })
@@ -249,7 +255,6 @@
           organId: this.addUser.organId,
           roles: [this.addUser.roles],
         }
-        console.log(userInfo)
         this.$http.post(global.server+'/user', userInfo).then(response => {
           if (response.bodyText === 'EXIT') {
             toastr.warning("用户名已经存在")
@@ -296,36 +301,39 @@
         }, response => {
 
         })
+      },
+      getUserInfo: function () {
+        if (typeof this.roles === 'string') {
+          switch (this.roles)
+          {
+            case 'superAdmin':
+              this.getAllUserInfo()
+              this.getAllOrganInfo()
+            case 'admin':
+              this.getAllUserInfoByOrganId()
+            case 'user':
+              return '用户'
+          }
+        } else {
+          switch (this.roles[0]) {
+            case 'superAdmin':
+              this.getAllUserInfo()
+              this.getAllOrganInfo()
+              break
+            case 'admin':
+              this.getAllUserInfoByOrganId()
+              break
+            case 'user':
+              break
+          }
+        }
       }
     },
+
+
+
     created () {
-      if (typeof this.roles === 'string') {
-        switch (this.roles)
-        {
-          case 'superAdmin':
-            this.getAllUserInfo()
-            this.getAllOrganInfo()
-          case 'admin':
-            this.getAllUserInfoByOrganId()
-          case 'user':
-            return '用户'
-        }
-      } else {
-        switch (this.roles[0]) {
-          case 'superAdmin':
-            this.getAllUserInfo()
-            this.getAllOrganInfo()
-            break
-          case 'admin':
-            this.getAllUserInfoByOrganId()
-            break
-          case 'user':
-            break
-        }
-      }
-
-
-
+      this.getUserInfo()
     }
   }
 
