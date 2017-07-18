@@ -57,18 +57,68 @@
     },
     computed: {
       ...mapGetters({
-        userId: 'userId'
+        userId: 'userId',
+        organId: 'organId',
+        roles: 'roles',
       })
     },
     methods: {
-      getRecycles: function () {
-        this.$http.get(global.server+'/recycle/'+this.userId).then(response => {
+      getRecyclesByUserId: function () {
+        let params = {'userId': this.userId}
+        this.$http.get(global.server+'/recycle/userRecycle', {params: params}).then(response => {
           this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
           this.loading = false
           // toastr.success("获取回收站地图成功")
         }, response => {
           toastr.error("获取回收站地图失败")
         })
+      },
+      getRecyclesByOrganId: function () {
+        let params = {'organId': this.organId}
+        this.$http.get(global.server+'/recycle/organRecycle', {params: params}).then(response => {
+          this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
+          this.loading = false
+          // toastr.success("获取回收站地图成功")
+        }, response => {
+          toastr.error("获取回收站地图失败")
+        })
+      },
+      getAllRecycles: function () {
+        this.$http.get(global.server+'/recycle/allRecycle').then(response => {
+          this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
+          this.loading = false
+          // toastr.success("获取回收站地图成功")
+        }, response => {
+          toastr.error("获取回收站地图失败")
+        })
+      },
+      getRecycles: function () {
+        if (typeof this.roles === 'string') {
+          switch (this.roles)
+          {
+            case 'superAdmin':
+              this.getAllRecycles()
+              break
+            case 'admin':
+              this.getRecyclesByOrganId()
+              break
+            case 'user':
+              this.getRecyclesByUserId()
+              break
+          }
+        } else {
+          switch (this.roles[0]) {
+            case 'superAdmin':
+              this.getAllRecycles()
+              break
+            case 'admin':
+              this.getRecyclesByOrganId()
+              break
+            case 'user':
+              this.getRecyclesByUserId()
+              break
+          }
+        }
       },
       openOp: function (index) {
         this.maps[index].opDisplay = !this.maps[index].opDisplay

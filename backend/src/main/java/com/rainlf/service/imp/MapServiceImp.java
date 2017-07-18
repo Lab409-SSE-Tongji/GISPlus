@@ -48,6 +48,7 @@ public class MapServiceImp implements MapService {
         mongoMapRepository.delete(mapId);
         mongoRecycleRepository.insert(new Recycle(map.getId(),
                 map.getUserId(),
+                map.getOrganId(),
                 map.getMapName()));
         return null;
     }

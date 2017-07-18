@@ -11,12 +11,25 @@ public class Recycle {
     private String id;
 
     private String userId;
+    private String organId;
     private String mapName;
 
-    public Recycle(String id, String userId, String mapName) {
+    public Recycle() {
+    }
+
+    public Recycle(String id, String userId, String organId, String mapName) {
         this.id = id;
         this.userId = userId;
+        this.organId = organId;
         this.mapName = mapName;
+    }
+
+    public String getOrganId() {
+        return organId;
+    }
+
+    public void setOrganId(String organId) {
+        this.organId = organId;
     }
 
     public String getId() {

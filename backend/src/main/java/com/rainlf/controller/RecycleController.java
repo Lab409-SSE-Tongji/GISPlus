@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Service;
-
 /**
  * Created by Administrator on 2017/7/11.
  */
@@ -19,13 +17,33 @@ public class RecycleController {
     private RecycleService recycleService;
 
     /**
-     * 获取用户所有回收站地图
+     * 获取所有回收站地图 用户
      * @param userId
      * @return
      */
-    @RequestMapping(value = "{userId}", method = RequestMethod.GET)
-    public ResponseEntity getRecycles(@PathVariable("userId") String userId) {
-        return ResponseEntity.ok(recycleService.getRecycles(userId));
+    @RequestMapping(value = "userRecycle", method = RequestMethod.GET)
+    public ResponseEntity getUserRecycles(@RequestParam("userId") String userId) {
+        return ResponseEntity.ok(recycleService.getUserRecycles(userId));
+    }
+
+    /**
+     * 获取所有回收站地图 管理员
+     * @param organId
+     * @return
+     */
+    @RequestMapping(value = "organRecycle", method = RequestMethod.GET)
+    public ResponseEntity getOrganIdRecycles(@RequestParam("organId") String organId) {
+        return ResponseEntity.ok(recycleService.getOrganRecycles(organId));
+    }
+
+    /**
+     * 获取所有回收站地图 超级管理员
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "allRecycle", method = RequestMethod.GET)
+    public ResponseEntity getAllRecycles() {
+        return ResponseEntity.ok(recycleService.getAllRecycles());
     }
 
     /**

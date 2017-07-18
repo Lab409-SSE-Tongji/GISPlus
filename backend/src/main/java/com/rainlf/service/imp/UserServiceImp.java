@@ -79,4 +79,9 @@ public class UserServiceImp implements UserService {
         return null;
     }
 
+    @Override
+    public List<User> getAllUsersByOrganId(String organId) {
+        return mongoUserRepository.findAllByOrganId(organId);
+    }
+
 }

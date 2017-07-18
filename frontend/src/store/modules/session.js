@@ -10,7 +10,7 @@ const state = {
   token: localStorage.token || '',
   userId: localStorage.userId || '',
   roles: localStorage.roles || '',
-  organ: localStorage.organ || '',
+  organId: localStorage.organId || '',
 }
 
 const getters = {
@@ -54,11 +54,11 @@ const mutations = {
   [USER_INIT] (state, userInfo) {
     state.userId  = userInfo.id
     state.roles  = userInfo.roles
-    state.organ  = userInfo.organ
+    state.organId  = userInfo.organId
 
     localStorage.userId = state.userId
     localStorage.roles = state.roles
-    localStorage.organ = state.organ
+    localStorage.organId = state.organId
   }
 }
 

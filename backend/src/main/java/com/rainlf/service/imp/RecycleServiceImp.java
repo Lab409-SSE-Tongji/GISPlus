@@ -31,8 +31,18 @@ public class RecycleServiceImp implements RecycleService {
     private MongoRecycleRepository mongoRecycleRepository;
 
     @Override
-    public List<Recycle> getRecycles(String userId) {
+    public List<Recycle> getUserRecycles(String userId) {
         return mongoRecycleRepository.findAllByUserId(userId);
+    }
+
+    @Override
+    public List<Recycle> getOrganRecycles(String organId) {
+        return mongoRecycleRepository.findAllByOrganId(organId);
+    }
+
+    @Override
+    public List<Recycle> getAllRecycles() {
+        return mongoRecycleRepository.findAll();
     }
 
     @Override
@@ -41,6 +51,7 @@ public class RecycleServiceImp implements RecycleService {
         mongoRecycleRepository.delete(recycleId);
         mongoMapRepository.insert(new Map(recycle.getId(),
                 recycle.getUserId(),
+                recycle.getOrganId(),
                 recycle.getMapName()));
         return null;
     }

@@ -17,9 +17,10 @@ public class Map {
     public Map() {
     }
 
-    public Map(String id, String userId, String mapName) {
+    public Map(String id, String userId, String organId, String mapName) {
         this.id = id;
         this.userId = userId;
+        this.organId = organId;
         this.mapName = mapName;
     }
 

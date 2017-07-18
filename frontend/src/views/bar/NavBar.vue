@@ -6,7 +6,7 @@
           <div class="dropdown profile-element">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
               <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">用户: {{username}}</strong> </span> </span>
-              <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">公司: {{organId | showOrgan}}</strong> </span> </span>
+              <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">公司: {{organId }}</strong> </span> </span>
               <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">角色: {{roles | showRoles}}</strong> </span> </span>
 
             </a>
@@ -16,11 +16,23 @@
           </div>
         </li>
 
-        <li v-for="(item, index) in items" :class="{active:index==activeItem}" @click="itemClick(index)">
-          <router-link :to="item.target">
-            <i class="fa" :class="item.iconName"></i>
-            <span class="nav-label"> {{item.title}} </span>
-          </router-link>
+        <li :class="{active:0===activeItem}" @click="itemClick(0)">
+          <router-link to="/mapManager"><i class="fa fa-map-o"></i><span class="nav-label">地图管理</span></router-link>
+        </li>
+        <li :class="{active:1===activeItem}" @click="itemClick(1)">
+          <router-link to="/mapShowManager"><i class="fa fa-map-o"></i><span class="nav-label">地图展示</span></router-link>
+        </li>
+        <li :class="{active:2===activeItem}" @click="itemClick(2)" v-show="userManagerShow">
+          <router-link to="/userManager"><i class="fa fa-address-book"></i><span class="nav-label">用户管理</span></router-link>
+        </li>
+        <li :class="{active:3===activeItem}" @click="itemClick(3)" v-show="organManagerShow">
+          <router-link to="/organManager"><i class="fa fa-address-book"></i><span class="nav-label">组织管理</span></router-link>
+        </li>
+        <li :class="{active:4===activeItem}" @click="itemClick(4)">
+          <router-link to="/userProfile"><i class="fa fa-user-o"></i><span class="nav-label">个人信息</span></router-link>
+        </li>
+        <li :class="{active:5===activeItem}" @click="itemClick(5)">
+          <router-link to="/recycle"><i class="fa fa-recycle"></i><span class="nav-label">回收站</span></router-link>
         </li>
       </ul>
 
@@ -36,38 +48,6 @@
     data () {
       return {
         activeItem:0,
-        items: [
-          {
-            target: '/mapManager',
-            title: '地图管理',
-            iconName: 'fa-map-o'
-          },
-          {
-            target: '/mapShowManager',
-            title: '地图展示',
-            iconName: 'fa-map-o'
-          },
-          {
-            target: '/userManager',
-            title: '用户管理',
-            iconName: 'fa-address-book'
-          },
-          {
-            target: '/organManager',
-            title: '组织管理',
-            iconName: 'fa-address-book'
-          },
-          {
-            target: '/userProfile',
-            title: '个人信息',
-            iconName: 'fa-user-o'
-          },
-          {
-            target: '/recycle',
-            title: '回收站',
-            iconName: 'fa-recycle'
-          },
-        ],
       }
     },
     computed: {
@@ -75,7 +55,13 @@
         username: 'username',
         organId: 'organId',
         roles: 'roles',
-      })
+      }),
+      organManagerShow: function () {
+        return this.roles === 'superAdmin' || this.roles[0] === 'superAdmin'
+      },
+      userManagerShow: function () {
+        return this.roles !== 'user' && this.roles[0] !== 'user'
+      },
     },
     filters: {
       showRoles: function (value) {

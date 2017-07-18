@@ -9,7 +9,11 @@ import java.util.List;
  */
 public interface RecycleService {
 
-    List<Recycle> getRecycles(String userId);
+    List<Recycle> getUserRecycles(String userId);
+
+    List<Recycle> getOrganRecycles(String organId);
+
+    List<Recycle> getAllRecycles();
 
     String restoreRecycle(String recycleId);
 

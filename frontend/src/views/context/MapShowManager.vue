@@ -49,6 +49,7 @@
       ...mapGetters({
         userId: 'userId',
         roles: 'roles',
+        organId: 'organId',
       })
     },
     methods: {
@@ -64,9 +65,8 @@
       },
       // 组织管理员获取地图
       getMapsByOrganId: function () {
-        let formData = new FormData();
-        formData.append('organId', this.organId)
-        this.$http.get(global.server+'/map/organMaps', formData).then(response => {
+        let params = {'organId': this.organId}
+        this.$http.get(global.server+'/map/organMaps', {params: params}).then(response => {
           this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
           this.loading = false
           // toastr.success("获取用户地图成功")
@@ -76,9 +76,8 @@
       },
       // 用户获取地图
       getMapsByUserId: function () {
-        let formData = new FormData();
-        formData.append('userId', this.userId)
-        this.$http.get(global.server+'/map/userMaps', formData).then(response => {
+        let params = {'userId': this.userId}
+        this.$http.get(global.server+'/map/userMaps', {params: params}).then(response => {
           this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
           this.loading = false
           // toastr.success("获取用户地图成功")

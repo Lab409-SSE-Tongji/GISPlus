@@ -44,7 +44,7 @@
           <ul class="op-list" v-show="map.opDisplay" style="left:113px; top:12px; display:block">
             <li data-toggle="modal" data-target="#editMapModal" ><img src="../../assets/rename-icon.png"><label>编辑</label></li>
             <li @click="deleteMap(index)"><img src="../../assets/delete-icon.png"><label>删除</label></li>
-            <li data-toggle="modal" data-target="#deliverMap" @click="toggleDeliver(index)"><img src="../../assets/manage-icon.png"><label>分配</label></li>
+            <li data-toggle="modal" data-target="#deliverMap" @click="toggleDeliver(index)" v-show="deliverShow"><img src="../../assets/manage-icon.png"><label>分配</label></li>
           </ul>
         </div>
       </div>
@@ -134,7 +134,10 @@ export default {
       userId: 'userId',
       organId: 'organId',
       roles: 'roles',
-    })
+    }),
+    deliverShow: function () {
+      return this.roles !== 'user' && this.roles[0] !== 'user'
+    }
   },
   methods: {
     // 超级管理员获取地图
@@ -149,9 +152,8 @@ export default {
     },
     // 组织管理员获取地图
     getMapsByOrganId: function () {
-      let formData = new FormData();
-      formData.append('organId', this.organId)
-      this.$http.get(global.server+'/map/organMaps', formData).then(response => {
+      let params = {'organId': this.organId}
+      this.$http.get(global.server+'/map/organMaps', {params: params}).then(response => {
         this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
         this.loading = false
         // toastr.success("获取用户地图成功")
@@ -161,9 +163,8 @@ export default {
     },
     // 用户获取地图
     getMapsByUserId: function () {
-      let formData = new FormData();
-      formData.append('userId', this.userId)
-      this.$http.get(global.server+'/map/userMaps', formData).then(response => {
+      let params = {'userId': this.userId}
+      this.$http.get(global.server+'/map/userMaps', {params: params}).then(response => {
         this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
         this.loading = false
         // toastr.success("获取用户地图成功")

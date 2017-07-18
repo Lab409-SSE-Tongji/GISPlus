@@ -23,4 +23,6 @@ public interface UserService {
 
     String addUserInfo(User user);
 
+    List<User> getAllUsersByOrganId(String organId);
+
 }

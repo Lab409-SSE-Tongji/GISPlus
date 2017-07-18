@@ -10,7 +10,7 @@
         <address class="m-t-md">
           <!--<strong>邮箱: {{user.email}}</strong><br>-->
           <!--<abbr>电话: {{user.phone}}</abbr><br>-->
-          <abbr>公司: {{showOrgan(user.organId)}}</abbr><br>
+          <abbr>公司: {{user.organId}}</abbr><br>
           <abbr>角色: {{user.roles | showRoles}}</abbr>
         </address>
       </a>
@@ -57,8 +57,8 @@
             <input type="password" class="form-control" v-model="addUser.password" :placeholder="addUser.password"/>
             <span>姓名</span>
             <input class="form-control" v-model="addUser.name" :placeholder="addUser.name"/>
-            <span>组织</span>
-            <select v-model="addUser.organId" class="form-control">
+            <span v-show="organShow">组织</span>
+            <select v-model="addUser.organId" class="form-control" v-show="organShow">
               <!--<option value="0" selected>选择组织</option>-->
               <option :value="organ.id" v-for="(organ, index) in organList">{{organ.name}}</option>
             </select>
@@ -95,8 +95,8 @@
             密码<input class="form-control" v-model="editUserInfo.password" :placeholder="editUserInfo.password"/>
             邮箱<input class="form-control" v-model="editUserInfo.email" :placeholder="editUserInfo.email"/>
             电话<input class="form-control" v-model="editUserInfo.phone" :placeholder="editUserInfo.phone"/>
-            <span>组织</span>
-            <select v-model="editUserInfo.organ" class="form-control">
+            <span v-show="organShow">组织</span>
+            <select v-model="editUserInfo.organ" class="form-control" v-show="organShow">
               <!--<option value="0" selected>选择组织</option>-->
               <option :value="organ.id" v-for="(organ, index) in organList">{{organ.name}}</option>
             </select>
@@ -117,7 +117,7 @@
     </div>
   </div>
 
-    <!--删除图层模态框-->
+    <!--删除模态框-->
     <div class="modal fade" id="deleteUserInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -170,20 +170,37 @@
     },
     computed: {
       ...mapGetters({
+        roles: 'roles',
         userId: 'userId',
         organId: 'organId',
-      })
+      }),
+      organShow: function () {
+        return this.organList.length !== 0
+      }
     },
     filters: {
       showRoles: function (value) {
-        switch (value[0]) {
-          case 'superAdmin':
-            return '超级管理员'
-          case 'admin':
-            return '管理员'
-          case 'user':
-            return '用户'
+        if (typeof value === 'string')
+        {
+          switch (value) {
+            case 'superAdmin':
+              return '超级管理员'
+            case 'admin':
+              return '管理员'
+            case 'user':
+              return '用户'
+          }
+        } else {
+          switch (value[0]) {
+            case 'superAdmin':
+              return '超级管理员'
+            case 'admin':
+              return '管理员'
+            case 'user':
+              return '用户'
+          }
         }
+
       },
     },
     methods: {
@@ -210,6 +227,15 @@
 
       getAllUserInfo: function () {
         this.$http.get(global.server+'/user/users').then(response => {
+          this.userList = JSON.parse(response.bodyText)
+          console.log(this.userList)
+        }, response => {
+
+        })
+      },
+      getAllUserInfoByOrganId: function () {
+        let params = {'organId':this.organId}
+        this.$http.get(global.server+'/user/organUsers', {params:params}).then(response => {
           this.userList = JSON.parse(response.bodyText)
           console.log(this.userList)
         }, response => {
@@ -273,8 +299,33 @@
       }
     },
     created () {
-      this.getAllUserInfo()
-      this.getAllOrganInfo()
+      if (typeof this.roles === 'string') {
+        switch (this.roles)
+        {
+          case 'superAdmin':
+            this.getAllUserInfo()
+            this.getAllOrganInfo()
+          case 'admin':
+            this.getAllUserInfoByOrganId()
+          case 'user':
+            return '用户'
+        }
+      } else {
+        switch (this.roles[0]) {
+          case 'superAdmin':
+            this.getAllUserInfo()
+            this.getAllOrganInfo()
+            break
+          case 'admin':
+            this.getAllUserInfoByOrganId()
+            break
+          case 'user':
+            break
+        }
+      }
+
+
+
     }
   }
 

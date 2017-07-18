@@ -47,6 +47,12 @@ public class UserController {
     }
 
 
+    @RequestMapping(value = "organUsers", method = RequestMethod.GET)
+    public ResponseEntity getAllUsersByOrganId(@RequestParam("organId") String organId) {
+        return ResponseEntity.ok(userService.getAllUsersByOrganId(organId));
+    }
+
+
     /**
      * 更新用户信息
      * @param userId
