@@ -2,8 +2,10 @@ package com.rainlf.service.imp;
 
 import com.rainlf.mongo.entity.Map;
 import com.rainlf.mongo.entity.Recycle;
+import com.rainlf.mongo.entity.User;
 import com.rainlf.mongo.repository.MongoMapRepository;
 import com.rainlf.mongo.repository.MongoRecycleRepository;
+import com.rainlf.mongo.repository.MongoUserRepository;
 import com.rainlf.service.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -61,5 +63,19 @@ public class MapServiceImp implements MapService {
     @Override
     public List<Map> getAllMaps() {
         return mongoMapRepository.findAll();
+    }
+
+    @Override
+    public String deliverMap(String mapId, String userId) {
+        Map map = mongoMapRepository.findOne(mapId);
+        List<String> owners = map.getOwners();
+        if (owners.contains(userId)) {
+            return "EXIT";
+        } else {
+            owners.add(userId);
+            map.setOwners(owners);
+            mongoMapRepository.save(map);
+            return null;
+        }
     }
 }

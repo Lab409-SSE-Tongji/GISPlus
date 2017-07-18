@@ -99,7 +99,9 @@
               <h4 class="modal-title">分配地图</h4>
             </div>
             <div class="modal-body">
-
+              <select v-model="deliverUserId" class="form-control">
+                <option v-for="(user, index) in userList" :value="user.id">{{user.name}}</option>
+              </select>
             </div>
             <div class="modal-footer">
               <button @click="closeOp()" type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
@@ -127,6 +129,16 @@ export default {
       editIndex: null,
       editId: null,
       editName: null,
+      deliverUserId: null,
+      userList: [],
+    }
+  },
+  watch: {
+    userList: function (value) {
+      let index = value.findIndex((user) => user.id === this.userId)
+      if (index > -1) {
+        value.splice(index, 1)
+      }
     }
   },
   computed: {
@@ -253,16 +265,68 @@ export default {
     toggleDeliver: function (index) {
       this.editIndex = index
     },
-    deliverMap: function (index) {
-      console.log(this.maps[index].id)
+    deliverMap: function () {
+      let mapId = this.maps[this.editIndex].id
+      let formData = new FormData()
+      formData.append('mapId', mapId)
+      formData.append('userId', this.deliverUserId)
+
+      this.$http.post(global.server+'/map/deliver', formData).then(response => {
+        if (response.bodyText === 'EXIT') {
+          toastr.warning("地图已被分配给该用户")
+        }
+      })
+      this.closeOp()
     },
 
     enterMap: function (index) {
       this.$router.push('/edit/'+this.maps[index].id)
     },
+
+    getAllUserInfo: function () {
+      this.$http.get(global.server+'/user/users').then(response => {
+        this.userList = JSON.parse(response.bodyText)
+        console.log(this.userList)
+      }, response => {
+
+      })
+    },
+    getAllUserInfoByOrganId: function () {
+      let params = {'organId':this.organId}
+      this.$http.get(global.server+'/user/organUsers', {params:params}).then(response => {
+        this.userList = JSON.parse(response.bodyText)
+      }, response => {
+
+      })
+    },
+    getUserInfo: function () {
+      if (typeof this.roles === 'string') {
+        switch (this.roles)
+        {
+          case 'superAdmin':
+            this.getAllUserInfo()
+          case 'admin':
+            this.getAllUserInfoByOrganId()
+          case 'user':
+            break
+        }
+      } else {
+        switch (this.roles[0]) {
+          case 'superAdmin':
+            this.getAllUserInfo()
+            break
+          case 'admin':
+            this.getAllUserInfoByOrganId()
+            break
+          case 'user':
+            break
+        }
+      }
+    }
   },
   created () {
     this.getMaps()
+    this.getUserInfo()
   }
 }
 </script>

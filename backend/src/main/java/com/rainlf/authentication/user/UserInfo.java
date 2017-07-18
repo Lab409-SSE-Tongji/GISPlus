@@ -1,7 +1,9 @@
 package com.rainlf.authentication.user;
 
 import com.rainlf.mongo.entity.User;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +16,7 @@ public class UserInfo {
     private String username;
     private String password;
     private Date lastPasswordResetDate;
-    private List<String> roles;
+    private List<String> roles = new ArrayList<>();
 
     private String name;
 

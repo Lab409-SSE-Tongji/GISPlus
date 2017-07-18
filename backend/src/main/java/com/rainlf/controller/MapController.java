@@ -77,4 +77,9 @@ public class MapController {
     public ResponseEntity deleteMap(@PathVariable("mapId") String mapId) {
         return ResponseEntity.ok(mapService.deleteMap(mapId));
     }
+
+    @RequestMapping(value = "deliver", method = RequestMethod.POST)
+    public ResponseEntity deliverMap(@RequestParam("mapId") String mapId, @RequestParam("userId") String userId) {
+        return ResponseEntity.ok(mapService.deliverMap(mapId, userId));
+    }
 }

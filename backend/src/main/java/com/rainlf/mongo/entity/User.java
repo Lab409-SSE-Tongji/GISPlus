@@ -22,13 +22,12 @@ public class User {
     private String password;
     private String name;
     private Date lastPasswordResetDate;
-    private List<String> roles;
+    private List<String> roles = new ArrayList<>();
 
     private String email;
     private String phone;
     private String imgUrl;
     private String organId;
-    private List<String> mapIds;
 
     public User() {
     }
@@ -47,14 +46,6 @@ public class User {
 
     public void setOrganId(String organId) {
         this.organId = organId;
-    }
-
-    public List<String> getMapIds() {
-        return mapIds;
-    }
-
-    public void setMapIds(List<String> mapIds) {
-        this.mapIds = mapIds;
     }
 
     public String getEmail() {

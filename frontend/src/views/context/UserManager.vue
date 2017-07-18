@@ -6,7 +6,7 @@
     <div class="contact-box center-version">
       <a>
         <img alt="image" class="img-circle" src="../../assets/rename-icon.png">
-        <h3 class="m-b-xs"><strong>{{user.username}}</strong></h3>
+        <h3 class="m-b-xs"><strong>{{user.name}}</strong></h3>
         <address class="m-t-md">
           <!--<strong>邮箱: {{user.email}}</strong><br>-->
           <!--<abbr>电话: {{user.phone}}</abbr><br>-->
@@ -223,6 +223,7 @@
       toggleEditUser: function (index) {
         this.editUserInfo.index = index
         this.editUserInfo.username = this.userList[index].username
+        this.editUserInfo.name = this.userList[index].name
 //        this.editUserInfo.password = this.userList[index].password
         this.editUserInfo.email = this.userList[index].email
         this.editUserInfo.phone = this.userList[index].phone
@@ -252,6 +253,7 @@
         let userInfo = {
           username: this.addUser.username,
           password: this.addUser.password,
+          name: this.addUser.name,
           organId: this.addUser.organId,
           roles: [this.addUser.roles],
         }
@@ -312,7 +314,7 @@
             case 'admin':
               this.getAllUserInfoByOrganId()
             case 'user':
-              return '用户'
+              break
           }
         } else {
           switch (this.roles[0]) {

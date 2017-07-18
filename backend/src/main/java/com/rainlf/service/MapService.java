@@ -20,4 +20,6 @@ public interface MapService {
     List<Map> getMapsByOrganId(String organId);
 
     List<Map> getAllMaps();
+
+    String deliverMap(String mapId, String userId);
 }
