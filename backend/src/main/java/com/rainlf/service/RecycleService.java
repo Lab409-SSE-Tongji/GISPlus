@@ -15,6 +15,8 @@ public interface RecycleService {
 
     List<Recycle> getAllRecycles();
 
+    List<Recycle> getDeliverRecycle(String userId);
+
     String restoreRecycle(String recycleId);
 
     String deleteRecycle(String recycleId);

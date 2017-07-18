@@ -22,4 +22,6 @@ public interface MapService {
     List<Map> getAllMaps();
 
     String deliverMap(String mapId, String userId);
+
+    List<Map> getDeliverMaps(String userId);
 }

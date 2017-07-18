@@ -46,6 +46,11 @@ public class RecycleServiceImp implements RecycleService {
     }
 
     @Override
+    public List<Recycle> getDeliverRecycle(String userId) {
+        return mongoRecycleRepository.findAllByOwnersContains(userId);
+    }
+
+    @Override
     public String restoreRecycle(String recycleId) {
         Recycle recycle = mongoRecycleRepository.findOne(recycleId);
         mongoRecycleRepository.delete(recycleId);

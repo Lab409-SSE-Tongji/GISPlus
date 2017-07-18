@@ -68,6 +68,7 @@
         this.$http.get(global.server+'/recycle/userRecycle', {params: params}).then(response => {
           this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
           this.loading = false
+          this.getDeliverRecycles()
           // toastr.success("获取回收站地图成功")
         }, response => {
           toastr.error("获取回收站地图失败")
@@ -78,6 +79,7 @@
         this.$http.get(global.server+'/recycle/organRecycle', {params: params}).then(response => {
           this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
           this.loading = false
+          this.getDeliverRecycles()
           // toastr.success("获取回收站地图成功")
         }, response => {
           toastr.error("获取回收站地图失败")
@@ -92,6 +94,16 @@
           toastr.error("获取回收站地图失败")
         })
       },
+      getDeliverRecycles: function () {
+        let params = {'userId': this.userId}
+        this.$http.get(global.server+'/recycle/deliverRecycle', {params: params}).then(response => {
+          console.log(response.bodyText)
+          let maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
+          this.maps = this.maps.concat(maps)
+        })
+      },
+
+
       getRecycles: function () {
         if (typeof this.roles === 'string') {
           switch (this.roles)

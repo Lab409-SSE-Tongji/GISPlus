@@ -78,8 +78,19 @@ public class MapController {
         return ResponseEntity.ok(mapService.deleteMap(mapId));
     }
 
+    /**
+     * 分配地图
+     * @param mapId
+     * @param userId
+     * @return
+     */
     @RequestMapping(value = "deliver", method = RequestMethod.POST)
     public ResponseEntity deliverMap(@RequestParam("mapId") String mapId, @RequestParam("userId") String userId) {
         return ResponseEntity.ok(mapService.deliverMap(mapId, userId));
+    }
+
+    @RequestMapping(value = "deliverMaps", method = RequestMethod.GET)
+    public ResponseEntity getDeliverMaps(@RequestParam("userId") String userId) {
+        return ResponseEntity.ok(mapService.getDeliverMaps(userId));
     }
 }

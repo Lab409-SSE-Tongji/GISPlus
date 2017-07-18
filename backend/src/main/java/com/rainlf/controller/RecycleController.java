@@ -46,6 +46,12 @@ public class RecycleController {
         return ResponseEntity.ok(recycleService.getAllRecycles());
     }
 
+
+    @RequestMapping(value = "deliverRecycle", method = RequestMethod.GET)
+    public ResponseEntity getDeliverRecycle(@RequestParam("userId") String userId) {
+        return ResponseEntity.ok(recycleService.getDeliverRecycle(userId));
+    }
+
     /**
      * 还原用户地图
      * @param recycleId

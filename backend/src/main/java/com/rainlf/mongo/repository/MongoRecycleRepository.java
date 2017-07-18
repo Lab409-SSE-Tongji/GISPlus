@@ -15,4 +15,6 @@ public interface MongoRecycleRepository extends MongoRepository<Recycle, String>
     List<Recycle> findAllByOrganId(String organId);
 
     List<Recycle> deleteByUserId(String userId);
+
+    List<Recycle> findAllByOwnersContains(String userId);
 }

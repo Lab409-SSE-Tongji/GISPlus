@@ -69,6 +69,7 @@
         this.$http.get(global.server+'/map/organMaps', {params: params}).then(response => {
           this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
           this.loading = false
+          this.getDelierMaps()
           // toastr.success("获取用户地图成功")
         }, response => {
           toastr.error("获取用户地图失败")
@@ -80,9 +81,19 @@
         this.$http.get(global.server+'/map/userMaps', {params: params}).then(response => {
           this.maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
           this.loading = false
+          this.getDelierMaps()
           // toastr.success("获取用户地图成功")
         }, response => {
           toastr.error("获取用户地图失败")
+        })
+      },
+      // 获取分配的地图
+      getDelierMaps: function () {
+        let params = {'userId': this.userId}
+        this.$http.get(global.server+'/map/deliverMaps', {params: params}).then(response => {
+          console.log(response.bodyText)
+          let maps = [...JSON.parse(response.bodyText)].map(ob => {ob.opDisplay=false; return ob})
+          this.maps = this.maps.concat(maps)
         })
       },
 

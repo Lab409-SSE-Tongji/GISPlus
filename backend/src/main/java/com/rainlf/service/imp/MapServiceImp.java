@@ -51,7 +51,8 @@ public class MapServiceImp implements MapService {
         mongoRecycleRepository.insert(new Recycle(map.getId(),
                 map.getUserId(),
                 map.getOrganId(),
-                map.getMapName()));
+                map.getMapName(),
+                map.getOwners()));
         return null;
     }
 
@@ -77,5 +78,10 @@ public class MapServiceImp implements MapService {
             mongoMapRepository.save(map);
             return null;
         }
+    }
+
+    @Override
+    public List<Map> getDeliverMaps(String userId) {
+        return mongoMapRepository.findAllByOwnersContains(userId);
     }
 }
