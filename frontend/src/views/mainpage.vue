@@ -34,8 +34,10 @@
     },
     created () {
       this.$http.get(global.server+'/user/'+this.username).then(response => {
-        this.userInit(JSON.parse(response.bodyText))
-        toastr.success("登录成功")
+        if (response.bodyText !== '') {
+          this.userInit(JSON.parse(response.bodyText))
+          toastr.success("登录成功")
+        }
       }, response => {
         toastr.error("获取用户信息失败")
       })

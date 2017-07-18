@@ -94,7 +94,13 @@
       },
       getOrganName: function () {
         this.$http.get(global.server+'/organ/'+this.organId).then(response => {
-            this.organName = JSON.parse(response.bodyText).name
+            if (response.bodyText === '') {
+              this.organName = 'Root'
+            } else {
+              this.organName = JSON.parse(response.bodyText).name
+            }
+        }, response => {
+
         })
       }
     },
