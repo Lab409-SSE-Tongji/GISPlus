@@ -176,7 +176,6 @@ export default {
     getUserInfo: function () {
       this.$http.get(global.server + '/user/id/' + this.userId).then(response => {
         let userInfo = JSON.parse(response.bodyText)
-        console.log(userInfo)
         this.name = userInfo.name
 //        this.phone = userInfo.phone
 //        this.email = userInfo.email
@@ -193,7 +192,6 @@ export default {
         phone: this.phone,
         password: this.password,
       }
-      console.log(this.phone)
       this.$http.put(global.server+'/user/id/'+this.userId, formData).then(response => {
         this.getUserInfo()
       })

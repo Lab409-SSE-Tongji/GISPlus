@@ -10,7 +10,7 @@
         <address class="m-t-md">
           <!--<strong>邮箱: {{user.email}}</strong><br>-->
           <!--<abbr>电话: {{user.phone}}</abbr><br>-->
-          <abbr>公司: {{user.organId}}</abbr><br>
+          <abbr>公司: {{showOrgan(user.organId)}}</abbr><br>
           <abbr>角色: {{user.roles | showRoles}}</abbr>
         </address>
       </a>
@@ -214,11 +214,13 @@
     methods: {
       showOrgan: function (organId) {
         if (organId) {
-          return organId
+          let organ = this.organList.find((n) => n.id === organId)
+          if (organ) {
+            return organ.name
+          }
         } else {
             return 'Root'
         }
-
       },
       toggleEditUser: function (index) {
         this.editUserInfo.index = index
@@ -254,7 +256,7 @@
           username: this.addUser.username,
           password: this.addUser.password,
           name: this.addUser.name,
-          organId: this.addUser.organId,
+          organId: this.addUser.organId || this.organId,
           roles: [this.addUser.roles],
         }
         this.$http.post(global.server+'/user', userInfo).then(response => {
@@ -304,6 +306,13 @@
 
         })
       },
+      getOrganInfo: function () {
+        this.$http.get(global.server+'/organ/'+this.organId).then(response => {
+          this.organList[0] = JSON.parse(response.bodyText)
+        }, response => {
+
+        })
+      },
       getUserInfo: function () {
         if (typeof this.roles === 'string') {
           switch (this.roles)
@@ -313,6 +322,7 @@
               this.getAllOrganInfo()
             case 'admin':
               this.getAllUserInfoByOrganId()
+              this.getOrganInfo()
             case 'user':
               break
           }
@@ -324,6 +334,7 @@
               break
             case 'admin':
               this.getAllUserInfoByOrganId()
+              this.getOrganInfo()
               break
             case 'user':
               break
