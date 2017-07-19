@@ -99,7 +99,7 @@
           <span>{{lat}}, {{lng}}</span>
         </div>
         <div class="form-group form-group-sm">
-          <select v-model="curPointStatus" class="form-control">
+          <select v-model="curPointStatus" class="form-control" :disabled="justShow">
             <option value="0">选择状态</option>
             <option value="GOOD">GOOD</option>
             <option value="BROKEN">BROKEN</option>
@@ -108,7 +108,7 @@
         </div>
 
         <div class="form-group form-group-sm">
-          <button type="button" @click="deletePointBtnClick()" class="btn btn-info btn-half-left">删除</button>
+          <button type="button" @click="deletePointBtnClick()" class="btn btn-info btn-half-left" v-show="!justShow">删除</button>
           <button type="button" class="btn btn-danger btn-half-right" id="pointMapMsgBtn">关闭</button>
         </div>
       </div>
@@ -121,13 +121,13 @@
           <i class="fa fa-map-marker icon"></i>
           <label>起点</label>
           <span>{{linex1}}, {{liney1}},</span>
-          <input id="linez1" v-model="linez1" type="number" step="0.01" style="width: 40px">
+          <input id="linez1" v-model="linez1" type="number" step="0.01" style="width: 40px" v-show="!justShow">
         </div>
         <div class="form-group form-group-sm ">
           <i class="fa fa-map-marker icon"></i>
           <label>终点</label>
           <span>{{linex2}}, {{liney2}},</span>
-          <input id="linez2" v-model="linez2" type="number" step="0.01" style="width: 40px">
+          <input id="linez2" v-model="linez2" type="number" step="0.01" style="width: 40px" v-show="!justShow">
         </div>
         <div class="form-group form-group-sm">
           <i class="fa fa-line-chart icon"></i>
@@ -135,7 +135,7 @@
           <span>{{lineDis}}</span>
         </div>
         <div class="form-group form-group-sm">
-          <select v-model="curLineStatus" class="form-control">
+          <select v-model="curLineStatus" class="form-control" disabled="justShow">
             <option value="0">选择状态</option>
             <option value="GOOD">GOOD</option>
             <option value="BROKEN">BROKEN</option>
@@ -144,7 +144,7 @@
         </div>
 
         <div class="form-group form-group-sm">
-          <button type="button" @click="deleteLineBtnClick()" class="btn btn-info btn-half-left">删除</button>
+          <button type="button" @click="deleteLineBtnClick()" class="btn btn-info btn-half-left" v-show="!justShow">删除</button>
           <button type="button" class="btn btn-danger btn-half-right" id="lineMapMsgBtn">关闭</button>
           <!--<button type="button" class="btn btn-half-right" id="lineMapCommitBtn">提交</button>-->
         </div>
@@ -216,6 +216,9 @@
       }
     },
     computed: {
+      justShow: function () {
+        return this.showLayers.show
+      },
       // 图层存在状态
       wellExist: function () {
         return (this.layers.well.id !== undefined)
@@ -503,6 +506,10 @@
         this.editLayers.show = !this.editLayers.show
         this.editLayers.editLayerName = null
         this.showLayers.show = false
+        this.showLayers.well = false
+        this.showLayers.waterPipe = false
+        this.showLayers.wellStyle = ''
+        this.showLayers.waterPipeStyle = ''
         this.renderWellLayer(false)
         this.renderWaterPipeLayer(false)
       },
@@ -593,7 +600,7 @@
         let formData = new FormData();
         formData.append('file', file)
         this.$http.post(global.server+'/layer/well/excel/'+this.layers.well.id, formData).then(response => {
-          // toastr.success("上传窨井盖图层成功")
+           toastr.success("上传窨井盖图层成功")
           this.getWellLayer()
         }, response => {
           toastr.error("上传窨井盖图层失败")
@@ -655,7 +662,7 @@
         let formData = new FormData();
         formData.append('file', file)
         this.$http.post(global.server+'/layer/water/excel/'+this.layers.waterPipe.id, formData).then(response => {
-          // toastr.success("上传下水管道图层成功")
+           toastr.success("上传下水管道图层成功")
           this.getWaterPipeLayer()
         }, response => {
           toastr.error("上传下水管道图层失败")
@@ -902,7 +909,7 @@
           } else {
 
           }
-          // toastr.success("更新窨井盖成功")
+           toastr.success("更新窨井盖成功")
         }, response => {
           toastr.error("更新窨井盖层失败")
         });
@@ -914,7 +921,7 @@
           } else {
 
           }
-          // toastr.success("更新下水管成功")
+           toastr.success("更新下水管成功")
         }, response => {
           toastr.error("更新下水管失败")
         })

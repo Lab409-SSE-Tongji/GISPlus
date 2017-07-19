@@ -18,6 +18,65 @@
     </div>
 
 
+    <!--窨井盖信息窗-->
+    <div class="hide" id="map-msg-point-parent">
+      <div id="map-msg-point">
+        <div class="form-group form-group-sm ">
+          <i class="fa fa-map-marker icon"></i>
+          <label>坐标</label>
+          <br>
+          <span>{{lat}}, {{lng}}</span>
+        </div>
+        <div class="form-group form-group-sm">
+          <span>状态</span>
+          <!--<select v-model="curPointStatus" class="form-control" :disabled="justShow">-->
+            <!--<option value="0">选择状态</option>-->
+            <!--<option value="GOOD">GOOD</option>-->
+            <!--<option value="BROKEN">BROKEN</option>-->
+            <!--<option value="LOST">LOST</option>-->
+          <!--</select>-->
+        </div>
+        <div class="form-group form-group-sm">
+          <button type="button" class="btn btn-danger btn-half-right" id="pointMapMsgBtn">关闭</button>
+        </div>
+      </div>
+    </div>
+
+    <!--下水管道信息窗-->
+    <!--<div class="hide" id="map-msg-line-parent">-->
+      <!--<div id="map-msg-line">-->
+        <!--<div class="form-group form-group-sm ">-->
+          <!--<i class="fa fa-map-marker icon"></i>-->
+          <!--<label>起点</label>-->
+          <!--<span>{{linex1}}, {{liney1}}</span>-->
+        <!--</div>-->
+        <!--<div class="form-group form-group-sm ">-->
+          <!--<i class="fa fa-map-marker icon"></i>-->
+          <!--<label>终点</label>-->
+          <!--<span>{{linex2}}, {{liney2}}</span>-->
+        <!--</div>-->
+        <!--<div class="form-group form-group-sm">-->
+          <!--<i class="fa fa-line-chart icon"></i>-->
+          <!--<label>长度</label>-->
+          <!--<span>{{lineDis}}</span>-->
+        <!--</div>-->
+        <!--<div class="form-group form-group-sm">-->
+          <!--<span>状态</span>-->
+          <!--&lt;!&ndash;<select v-model="curLineStatus" class="form-control" disabled="justShow">&ndash;&gt;-->
+            <!--&lt;!&ndash;<option value="0">选择状态</option>&ndash;&gt;-->
+            <!--&lt;!&ndash;<option value="GOOD">GOOD</option>&ndash;&gt;-->
+            <!--&lt;!&ndash;<option value="BROKEN">BROKEN</option>&ndash;&gt;-->
+            <!--&lt;!&ndash;<option value="LOST">LOST</option>&ndash;&gt;-->
+          <!--&lt;!&ndash;</select>&ndash;&gt;-->
+        <!--</div>-->
+
+        <!--<div class="form-group form-group-sm">-->
+          <!--<button type="button" class="btn btn-danger btn-half-right" id="lineMapMsgBtn">关闭</button>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+
+
 
     <!--todo 自适应地图高度-->
     <div class="ibox-content" style="position: relative; padding: 0 0 0 0">
@@ -36,6 +95,17 @@
       return {
         mapId: this.$route.params.mapId,
         baseMap: null,
+
+        lat: null,
+        lng: null,
+        linex1:null,
+        liney1:null,
+        linez1:0,
+        linex2:null,
+        liney2:null,
+        linez2:0,
+        lineDis:null,
+
         layers: {
           well: {},
           waterPipe: {},
@@ -77,35 +147,96 @@
       registerWellClick: function (self, marker) {
         google.maps.event.addListener(marker, 'click', function() {
           if (marker.statusInfo.show) {
-              marker.infoWindow.close(self.baseMap, marker)
+            document.getElementById('map-msg-point-parent').append(document.getElementById('map-msg-point'));
+            marker.infoWindow.close(self.baseMap, marker);
             marker.statusInfo.show = false
           } else {
+            if(self.curPoint !== null){
+              self.curPoint.infoWindow.ownClose();
+              self.curPoint.statusInfo.show = false;
+              self.curPoint = null;
+              self.curPointStatus = null;
+            }
+            self.curPointStatus = marker.statusInfo.status;
+            self.curPoint = marker;
+            self.lat = marker.position.lat().toFixed(3);
+            self.lng = marker.position.lng().toFixed(3);
             marker.infoWindow = new google.maps.InfoWindow({
-              // todo 下拉选择框
-              content: marker.statusInfo.status,
+              content: document.getElementById('map-msg-point')
             })
-            marker.infoWindow.open(self.baseMap, marker)
+            marker.infoWindow.open(self.baseMap, marker);
+
+            marker.infoWindow.ownClose = () => {
+              document.getElementById('map-msg-point-parent').append(document.getElementById('map-msg-point'))
+              marker.infoWindow.close(self.baseMap, marker)
+            }
+
+            google.maps.event.addListener(marker.infoWindow, 'domready', function () {
+              var closeBtn = $('.gm-style-iw').next()
+              closeBtn.hide()
+              $('#pointMapMsgBtn').on('click', function (event) {
+                marker.infoWindow.ownClose()
+                marker.statusInfo.show = false
+              })
+            })
             marker.statusInfo.show = true
           }
         })
       },
       registerWaterPipeClick: function (self, polyline) {
         google.maps.event.addListener(polyline, 'click', function(event) {
-//            状态显示框
-//          if (polyline.statusInfo.show) {
-//            polyline.infoWindow.close(self.baseMap, polyline)
-//            polyline.statusInfo.show = false
-//          } else {
-//            polyline.infoWindow = new google.maps.InfoWindow({
+          if (polyline.statusInfo.show) {
+            document.getElementById('map-msg-line-parent').append(document.getElementById('map-msg-line'));
+            polyline.infoWindow.close(self.baseMap, polyline)
+            polyline.statusInfo.show = false
+          } else {
+            if(self.curLine !== null){
+              self.curLine.infoWindow.ownClose();
+              self.curLine.statusInfo.show = false;
+              self.curLine = null;
+              self.curLineStatus = null;
+            }
+            self.curLineStatus = polyline.statusInfo.status;
+            self.curLine = polyline;
+
+            let vertices = polyline.getPath();
+            self.linex1 = vertices.getAt(0).lat().toFixed(3);
+            self.liney1 = vertices.getAt(0).lng().toFixed(3);
+            self.linez1 = polyline.originInfo.z1;
+            self.linex2 = vertices.getAt(1).lat().toFixed(3);
+            self.liney2 = vertices.getAt(1).lng().toFixed(3);
+            self.linez2 = polyline.originInfo.z2;
+            self.lineDis = self.getTwoPointsDis(vertices.getAt(0),vertices.getAt(1));
+
+            polyline.infoWindow = new google.maps.InfoWindow({
+              // todo 下拉选择框
 //              content: polyline.statusInfo.status,
-//              position: polyline.statusInfo.position,
-//            })
-//            polyline.infoWindow.open(self.baseMap, polyline)
-//            polyline.statusInfo.show = true
-//          }
-          let originPoint = {x: event.latLng.lng(), y: event.latLng.lat()}
-          $("#main-canvas").html("")
-          render3D(originPoint, self.layers.waterPipe.waterPipeDomains)
+              content: document.getElementById('map-msg-line'),
+              position: polyline.statusInfo.position,
+            })
+            polyline.infoWindow.open(self.baseMap, polyline);
+
+            polyline.infoWindow.ownClose = () => {
+              document.getElementById('map-msg-line-parent').append(document.getElementById('map-msg-line'));
+              polyline.infoWindow.close(self.baseMap, polyline);
+            }
+
+            google.maps.event.addListener(polyline.infoWindow, 'domready', function () {
+              var closeBtn = $('.gm-style-iw').next();
+              closeBtn.hide();
+              $('#lineMapMsgBtn').on('click', function (event) {
+                polyline.infoWindow.ownClose()
+                polyline.statusInfo.show = false
+              })
+            })
+
+            polyline.statusInfo.show = true
+
+            let originPoint = {x: event.latLng.lng(), y: event.latLng.lat()};
+            $("#main-canvas").html("");
+            render3D(originPoint, self.layers.waterPipe.waterPipeDomains)
+          }
+
         })
       },
 
