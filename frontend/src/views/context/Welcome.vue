@@ -1,13 +1,11 @@
-<template>
-  <div>
-    Welcome XXXXXXXXXXXXX TTTTTTTTTTTTT DDDDDDDDDDDDDDD
-  </div>
+<template>   
+    <img src="/static/img/welcome.jpg" class="img-responsive" alt="loading">
 </template>
 
 <script>
 
 </script>
 
-<style>
+<style scoped>
 
 </style>
