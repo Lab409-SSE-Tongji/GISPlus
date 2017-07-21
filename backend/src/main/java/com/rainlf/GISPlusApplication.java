@@ -2,11 +2,18 @@ package com.rainlf;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class GISPlusApplication {
+public class GISPlusApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(GISPlusApplication.class, args);
+	}
+
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(GISPlusApplication.class);
 	}
 }
