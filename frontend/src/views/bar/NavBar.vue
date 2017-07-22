@@ -93,15 +93,19 @@
         this.activeItem = index;
       },
       getOrganName: function () {
-        this.$http.get(global.server+'/organ/'+this.organId).then(response => {
+        if (this.organId === '' || this.organId === null) {
+          this.organName = 'Root'
+        } else {
+          this.$http.get(global.server+'/organ/'+this.organId).then(response => {
             if (response.bodyText === '') {
               this.organName = 'Root'
             } else {
               this.organName = JSON.parse(response.bodyText).name
             }
-        }, response => {
+          }, response => {
 
-        })
+          })
+        }
       }
     },
     created () {
