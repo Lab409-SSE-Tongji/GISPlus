@@ -4,7 +4,7 @@
           <div class="navbar-header">
               <a class="minimalize-styl-2 btn btn-primary" @click="toggleMenu"><i class="fa fa-bars"></i> </a>
               <router-link :to="path.route" type="button" class="btn btn-sm btn-primary" style="margin-left: 20px; margin-top: 14px">{{path.title}}</router-link>
-              <button type="button" class="btn btn-sm btn-primary" style="margin-left: 5px; margin-top: 14px" v-show="recycle" @click="cleanRecycle()">清空回收站</button>
+              <!--<button type="button" class="btn btn-sm btn-primary" style="margin-left: 5px; margin-top: 14px" v-show="recycle" @click="cleanRecycle()">清空回收站</button>-->
           </div>
           <ul class="nav navbar-top-links navbar-right">
               <li>

@@ -7,7 +7,7 @@
       <el-col :span="24">
         <div class="grid-content">
           <div class="bg-purple-light">
-            <img class="user-logo" src="../../../static/img/img.jpg">
+            <img class="user-logo" src="../../assets/user2-icon.png">
             <h2>{{name}}</h2>
           </div>
           <div class="contact">
@@ -22,7 +22,8 @@
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <input type="text" :disabled="disabled" class="form-control" v-model="email">
+                    <input type="text" :disabled="disabled" class="form-control" v-model="email" name="email" v-validate data-vv-rules="required|email" >
+                    <span v-show="errors.has('email')" class="help is-danger" style="color: #ed5565">{{ errors.first('email') }}</span>
                   </div>
                 </div>
               </el-col>
@@ -37,7 +38,8 @@
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <input type="text" :disabled="disabled" class="form-control" v-model="phone">
+                    <input type="text" :disabled="disabled" class="form-control" v-model="phone" name="phone" v-validate="{ rules: { regex: /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/} }" >
+                    <span v-show="errors.has('phone')" class="help is-danger" style="color: #ed5565">{{ errors.first('phone') }}</span>
                   </div>
                 </div>
               </el-col>
@@ -56,7 +58,8 @@
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <input type="text" :disabled="disabled" class="form-control" v-model="name">
+                    <input type="text" :disabled="disabled" class="form-control" v-model="name" name="name" v-validate data-vv-rules="required" >
+                    <span v-show="errors.has('name')" class="help is-danger" style="color: #ed5565">{{ errors.first('name') }}</span>
                   </div>
                 </div>
               </el-col>
@@ -86,7 +89,8 @@
               <el-col :xs="4" :sm="6" :md="8" :lg="9">
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
-                    <input type="text" :disabled="disabled" class="form-control" v-model="password">
+                    <input type="text" :disabled="disabled" class="form-control" v-model="password" name="password" v-validate data-vv-rules="required" >
+                    <span v-show="errors.has('password')" class="help is-danger" style="color: #ed5565">{{ errors.first('password') }}</span>
                   </div>
                 </div>
               </el-col>
@@ -102,6 +106,7 @@
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
                     <input type="text" :disabled="disabled" class="form-control" v-model="passwordRepeat">
+                    <span v-show="!passwordEqual" class="help is-danger" style="color: #ed5565">The password should be the same.</span>
                   </div>
                 </div>
               </el-col>
@@ -144,6 +149,9 @@ export default {
   filters: {
   },
   computed: {
+    passwordEqual: function () {
+      return this.password === this.passwordRepeat
+    },
     ...mapGetters({
       userId: 'userId',
       organId: 'organId',

@@ -59,7 +59,8 @@
               <h4 class="modal-title">新建地图</h4>
             </div>
             <div class="modal-body">
-              <input class="form-control" v-model="mapName" placeholder="请输入地图名称"/>
+              <input class="form-control" v-model="mapName" placeholder="请输入地图名称" name="mapName" v-validate data-vv-rules="required" >
+              <span v-show="errors.has('mapName')" class="help is-danger" style="color: #ed5565">{{ errors.first('mapName') }}</span>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
@@ -99,6 +100,7 @@
               <h4 class="modal-title">分配地图</h4>
             </div>
             <div class="modal-body">
+              <span>请选择用户</span>
               <select v-model="deliverUserId" class="form-control">
                 <option v-for="(user, index) in userList" :value="user.id">{{user.name}}</option>
               </select>
@@ -314,8 +316,10 @@ export default {
         {
           case 'superAdmin':
             this.getAllUserInfo()
+            break
           case 'admin':
             this.getAllUserInfoByOrganId()
+            break
           case 'user':
             break
         }

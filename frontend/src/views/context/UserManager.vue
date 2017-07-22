@@ -5,7 +5,7 @@
   <div class="col-lg-3" v-for="(user, index) in userList" @click="">
     <div class="contact-box center-version">
       <a>
-        <img alt="image" class="img-circle" src="../../assets/rename-icon.png">
+        <img alt="image" class="img-circle" src="../../assets/user-icon.png">
         <h3 class="m-b-xs"><strong>{{user.name}}</strong></h3>
         <address class="m-t-md">
           <!--<strong>邮箱: {{user.email}}</strong><br>-->
@@ -28,7 +28,7 @@
     <div class="contact-box center-version">
       <a data-toggle="modal" data-target="#addUser">
         <!--todo 图片改成 + 号-->
-        <img alt="image" class="img-circle" style="margin-top: 50px" src="../../assets/rename-icon.png">
+        <img alt="image" class="img-circle" style="margin-top: 50px" src="../../assets/add-icon.png">
       </a>
       <div class="contact-box-footer" style="margin-top: 38px; margin-bottom: 12px">
         <div class="m-t-xs btn-group">
@@ -52,11 +52,17 @@
         <div class="modal-body">
           <div class="form-group has-success">
             <span>用户名</span>
-            <input class="form-control" v-model="addUser.username" :placeholder="addUser.username"/>
+            <input class="form-control" v-model="addUser.username" name="username" v-validate data-vv-rules="required" >
+            <span v-show="errors.has('username')" class="help is-danger" style="color: #ed5565">{{ errors.first('username') }}</span><br>
             <span>密码</span>
-            <input type="password" class="form-control" v-model="addUser.password" :placeholder="addUser.password"/>
+            <input type="password" class="form-control" v-model="addUser.password" name="password" v-validate data-vv-rules="required" >
+            <span v-show="errors.has('password')" class="help is-danger" style="color: #ed5565">{{ errors.first('password') }}</span><br>
+            <span>确认密码</span>
+            <input type="password" class="form-control" placeholder="确认密码" v-model="addUser.passwordRepeat">
+            <span v-show="!passwordEqual" class="help is-danger" style="color: #ed5565">The password should be the same.</span><br>
             <span>姓名</span>
-            <input class="form-control" v-model="addUser.name" :placeholder="addUser.name"/>
+            <input class="form-control" v-model="addUser.name" name="name" v-validate data-vv-rules="required" >
+            <span v-show="errors.has('name')" class="help is-danger" style="color: #ed5565">{{ errors.first('name') }}</span><br>
             <span v-show="organShow">组织</span>
             <select v-model="addUser.organId" class="form-control" v-show="organShow">
               <!--<option value="0" selected>选择组织</option>-->
@@ -149,6 +155,7 @@
         addUser: {
           username: '',
           password: '',
+          passwordRepeat: '',
           name: '',
           organId: '',
           roles: '',
@@ -184,6 +191,9 @@
       }),
       organShow: function () {
         return this.organList.length !== 0
+      },
+      passwordEqual: function () {
+        return this.addUser.password === this.addUser.passwordRepeat
       }
     },
     filters: {
@@ -308,7 +318,9 @@
       },
       getOrganInfo: function () {
         this.$http.get(global.server+'/organ/'+this.organId).then(response => {
-          this.organList[0] = JSON.parse(response.bodyText)
+          if (response.bodyText !== '') {
+            this.organList[0] = JSON.parse(response.bodyText)
+          }
         }, response => {
 
         })
@@ -320,9 +332,11 @@
             case 'superAdmin':
               this.getAllUserInfo()
               this.getAllOrganInfo()
+              break
             case 'admin':
               this.getAllUserInfoByOrganId()
               this.getOrganInfo()
+              break
             case 'user':
               break
           }

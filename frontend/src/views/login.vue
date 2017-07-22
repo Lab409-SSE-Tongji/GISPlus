@@ -7,10 +7,12 @@
 
     <form class="m-t middle-box loginscreen" >
       <div class="form-group">
-        <input type="text" class="form-control " placeholder="用户名" required="" v-model="username">
+        <input type="text" class="form-control " placeholder="用户名" required="" v-model="username" name="username" v-validate data-vv-rules="required">
+        <span v-show="errors.has('username')" class="help is-danger" style="color: #ed5565">{{ errors.first('username') }}</span>
       </div>
       <div class="form-group">
-        <input type="password" class="form-control " placeholder="密码" required="" v-model="password">
+        <input type="password" class="form-control " placeholder="密码" required="" v-model="password" name="password" v-validate data-vv-rules="required">
+        <span v-show="errors.has('password')" class="help is-danger" style="color: #ed5565">{{ errors.first('password') }}</span>
       </div>
       <button type="button" class="btn btn-primary block full-width m-b" @click="userLogin">登录</button>
       <p class="text-muted text-center"><small>没有账号?</small></p>

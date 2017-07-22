@@ -4,11 +4,9 @@
     <div class="col-lg-3" v-for="(organ, index) in organList" @click="">
       <div class="contact-box center-version">
         <a>
-          <img alt="image" class="img-circle" src="../../assets/rename-icon.png">
+          <img alt="image" class="img-circle" src="../../assets/company-icon.png">
           <h3 class="m-b-xs"><strong>{{organ.name}}</strong></h3>
           <address class="m-t-md">
-            <!--<strong>邮箱: {{organ.email}}</strong><br>-->
-            <!--<abbr>电话: {{organ.phone}}</abbr>-->
           </address>
         </a>
         <div class="contact-box-footer">
@@ -25,13 +23,13 @@
       <div class="contact-box center-version">
         <a data-toggle="modal" data-target="#addOrgan">
           <!--todo 图片改成 + 号-->
-          <img alt="image" class="img-circle" style="margin-top: 50px; margin-bottom: 50px" src="../../assets/rename-icon.png">
+          <img alt="image" class="img-circle" style="margin-top: 25px;" src="../../assets/add-icon.png">
         </a>
-        <!--<div class="contact-box-footer" style="margin-top: 38px; margin-bottom: 12px">-->
-          <!--<div class="m-t-xs btn-group">-->
-            <!--<abbr>新建公司组织</abbr>-->
-          <!--</div>-->
-        <!--</div>-->
+        <div class="contact-box-footer" style="margin-top: 30px; margin-bottom: 9px">
+          <div class="m-t-xs btn-group">
+            <abbr>新建公司组织</abbr>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -42,12 +40,12 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
               aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">修改基础用户信息</h4>
+            <h4 class="modal-title">添加公司组织</h4>
           </div>
           <div class="modal-body">
             <div class="form-group has-success">
-              用户名<input class="form-control" v-model="adder.name" :placeholder="addOrgan.username"/>
-              <!--密码<input class="form-control" v-model="addUser.password" :placeholder="name.password"/>-->
+              名称<input class="form-control" v-model="adder.name" name="name" v-validate data-vv-rules="required" >
+              <span v-show="errors.has('name')" class="help is-danger" style="color: #ed5565">{{ errors.first('name') }}</span>
             </div>
           </div>
           <div class="modal-footer">
