@@ -6,7 +6,7 @@
       <button type="button" class="btn btn-primary btn-outline" :class="waterPipeLayer.style" v-show="waterPipeLayerStatus" @click="toggleWaterPipeLayer()">下水管道</button>
 
       <button type="button" class="btn btn-sm btn-info" :class="statusStyle" style="float:right; margin-top: 17px; margin-left: 10px"v-show="rightOpShow" @click="showStatusBar()">状态</button>
-      <button type="button" class="btn btn-sm btn-info" :class="style3D" style="float:right; margin-top: 17px; margin-left: 10px" v-show="rightOpShow" @click="show3DFun()">3D</button>
+      <button type="button" class="btn btn-sm btn-info" :class="style3D" style="float:right; margin-top: 17px; margin-left: 10px" v-show="rightOpShow3D" @click="show3DFun()">3D</button>
 
     </div>
     <!--状态选择条-->
@@ -140,6 +140,9 @@
       // 右侧操作按钮显示
       rightOpShow: function () {
         return (this.wellLayer.style==='active') || (this.waterPipeLayer.style==='active')
+      },
+      rightOpShow3D: function () {
+        return this.showLayers.waterPipeStyle==='active'
       },
     },
     methods: {

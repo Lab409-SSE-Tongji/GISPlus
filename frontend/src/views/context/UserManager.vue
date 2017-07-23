@@ -96,11 +96,11 @@
         </div>
         <div class="modal-body">
           <div class="form-group has-success">
-            用户名<input class="form-control" v-model="editUserInfo.username" :placeholder="editUserInfo.username"/>
-            姓名<input class="form-control" v-model="editUserInfo.name" :placeholder="editUserInfo.name"/>
-            密码<input class="form-control" v-model="editUserInfo.password" :placeholder="editUserInfo.password"/>
-            邮箱<input class="form-control" v-model="editUserInfo.email" :placeholder="editUserInfo.email"/>
-            电话<input class="form-control" v-model="editUserInfo.phone" :placeholder="editUserInfo.phone"/>
+            用户名<input class="form-control" v-model="editUserInfo.username" disabled/>
+            姓名<input class="form-control" v-model="editUserInfo.name" placeholder="姓名" />
+            密码<input class="form-control" v-model="editUserInfo.password" placeholder="密码"/>
+            邮箱<input class="form-control" v-model="editUserInfo.email" placeholder="邮箱"/>
+            电话<input class="form-control" v-model="editUserInfo.phone" placeholder="电话"/>
             <span v-show="organShow">组织</span>
             <select v-model="editUserInfo.organ" class="form-control" v-show="organShow">
               <!--<option value="0" selected>选择组织</option>-->
