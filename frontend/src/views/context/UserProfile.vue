@@ -185,8 +185,8 @@ export default {
       this.$http.get(global.server + '/user/id/' + this.userId).then(response => {
         let userInfo = JSON.parse(response.bodyText)
         this.name = userInfo.name
-//        this.phone = userInfo.phone
-//        this.email = userInfo.email
+        this.phone = userInfo.phone
+        this.email = userInfo.email
         // toastr.success("获取用户信息成功")
       }, response => {
         toastr.error("获取用户信息失败")
