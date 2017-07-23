@@ -40,6 +40,7 @@ public class UserServiceImp implements UserService {
     public String updateUserInfo(User user) {
         User userRemote = mongoUserRepository.findOne(user.getId());
 
+        userRemote.setName(user.getName());
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         final String rawPassword = user.getPassword();
         if ((rawPassword.indexOf('*') == -1) &&  (rawPassword.length() > 6)) {

@@ -52,16 +52,16 @@
         <div class="modal-body">
           <div class="form-group has-success">
             <span>用户名</span>
-            <input class="form-control" v-model="addUser.username" name="username" v-validate data-vv-rules="required" >
+            <input class="form-control" v-model="addUser.username" placeholder="请输入用户名" name="username" v-validate data-vv-rules="required" >
             <span v-show="errors.has('username')" class="help is-danger" style="color: #ed5565">请输入用户名</span><br>
             <span>密码</span>
-            <input type="password" class="form-control" v-model="addUser.password" name="password" v-validate data-vv-rules="required" >
+            <input type="password" class="form-control" placeholder="请输入密码" v-model="addUser.password" name="password" v-validate data-vv-rules="required" >
             <span v-show="errors.has('password')" class="help is-danger" style="color: #ed5565">请输入密码</span><br>
             <span>确认密码</span>
             <input type="password" class="form-control" placeholder="确认密码" v-model="addUser.passwordRepeat">
             <span v-show="!passwordEqual" class="help is-danger" style="color: #ed5565">两次输入的密码不一致！</span><br>
             <span>姓名</span>
-            <input class="form-control" v-model="addUser.name" name="name" v-validate data-vv-rules="required" >
+            <input class="form-control" v-model="addUser.name" placeholder="请输入姓名" name="name" v-validate data-vv-rules="required" >
             <span v-show="errors.has('name')" class="help is-danger" style="color: #ed5565">请输入姓名</span><br>
             <span v-show="organShow">组织</span>
             <select v-model="addUser.organId" class="form-control" v-show="organShow">
@@ -278,6 +278,7 @@
           this.getAllUserInfo()
           this.addUser.username = null
           this.addUser.password = null
+          this.addUser.passwordRepeat = null
           this.addUser.name = null
           this.addUser.organ = null
           this.addUser.roles = null

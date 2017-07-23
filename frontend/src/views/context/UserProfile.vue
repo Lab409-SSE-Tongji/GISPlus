@@ -200,6 +200,7 @@ export default {
         phone: this.phone,
         password: this.password,
       }
+      console.log(formData)
       this.$http.put(global.server+'/user/id/'+this.userId, formData).then(response => {
         this.getUserInfo()
       })
