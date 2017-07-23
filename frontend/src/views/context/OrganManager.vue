@@ -45,7 +45,7 @@
           <div class="modal-body">
             <div class="form-group has-success">
               名称<input class="form-control" v-model="adder.name" name="name" v-validate data-vv-rules="required" >
-              <span v-show="errors.has('name')" class="help is-danger" style="color: #ed5565">{{ errors.first('name') }}</span>
+              <span v-show="errors.has('name')" class="help is-danger" style="color: #ed5565">请输入公司组织名称</span>
             </div>
           </div>
           <div class="modal-footer">

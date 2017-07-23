@@ -60,7 +60,7 @@
             </div>
             <div class="modal-body">
               <input class="form-control" v-model="mapName" placeholder="请输入地图名称" name="mapName" v-validate data-vv-rules="required" >
-              <span v-show="errors.has('mapName')" class="help is-danger" style="color: #ed5565">{{ errors.first('mapName') }}</span>
+              <span v-show="errors.has('mapName')" class="help is-danger" style="color: #ed5565">请输入地图名称</span>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>

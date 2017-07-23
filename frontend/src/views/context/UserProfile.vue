@@ -23,7 +23,7 @@
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
                     <input type="text" :disabled="disabled" class="form-control" v-model="email" name="email" v-validate data-vv-rules="required|email" >
-                    <span v-show="errors.has('email')" class="help is-danger" style="color: #ed5565">{{ errors.first('email') }}</span>
+                    <span v-show="errors.has('email')" class="help is-danger" style="color: #ed5565">请输入电子邮箱</span>
                   </div>
                 </div>
               </el-col>
@@ -39,7 +39,7 @@
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
                     <input type="text" :disabled="disabled" class="form-control" v-model="phone" name="phone" v-validate="{ rules: { regex: /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/} }" >
-                    <span v-show="errors.has('phone')" class="help is-danger" style="color: #ed5565">{{ errors.first('phone') }}</span>
+                    <span v-show="errors.has('phone')" class="help is-danger" style="color: #ed5565">请输入手机号</span>
                   </div>
                 </div>
               </el-col>
@@ -59,7 +59,7 @@
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
                     <input type="text" :disabled="disabled" class="form-control" v-model="name" name="name" v-validate data-vv-rules="required" >
-                    <span v-show="errors.has('name')" class="help is-danger" style="color: #ed5565">{{ errors.first('name') }}</span>
+                    <span v-show="errors.has('name')" class="help is-danger" style="color: #ed5565">请输入姓名</span>
                   </div>
                 </div>
               </el-col>
@@ -90,7 +90,7 @@
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
                     <input type="text" :disabled="disabled" class="form-control" v-model="password" name="password" v-validate data-vv-rules="required" >
-                    <span v-show="errors.has('password')" class="help is-danger" style="color: #ed5565">{{ errors.first('password') }}</span>
+                    <span v-show="errors.has('password')" class="help is-danger" style="color: #ed5565">请输入密码</span>
                   </div>
                 </div>
               </el-col>
@@ -106,7 +106,7 @@
                 <div class="bg-purple-light item-content">
                   <div class="input-message">
                     <input type="text" :disabled="disabled" class="form-control" v-model="passwordRepeat">
-                    <span v-show="!passwordEqual" class="help is-danger" style="color: #ed5565">The password should be the same.</span>
+                    <span v-show="!passwordEqual" class="help is-danger" style="color: #ed5565">两次输入的密码不一致！</span>
                   </div>
                 </div>
               </el-col>
