@@ -93,6 +93,7 @@
         this.activeItem = index;
       },
       getOrganName: function () {
+        console.log(this.organId)
         if (this.organId === '' || this.organId === null) {
           this.organName = 'Root'
         } else {
