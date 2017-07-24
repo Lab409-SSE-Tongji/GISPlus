@@ -1106,7 +1106,7 @@
         })
       },
       deleteWellHistory: function () {
-        this.$http.post(global.server+'/history/layer/well/'+this.history.well[this.history.selectWellIndex].id).then(response => {
+        this.$http.delete(global.server+'/history/layer/well/'+this.history.well[this.history.selectWellIndex].id).then(response => {
           toastr.success("删除窨井盖历史版本成功")
           this.getWellHistorys()
         }, response => {
@@ -1114,7 +1114,7 @@
         })
       },
       deleteWaterPipeHistory: function () {
-        this.$http.post(global.server+'/history/layer/waterPipe/'+this.history.waterPipe[this.history.selectWaterPipeIndex].id).then(response => {
+        this.$http.delete(global.server+'/history/layer/waterPipe/'+this.history.waterPipe[this.history.selectWaterPipeIndex].id).then(response => {
           toastr.success("删除下水管历史版本成功")
           this.getWaterPipeHistorys()
         }, response => {
