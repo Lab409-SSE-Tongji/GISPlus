@@ -57,8 +57,6 @@
               <option disabled value="">请选择</option>
               <option>{{defaultLayer.well}}</option>
               <option>{{defaultLayer.waterPipe}}</option>
-              <!--<option>option 3</option>-->
-              <!--<option>option 4</option>-->
             </select>
             <!--<span>{{addLayerName}}</span>-->
           </div>
@@ -99,15 +97,21 @@
               aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">选择历史版本</h4>
           </div>
-          <!--<select class="form-control m-b" v-model="history.selectId">-->
-            <!--<option v-for="(id, index) in history." value="">请选择</option>-->
-            <!--<option>{{defaultLayer.well}}</option>-->
-            <!--<option>{{defaultLayer.waterPipe}}</option>-->
-          <!--</select>-->
+          <div class="modal-body">
+            <sapn v-show="this.editLayers.editLayerName === this.defaultLayer.well">选择窨井盖历史版本</sapn>
+            <select class="form-control m-b" v-model="history.selectWellId" v-show="this.editLayers.editLayerName === this.defaultLayer.well">
+              <option v-for="(well, index) in history.well" value="">{{new Date(well.createTime).toLocaleString()}}</option>
+            </select>
+
+            <sapn v-show="this.editLayers.editLayerName === this.defaultLayer.waterPipe">选择下水管道历史版本</sapn>
+            <select class="form-control m-b" v-model="history.selectWaterPipeId" v-show="this.editLayers.editLayerName === this.defaultLayer.waterPipe">
+              <option v-for="(waterPipe, index) in history.waterPipe" value="">{{new Date(waterPipe.createTime).toLocaleString()}}</option>
+            </select>
+          </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
-            <button type="button" class="btn btn-success" data-dismiss="modal" style="float: left; margin-top: 16px;"> 新建&nbsp;</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal" @click="">&nbsp;确认&nbsp;</button>
+            <button type="button" class="btn btn-success" data-dismiss="modal" style="float: left; margin-top: 16px;" @click="addHistory()"> 新建&nbsp;</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" @click="chooseHistory()">&nbsp;确认&nbsp;</button>
           </div>
         </div>
       </div>
@@ -238,6 +242,8 @@
           lostStyle: 'active',
         },
         history: {
+          selectWellId: null,
+          selectWaterPipeId: null,
           well: [],
           waterPipe: []
         }
@@ -1070,7 +1076,11 @@
 
       // 历史版本
       getWellHistorys: function () {
-
+        this.$http.get(global.server+'/history/layer/water/'+this.mapId).then(response => {
+          this.history.waterPipe = JSON.parse(response.bodyText)
+        }, response => {
+          toastr.error("获取窨井盖历史版本失败")
+        })
       },
       getWaterPipeHistorys: function () {
         this.$http.get(global.server+'/history/layer/water/'+this.mapId).then(response => {
@@ -1080,11 +1090,18 @@
         })
       },
       addWellHistory: function () {
+        this.$http.post(global.server+'/history/layer/well/'+this.layers.waterPipe.id).then(response => {
+          toastr.success("添加窨井盖历史版本成功")
+          this.getWellHistorys()
+        }, response => {
+          toastr.error("添加窨井盖道历史版本失败")
+        })
 
       },
       addWaterPipeHistory: function () {
         this.$http.post(global.server+'/history/layer/water/'+this.layers.waterPipe.id).then(response => {
           toastr.success("添加下水管道历史版本成功")
+          this.getWaterPipeHistorys()
         }, response => {
           toastr.error("添加下水管道历史版本失败")
         })
@@ -1095,7 +1112,23 @@
       deleteWaterPipeHistory: function () {
 
       },
+      chooseHistory: function () {
+        
+      },
 
+      addHistory: function () {
+        switch (this.editLayers.editLayerName) {
+          case this.defaultLayer.well:
+            this.addWellHistory()
+            break
+          case this.defaultLayer.waterPipe:
+            this.addWaterPipeHistory()
+            break
+          default:
+            toastr.error("请选择：要操作的图层")
+            break
+        }
+      }
     },
 
     // 初始化
@@ -1113,6 +1146,8 @@
       this.getWaterPipeLayer()
 
       // 获取历史版本
+      this.getWellHistorys()
+      this.getWaterPipeHistorys()
     }
   }
 </script>
