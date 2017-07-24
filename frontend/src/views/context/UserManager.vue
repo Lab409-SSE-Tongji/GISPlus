@@ -72,8 +72,8 @@
             <select v-model="addUser.roles" class="form-control">
               <!--<option value="0" selected>选择角色</option>-->
               <option value="user">用户</option>
-              <option value="admin">管理员</option>
-              <option value="superAdmin">超级管理员</option>
+              <option value="admin" v-show="showAddAdmin">管理员</option>
+              <option value="superAdmin" v-show="showAddSuperAdmin">超级管理员</option>
             </select>
           </div>
         </div>
@@ -152,6 +152,8 @@
     name: 'userManager',
     data () {
       return {
+        showAddAdmin: false,
+        showAddSuperAdmin: false,
         addUser: {
           username: '',
           password: '',
@@ -336,10 +338,13 @@
             case 'superAdmin':
               this.getAllUserInfo()
               this.getAllOrganInfo()
+              this.showAddAdmin = true
+              this.showAddSuperAdmin = true
               break
             case 'admin':
               this.getAllUserInfoByOrganId()
               this.getOrganInfo()
+              this.showAddAdmin = true
               break
             case 'user':
               break
@@ -349,10 +354,13 @@
             case 'superAdmin':
               this.getAllUserInfo()
               this.getAllOrganInfo()
+              this.showAddAdmin = true
+              this.showAddSuperAdmin = true
               break
             case 'admin':
               this.getAllUserInfoByOrganId()
               this.getOrganInfo()
+              this.showAddAdmin = true
               break
             case 'user':
               break
