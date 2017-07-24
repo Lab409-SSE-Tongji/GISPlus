@@ -1007,54 +1007,64 @@
       },
       addLine: function () {
         let self = this;
+        let mapMoveListener = null;
+        let lineClickListener = null;
+        let polyline = null;
         this.baseMap.setOptions({ draggableCursor: 'crosshair' });
         let mapClickListener = google.maps.event.addListener(this.baseMap, 'click', (event) => {
-          if(self.clickTime ===0){
             var latLng = event.latLng;
             self.linex1 = latLng.lng();
             self.liney1 = latLng.lat();
             self.clickTime =1;
-          }else{
-            var latLng = event.latLng;
-            self.linex2 = latLng.lng();
-            self.liney2 = latLng.lat();
-            let originInfo = {
-              x1:self.linex1,
-              x2:self.linex2,
-              y1:self.liney1,
-              y2:self.liney2,
-              z1:self.linez1,
-              z2:self.linez2,
-              status:"GOOD"
-            }
+            mapMoveListener = google.maps.event.addListener(this.baseMap, 'mousemove', (event) => {
+              console.log(event.latLng.lng()+" , "+event.latLng.lat());
+              if(polyline !== null) polyline.setMap(null);
+              polyline = null;
 
-            let start = new google.maps.LatLng(self.liney1 * 1, self.linex1 * 1)
-            let end = new google.maps.LatLng(self.liney2 * 1, self.linex2 * 1)
-            let path = [start, end]
-            let strokeColor = "#0000FF"
-            let polyline = new google.maps.Polyline({
-              path: path,
-              strokeColor: strokeColor,
-              strokeOpacity: 1,
-              strokeWeight: 4,
-              statusInfo: {
-                show: false,
-                status: "GOOD",
-                position: {
-                  lat: (self.liney1*1 + self.liney2*1) / 2,
-                  lng: (self.linex1*1 + self.linex2*1) / 2,
+              var latLng = event.latLng;
+              self.linex2 = latLng.lng();
+              self.liney2 = latLng.lat();
+              let originInfo = {
+                x1:self.linex1,
+                x2:self.linex2,
+                y1:self.liney1,
+                y2:self.liney2,
+                z1:self.linez1,
+                z2:self.linez2,
+                status:"GOOD"
+              }
+
+              let start = new google.maps.LatLng(self.liney1 * 1, self.linex1 * 1)
+              let end = new google.maps.LatLng(self.liney2 * 1, self.linex2 * 1)
+              let path = [start, end]
+              let strokeColor = "#0000FF"
+              polyline = new google.maps.Polyline({
+                path: path,
+                strokeColor: strokeColor,
+                strokeOpacity: 1,
+                strokeWeight: 4,
+                statusInfo: {
+                  show: false,
+                  status: "GOOD",
+                  position: {
+                    lat: (self.liney1*1 + self.liney2*1) / 2,
+                    lng: (self.linex1*1 + self.linex2*1) / 2,
+                  },
                 },
-              },
-              originInfo: originInfo,
+                originInfo: originInfo,
+              })
+              lineClickListener = google.maps.event.addListener(polyline, 'click', (event) => {
+                google.maps.event.removeListener(mapMoveListener);
+                self.registerWaterPipeClick(self, polyline)
+                self.layers.waterPipeList.push(polyline)
+                self.curWaterPipeList.push(originInfo)
+                self.clickTime = 0;
+                this.baseMap.setOptions({ draggableCursor: '' });
+                google.maps.event.removeListener(mapClickListener);
+              });
+
+              polyline.setMap(self.baseMap);
             })
-            polyline.setMap(self.baseMap);
-            self.registerWaterPipeClick(self, polyline)
-            self.layers.waterPipeList.push(polyline)
-            self.curWaterPipeList.push(originInfo)
-            self.clickTime = 0;
-            this.baseMap.setOptions({ draggableCursor: '' });
-            google.maps.event.removeListener(mapClickListener);
-          }
 
         });
       },
