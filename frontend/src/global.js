@@ -4,3 +4,4 @@
 
 global.server = 'http://localhost:8080'
 // global.server = 'http://202.120.167.198:8080'
+// global.server = 'http://tom.rainlf.com:8080'

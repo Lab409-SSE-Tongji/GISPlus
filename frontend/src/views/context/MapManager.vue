@@ -44,7 +44,7 @@
           <ul class="op-list" v-show="map.opDisplay" style="left:113px; top:12px; display:block">
             <li data-toggle="modal" data-target="#editMapModal" ><img src="../../assets/rename-icon.png"><label>编辑</label></li>
             <li @click="deleteMap(index)"><img src="../../assets/delete-icon.png"><label>删除</label></li>
-            <li data-toggle="modal" data-target="#deliverMap" @click="toggleDeliver(index)" v-show="deliverShow"><img src="../../assets/manage-icon.png"><label>分配</label></li>
+            <li data-toggle="modal" data-target="#deliverMap" @click="toggleDeliver(index)" v-show="deliverShow"><img src="../../assets/manage-icon.png"><label>分享</label></li>
           </ul>
         </div>
       </div>
@@ -80,7 +80,7 @@
               <h4 class="modal-title">编辑地图信息</h4>
             </div>
             <div class="modal-body">
-              <input class="form-control" v-model="mapName" :placeholder="editName"/>
+              <input class="form-control" v-model="mapName" />
             </div>
             <div class="modal-footer">
               <button @click="closeOp()" type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
@@ -243,6 +243,7 @@ export default {
       this.editIndex = index
       this.editId = this.maps[index].id
       this.editName = this.maps[index].mapName
+      this.mapName = this.editName
     },
     closeOp: function () {
       this.maps[this.editIndex].opDisplay = false

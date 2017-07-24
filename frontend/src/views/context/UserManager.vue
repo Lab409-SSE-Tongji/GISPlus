@@ -291,8 +291,11 @@
           id: this.userList[this.editUserInfo.index].id,
           username: this.editUserInfo.username,
           password: this.editUserInfo.password,
+          name: this.editUserInfo.name,
           email: this.editUserInfo.email,
           phone: this.editUserInfo.phone,
+          organId: this.editUserInfo.organ,
+          roles: [this.editUserInfo.roles],
         }
         this.$http.put(global.server+'/user/id/'+userInfo.id, userInfo).then(response => {
           // toastr.success("更新普通用户信息成功")

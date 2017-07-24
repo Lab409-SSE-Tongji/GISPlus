@@ -48,6 +48,8 @@ public class UserServiceImp implements UserService {
         }
         userRemote.setEmail(user.getEmail());
         userRemote.setPhone(user.getPhone());
+        userRemote.setOrganId(user.getOrganId());
+        userRemote.setRoles(user.getRoles());
 
         mongoUserRepository.save(userRemote);
         return null;

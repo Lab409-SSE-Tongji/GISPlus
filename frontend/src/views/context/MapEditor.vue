@@ -2,8 +2,8 @@
   <div class="row btns white-bg ">
     <!--顶层操作条-->
     <div class="col-lg-12 btn-content">
-      <button type="button" class="btn btn-primary"  @click="toggleShowLayers()">显示图层</button>
-      <button type="button" class="btn btn-primary"  @click="toggleEditLayers()">编辑图层</button>
+      <button type="button" class="btn btn-primary" @click="toggleShowLayers()">显示图层</button>
+      <button type="button" class="btn btn-primary" @click="toggleEditLayers()">编辑图层</button>
     </div>
 
     <!--显示条-->
@@ -35,7 +35,8 @@
       <button type="button" class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px" @click="exportFile()">导出</button>
       <input id="fileUpLoader" type="file" style="display: none" @change="importFile()" ref="input"/>
       <label for="fileUpLoader" class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px">导入</label>
-      <button type="button" class="btn btn-sm btn-primary" style="float:right; margin-top: 17px; margin-left: 10px; margin-right: 20px" v-show="submitChangeShow" @click="submitChange()">提交更改</button>
+      <label class="btn btn-sm btn-info" style="float:right; margin-top: 17px; margin-left: 10px" data-toggle="modal" data-target="#historyModal" v-show="submitChangeShow">历史版本</label>
+      <button type="button" class="btn btn-sm btn-primary" style="float:right; margin-top: 17px; margin-left: 10px; margin-right: 20px" v-show="submitChangeShow" @click="submitChange()">保存</button>
       <button type="button" class="btn btn-sm btn-primary" style="float:right; margin-top: 17px; margin-left: 10px;" v-show="addLineShow" @click="addLine()">添加线</button>
       <button type="button" class="btn btn-sm btn-primary" style="float:right; margin-top: 17px; margin-left: 10px;" v-show="addPointShow" @click="addPoint()">添加点</button>
     </div>
@@ -84,6 +85,29 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
             <button type="button" class="btn btn-primary" data-dismiss="modal" @click="deleteLayer()">&nbsp;确认&nbsp;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--历史版本模态框-->
+    <div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">选择历史版本</h4>
+          </div>
+          <!--<select class="form-control m-b" v-model="history.selectId">-->
+            <!--<option v-for="(id, index) in history." value="">请选择</option>-->
+            <!--<option>{{defaultLayer.well}}</option>-->
+            <!--<option>{{defaultLayer.waterPipe}}</option>-->
+          <!--</select>-->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
+            <button type="button" class="btn btn-success" data-dismiss="modal" style="float: left; margin-top: 16px;"> 新建&nbsp;</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" @click="">&nbsp;确认&nbsp;</button>
           </div>
         </div>
       </div>
@@ -213,6 +237,10 @@
           brokenStyle: 'active',
           lostStyle: 'active',
         },
+        history: {
+          well: [],
+          waterPipe: []
+        }
       }
     },
     computed: {
@@ -1036,8 +1064,36 @@
         return flag;
       },
       /* google map utils */
-      getTwoPointsDis: function (point1, point2 ) {
+      getTwoPointsDis: function (point1, point2) {
         return google.maps.geometry.spherical.computeDistanceBetween(point1, point2);
+      },
+
+      // 历史版本
+      getWellHistorys: function () {
+
+      },
+      getWaterPipeHistorys: function () {
+        this.$http.get(global.server+'/history/layer/water/'+this.mapId).then(response => {
+          this.history.waterPipe = JSON.parse(response.bodyText)
+        }, response => {
+          toastr.error("获取下水管道历史版本失败")
+        })
+      },
+      addWellHistory: function () {
+
+      },
+      addWaterPipeHistory: function () {
+        this.$http.post(global.server+'/history/layer/water/'+this.layers.waterPipe.id).then(response => {
+          toastr.success("添加下水管道历史版本成功")
+        }, response => {
+          toastr.error("添加下水管道历史版本失败")
+        })
+      },
+      deleteWellHistory: function () {
+
+      },
+      deleteWaterPipeHistory: function () {
+
       },
 
     },
@@ -1055,6 +1111,8 @@
       // 获取各个图层
       this.getWellLayer()
       this.getWaterPipeLayer()
+
+      // 获取历史版本
     }
   }
 </script>
