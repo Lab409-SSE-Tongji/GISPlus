@@ -111,6 +111,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;取消&nbsp;</button>
             <button type="button" class="btn btn-success" data-dismiss="modal" style="float: left; margin-top: 16px;" @click="addHistory()"> 新建&nbsp;</button>
+            <button type="button" class="btn btn-success" data-dismiss="modal" style="float: left; margin-top: 16px;" @click="deleteHistory()"> 删除&nbsp;</button>
             <button type="button" class="btn btn-primary" data-dismiss="modal" @click="chooseHistory()">&nbsp;确认&nbsp;</button>
           </div>
         </div>
@@ -287,9 +288,7 @@
       },
       submitChangeShow: function () {
         return (this.editLayers.editLayerName===this.defaultLayer.well) || (this.editLayers.editLayerName===this.defaultLayer.waterPipe)
-      }
-
-
+      },
     },
     watch: {
       rightOpShow: function () {
@@ -338,7 +337,7 @@
     },
     methods: {
       // 注册点击事件
-      registerWellClick: function (self, marker) {
+       registerWellClick: function (self, marker) {
         google.maps.event.addListener(marker, 'click', function() {
           if (marker.statusInfo.show) {
             document.getElementById('map-msg-point-parent').append(document.getElementById('map-msg-point'));
@@ -1107,13 +1106,38 @@
         })
       },
       deleteWellHistory: function () {
-
+        this.$http.post(global.server+'/history/layer/well/'+this.history.well[this.history.selectWellIndex].id).then(response => {
+          toastr.success("删除窨井盖历史版本成功")
+          this.getWellHistorys()
+        }, response => {
+          toastr.error("删除窨井盖道历史版本失败")
+        })
       },
       deleteWaterPipeHistory: function () {
-
+        this.$http.post(global.server+'/history/layer/waterPipe/'+this.history.waterPipe[this.history.selectWaterPipeIndex].id).then(response => {
+          toastr.success("删除下水管历史版本成功")
+          this.getWaterPipeHistorys()
+        }, response => {
+          toastr.error("删除下水管历史版本失败")
+        })
       },
       chooseHistory: function () {
-
+        this.deleteOverlayers();
+        switch (this.editLayers.editLayerName) {
+          case this.defaultLayer.well:
+            this.layers.well.wellDomains = this.history.well[this.history.selectWellIndex].wellDomains;
+            this.syncGoogleWell();
+            this.renderWellLayer();
+            break
+          case this.defaultLayer.waterPipe:
+            this.layers.waterPipe.waterPipeDomains = this.history.waterPipe[this.history.selectWaterPipeIndex].waterPipeDomains;
+            this.syncGoogleWaterPipe();
+            this.renderWaterPipeLayer();
+            break
+          default:
+            toastr.error("请选择：要操作的图层")
+            break
+        }
       },
 
       addHistory: function () {
@@ -1123,6 +1147,46 @@
             break
           case this.defaultLayer.waterPipe:
             this.addWaterPipeHistory()
+            break
+          default:
+            toastr.error("请选择：要操作的图层")
+            break
+        }
+      },
+      deleteHistory: function () {
+        switch (this.editLayers.editLayerName) {
+          case this.defaultLayer.well:
+            this.deleteWellHistory();
+            break
+          case this.defaultLayer.waterPipe:
+            this.deleteWaterPipeHistory();
+            break
+          default:
+            toastr.error("请选择：要操作的图层")
+            break
+        }
+      },
+      deleteAllMarkers: function () {
+        for (let i = 0; i < this.layers.wellList.length; i++)
+          this.layers.wellList[i].setMap(null);
+        this.layers.wellList = [];
+        this.layers.well.wellDomains = [];
+        this.curWellList = [];
+      },
+      deleteAllPolylines: function () {
+        for (let i = 0; i < this.layers.waterPipeList.length; i++)
+          this.layers.waterPipeList[i].setMap(null);
+        this.layers.waterPipeList = [];
+        this.layers.waterPipe.waterPipeDomains = [];
+        this.curWaterPipeList = []; //更新数据库用
+      },
+      deleteOverlayers: function () {
+        switch (this.editLayers.editLayerName) {
+          case this.defaultLayer.well:
+            this.deleteAllMarkers()
+            break
+          case this.defaultLayer.waterPipe:
+            this.deleteAllPolylines()
             break
           default:
             toastr.error("请选择：要操作的图层")
