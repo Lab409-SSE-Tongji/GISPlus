@@ -1075,7 +1075,7 @@
 
       // 历史版本
       getWellHistorys: function () {
-        this.$http.get(global.server+'/history/layer/water/'+this.mapId).then(response => {
+        this.$http.get(global.server+'/history/layer/well/'+this.mapId).then(response => {
           this.history.well = JSON.parse(response.bodyText)
         }, response => {
           toastr.error("获取窨井盖历史版本失败")
@@ -1114,7 +1114,7 @@
         })
       },
       deleteWaterPipeHistory: function () {
-        this.$http.delete(global.server+'/history/layer/waterPipe/'+this.history.waterPipe[this.history.selectWaterPipeIndex].id).then(response => {
+        this.$http.delete(global.server+'/history/layer/water/'+this.history.waterPipe[this.history.selectWaterPipeIndex].id).then(response => {
           toastr.success("删除下水管历史版本成功")
           this.getWaterPipeHistorys()
         }, response => {
