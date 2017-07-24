@@ -98,12 +98,12 @@
             <h4 class="modal-title">选择历史版本</h4>
           </div>
           <div class="modal-body">
-            <sapn v-show="this.editLayers.editLayerName === this.defaultLayer.well">选择窨井盖历史版本</sapn>
+            <span v-show="this.editLayers.editLayerName === this.defaultLayer.well">选择窨井盖历史版本</span>
             <select class="form-control m-b" v-model="history.selectWellId" v-show="this.editLayers.editLayerName === this.defaultLayer.well">
               <option v-for="(well, index) in history.well" value="">{{new Date(well.createTime).toLocaleString()}}</option>
             </select>
 
-            <sapn v-show="this.editLayers.editLayerName === this.defaultLayer.waterPipe">选择下水管道历史版本</sapn>
+            <span v-show="this.editLayers.editLayerName === this.defaultLayer.waterPipe">选择下水管道历史版本</span>
             <select class="form-control m-b" v-model="history.selectWaterPipeId" v-show="this.editLayers.editLayerName === this.defaultLayer.waterPipe">
               <option v-for="(waterPipe, index) in history.waterPipe" value="">{{new Date(waterPipe.createTime).toLocaleString()}}</option>
             </select>
@@ -1113,7 +1113,7 @@
 
       },
       chooseHistory: function () {
-        
+
       },
 
       addHistory: function () {

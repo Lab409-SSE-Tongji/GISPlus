@@ -142,7 +142,7 @@
         return (this.wellLayer.style==='active') || (this.waterPipeLayer.style==='active')
       },
       rightOpShow3D: function () {
-        return this.showLayers.waterPipeStyle==='active'
+        return this.waterPipeLayer.style==='active'
       },
     },
     methods: {
