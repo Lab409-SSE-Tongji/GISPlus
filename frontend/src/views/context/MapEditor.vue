@@ -99,13 +99,13 @@
           </div>
           <div class="modal-body">
             <span v-show="this.editLayers.editLayerName === this.defaultLayer.well">选择窨井盖历史版本</span>
-            <select class="form-control m-b" v-model="history.selectWellId" v-show="this.editLayers.editLayerName === this.defaultLayer.well">
-              <option v-for="(well, index) in history.well" value="">{{new Date(well.createTime).toLocaleString()}}</option>
+            <select class="form-control m-b" v-model="history.selectWellIndex" v-show="this.editLayers.editLayerName === this.defaultLayer.well">
+              <option v-for="(well, index) in history.well" :value="index">{{new Date(well.createTime).toLocaleString()}}</option>
             </select>
 
             <span v-show="this.editLayers.editLayerName === this.defaultLayer.waterPipe">选择下水管道历史版本</span>
-            <select class="form-control m-b" v-model="history.selectWaterPipeId" v-show="this.editLayers.editLayerName === this.defaultLayer.waterPipe">
-              <option v-for="(waterPipe, index) in history.waterPipe" value="">{{new Date(waterPipe.createTime).toLocaleString()}}</option>
+            <select class="form-control m-b" v-model="history.selectWaterPipeIndex" v-show="this.editLayers.editLayerName === this.defaultLayer.waterPipe">
+              <option v-for="(waterPipe, index) in history.waterPipe" :value="index">{{new Date(waterPipe.createTime).toLocaleString()}}</option>
             </select>
           </div>
           <div class="modal-footer">
@@ -242,8 +242,8 @@
           lostStyle: 'active',
         },
         history: {
-          selectWellId: null,
-          selectWaterPipeId: null,
+          selectWellIndex: null,
+          selectWaterPipeIndex: null,
           well: [],
           waterPipe: []
         }
@@ -1077,7 +1077,7 @@
       // 历史版本
       getWellHistorys: function () {
         this.$http.get(global.server+'/history/layer/water/'+this.mapId).then(response => {
-          this.history.waterPipe = JSON.parse(response.bodyText)
+          this.history.well = JSON.parse(response.bodyText)
         }, response => {
           toastr.error("获取窨井盖历史版本失败")
         })
@@ -1090,7 +1090,7 @@
         })
       },
       addWellHistory: function () {
-        this.$http.post(global.server+'/history/layer/well/'+this.layers.waterPipe.id).then(response => {
+        this.$http.post(global.server+'/history/layer/well/'+this.layers.well.id).then(response => {
           toastr.success("添加窨井盖历史版本成功")
           this.getWellHistorys()
         }, response => {

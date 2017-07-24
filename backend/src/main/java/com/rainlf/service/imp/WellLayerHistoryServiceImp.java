@@ -6,6 +6,7 @@ import com.rainlf.mongo.repository.MongoWellLayerHistoryRepository;
 import com.rainlf.mongo.repository.MongoWellLayerRepository;
 import com.rainlf.service.WellLayerHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2017/7/24.
  */
+@Service
 public class WellLayerHistoryServiceImp implements WellLayerHistoryService {
 
     @Autowired
