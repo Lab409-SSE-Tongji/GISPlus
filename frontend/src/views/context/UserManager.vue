@@ -72,8 +72,8 @@
             <select v-model="addUser.roles" class="form-control">
               <!--<option value="0" selected>选择角色</option>-->
               <option value="user">用户</option>
-              <option value="admin" v-show="showAddAdmin">管理员</option>
-              <option value="superAdmin" v-show="showAddSuperAdmin">超级管理员</option>
+              <option value="admin" v-show="showAddSuperAdmin">管理员</option>
+              <option value="superAdmin" v-show="false">超级管理员</option>
             </select>
           </div>
         </div>
@@ -110,8 +110,8 @@
             <select v-model="editUserInfo.roles" class="form-control">
               <!--<option value="0" selected>选择角色</option>-->
               <option value="user">用户</option>
-              <option value="admin">管理员</option>
-              <option value="superAdmin">超级管理员</option>
+              <option value="admin" v-show="showAddSuperAdmin">管理员</option>
+              <option value="superAdmin" v-show="false">超级管理员</option>
             </select>
           </div>
         </div>
@@ -179,9 +179,18 @@
     },
     watch: {
       userList: function (value) {
-        let index = value.findIndex((user) => user.id === this.userId)
-        if (index > -1) {
-            value.splice(index, 1)
+//        let index = value.findIndex((user) => user.id === this.userId)
+//        if (index > -1) {
+//            value.splice(index, 1)
+//        }
+//        console.log(value[0].roles)
+//        console.log(this.roles)
+        for (let i=0; i<value.length; i++) {
+          if (value[i].roles[0] === this.roles[0]) {
+            value.splice(i, 1)
+            i--
+            length--
+          }
         }
       }
     },
